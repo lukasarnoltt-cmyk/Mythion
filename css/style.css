@@ -74,3 +74,8 @@ footer {
   padding: 20px;
 }
 footer a { color: gold; text-decoration: none; }
+section {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1s ease;
+}
