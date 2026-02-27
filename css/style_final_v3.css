@@ -1,164 +1,200 @@
-/* ================== RESET ================== */
-* { margin:0; padding:0; box-sizing:border-box; }
+/* ============ RESET ============ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-/* ================== BODY ================== */
+/* ============ BODY ============ */
 body {
   font-family: 'Cinzel', serif;
-  background-color: black;
+  background: black;
   color: white;
 }
 
-/* ================== MENU ================== */
+/* ============ MENU ============ */
 .menu {
   position: fixed;
-  top: 20px;
+  top: 15px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 20px;
-  z-index: 10;
+  gap: 22px;
+  z-index: 1000;
 }
 
 .menu-link {
   color: gold;
   text-decoration: none;
-  font-weight: bold;
   font-size: 1.2rem;
+  font-weight: bold;
   transition: 0.3s;
 }
 
 .menu-link:hover {
-  color: white;
   text-shadow: 0 0 10px gold;
 }
 
-/* ================== HERO ================== */
+/* ============ HERO ============ */
 .hero {
-  position: relative;
   height: 100vh;
+  width: 100%;
   background-image: url('../images/hero_epic.jpg?v=8');
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  overflow: hidden;
 }
 
 .hero::before {
-  content:"";
-  position:absolute;
-  inset:0;
-  background: rgba(0,0,0,0.7);
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
 }
 
 .hero::after {
-  content:"";
-  position:absolute;
-  bottom:0; left:0;
-  width:100%; height:35%;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 35%;
+  background: linear-gradient(to top, #000, transparent);
   z-index:2;
 }
 
-/* ================== PARTICLES ================== */
+/* ============ PARTICLES ============ */
 .particles {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  pointer-events:none; overflow:hidden; z-index:1;
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  overflow:hidden;
 }
 
 .particles span {
-  position:absolute; width:4px; height:4px; background:rgba(255,255,255,0.8);
-  border-radius:50%; animation:float 10s linear infinite;
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:rgba(255,255,255,0.8);
+  border-radius:50%;
+  animation: particleMove linear infinite;
 }
 
-@keyframes float {
-  0% { transform: translateY(100vh) translateX(0) scale(0.5); opacity:0; }
+@keyframes particleMove {
+  0% { transform: translateY(100vh) translateX(0); opacity:0; }
   50% { opacity:1; }
-  100% { transform: translateY(-10vh) translateX(50px) scale(1); opacity:0; }
+  100% { transform: translateY(-10vh) translateX(50px); opacity:0; }
 }
 
-/* ================== HERO CONTENT ================== */
+/* ============ HERO CONTENT ============ */
 .hero-content {
   position: relative;
-  z-index:2;
-  max-width:900px;
-  padding:20px;
-  animation: zoomInOut 20s ease-in-out infinite;
+  z-index: 3;
+  animation: heroZoom 20s ease-in-out infinite;
+  padding: 20px;
+  max-width: 800px;
 }
 
-@keyframes zoomInOut {
+@keyframes heroZoom {
   0%,100% { transform: scale(1) translateY(0); }
   50% { transform: scale(1.03) translateY(-10px); }
 }
 
 .hero h1 {
-  font-size:5rem;
-  letter-spacing:6px;
-  margin-bottom:25px;
-  text-shadow:0 0 15px rgba(255,215,0,0.9),
-              0 0 30px rgba(255,140,0,0.7),
-              0 0 50px rgba(255,100,0,0.5);
-  animation: glow 2s ease-in-out infinite alternate;
+  font-size: 5rem;
+  color: gold;
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px rgba(255,215,0,0.9), 0 0 30px rgba(255,140,0,0.7);
+  animation: textGlow 2s ease-in-out infinite alternate;
 }
 
-@keyframes glow {
-  0% { text-shadow:0 0 10px rgba(255,215,0,0.7),0 0 20px rgba(255,140,0,0.5); }
-  100% { text-shadow:0 0 25px rgba(255,255,0,1),0 0 50px rgba(255,140,0,0.8); }
+@keyframes textGlow {
+  0% { text-shadow:0 0 10px rgba(255,215,0,0.7); }
+  100% { text-shadow:0 0 25px rgba(255,255,0,1); }
 }
 
-.hero p { font-size:1.8rem; line-height:1.6; margin-bottom:35px; text-shadow:0 0 15px rgba(0,0,0,0.9); }
+.hero p {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+}
 
-.hero a { display:inline-block; padding:15px 40px; font-size:1.3rem; text-decoration:none; color:white; border:2px solid gold; border-radius:10px; transition:0.3s; }
+.hero a {
+  font-size: 1.3rem;
+  padding: 14px 32px;
+  color: white;
+  text-decoration: none;
+  border: 2px solid gold;
+  border-radius: 8px;
+  transition: 0.3s;
+}
 
-.hero a:hover { background:gold; color:black; box-shadow:0 0 25px gold; }
+.hero a:hover {
+  background: gold;
+  color: black;
+  box-shadow: 0 0 20px gold;
+}
 
-/* ================== SECTIONS ================== */
+/* ============ SECTIONS ============ */
 section {
-  padding:80px 20px;
-  text-align:center;
-  opacity:0;
-  transform:translateY(40px);
+  padding: 80px 20px;
+  opacity: 0;
+  transform: translateY(40px);
   transition: all 1.2s ease;
 }
 
-h2 { font-size:3rem; margin-bottom:20px; }
-p { font-size:1.5rem; line-height:1.5; }
+h2 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
 
-/* ================== MEMBERS ================== */
+p {
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+/* ============ MEMBERS ============ */
 .member-card {
   display:inline-block;
   background:#111;
   padding:20px;
   margin:15px;
-  border-radius:12px;
-  width:250px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius:10px;
+  width:230px;
+  transition:0.3s;
 }
 .member-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 15px gold;
+  box-shadow: 0 0 12px gold;
 }
 .member-card img { width:120px; border-radius:50%; }
 
-.progress { background:#333; height:10px; border-radius:5px; margin-top:10px; }
-.progress-bar { height:100%; background:gold; border-radius:5px; }
+.progress { background:#222; height:10px; border-radius:5px; }
+.progress-bar { background:gold; height:100%; border-radius:5px; }
 
-/* ================== GALLERY ================== */
+/* ============ GALLERY ============ */
 .gallery-grid img {
-  width:200px; margin:10px; border-radius:10px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  width:200px;
+  margin:10px;
+  border-radius:10px;
+  transition:0.3s;
 }
 .gallery-grid img:hover {
-  transform: scale(1.05);
+  transform: scale(1.06);
   box-shadow: 0 0 15px gold;
 }
 
-/* ================== FOOTER ================== */
+/* ============ FOOTER ============ */
 footer { background:#111; padding:30px; }
 
-/* ================== RESPONSIVE ================== */
+/* ============ RESPONSIVE ============ */
 @media(max-width:768px){
   .hero h1{ font-size:3rem; }
   .hero p{ font-size:1.2rem; }
