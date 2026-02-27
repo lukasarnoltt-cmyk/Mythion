@@ -1,15 +1,11 @@
 /* ============ RESET ============ */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin:0; padding:0; box-sizing:border-box; }
 
 /* ============ BODY ============ */
 body {
   font-family: 'Cinzel', serif;
-  background: black;
-  color: white;
+  background:black;
+  color:white;
 }
 
 /* ============ MENU ============ */
@@ -22,7 +18,6 @@ body {
   gap: 22px;
   z-index: 1000;
 }
-
 .menu-link {
   color: gold;
   text-decoration: none;
@@ -30,10 +25,7 @@ body {
   font-weight: bold;
   transition: 0.3s;
 }
-
-.menu-link:hover {
-  text-shadow: 0 0 10px gold;
-}
+.menu-link:hover { text-shadow: 0 0 10px gold; }
 
 /* ============ HERO ============ */
 .hero {
@@ -49,45 +41,38 @@ body {
   align-items: center;
   text-align: center;
 }
-
 .hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
+  content:"";
+  position:absolute;
+  inset:0;
   background: rgba(0,0,0,0.75);
 }
-
 .hero::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 35%;
-  background: linear-gradient(to top, #000, transparent);
+  content:"";
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:35%;
+  background: linear-gradient(to top,#000,transparent);
   z-index:2;
 }
 
 /* ============ PARTICLES ============ */
 .particles {
-  position: absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
   pointer-events:none;
   overflow:hidden;
 }
-
 .particles span {
   position:absolute;
-  width:4px;
-  height:4px;
+  width:4px; height:4px;
   background:rgba(255,255,255,0.8);
   border-radius:50%;
   animation: particleMove linear infinite;
 }
-
 @keyframes particleMove {
   0% { transform: translateY(100vh) translateX(0); opacity:0; }
   50% { opacity:1; }
@@ -99,66 +84,49 @@ body {
   position: relative;
   z-index: 3;
   animation: heroZoom 20s ease-in-out infinite;
-  padding: 20px;
-  max-width: 800px;
+  padding:20px;
+  max-width:800px;
 }
-
 @keyframes heroZoom {
   0%,100% { transform: scale(1) translateY(0); }
   50% { transform: scale(1.03) translateY(-10px); }
 }
-
 .hero h1 {
-  font-size: 5rem;
+  font-size:5rem;
   color: gold;
-  margin-bottom: 20px;
-  text-shadow: 0 0 15px rgba(255,215,0,0.9), 0 0 30px rgba(255,140,0,0.7);
+  margin-bottom:20px;
+  text-shadow:0 0 15px rgba(255,215,0,0.9),0 0 30px rgba(255,140,0,0.7);
   animation: textGlow 2s ease-in-out infinite alternate;
 }
-
 @keyframes textGlow {
   0% { text-shadow:0 0 10px rgba(255,215,0,0.7); }
   100% { text-shadow:0 0 25px rgba(255,255,0,1); }
 }
-
-.hero p {
-  font-size: 1.8rem;
-  margin-bottom: 30px;
-}
-
+.hero p { font-size:1.8rem; margin-bottom:30px; }
 .hero a {
-  font-size: 1.3rem;
-  padding: 14px 32px;
-  color: white;
-  text-decoration: none;
-  border: 2px solid gold;
-  border-radius: 8px;
-  transition: 0.3s;
+  font-size:1.3rem;
+  padding:14px 32px;
+  color:white;
+  text-decoration:none;
+  border:2px solid gold;
+  border-radius:8px;
+  transition:0.3s;
 }
-
 .hero a:hover {
   background: gold;
-  color: black;
-  box-shadow: 0 0 20px gold;
+  color:black;
+  box-shadow:0 0 20px gold;
 }
 
 /* ============ SECTIONS ============ */
 section {
-  padding: 80px 20px;
-  opacity: 0;
-  transform: translateY(40px);
+  padding:80px 20px;
+  opacity:0;
+  transform:translateY(40px);
   transition: all 1.2s ease;
 }
-
-h2 {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-p {
-  font-size: 1.5rem;
-  line-height: 1.5;
-}
+h2 { font-size:3rem; margin-bottom:15px; }
+p { font-size:1.5rem; line-height:1.5; }
 
 /* ============ MEMBERS ============ */
 .member-card {
@@ -171,11 +139,10 @@ p {
   transition:0.3s;
 }
 .member-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 12px gold;
+  transform:translateY(-5px);
+  box-shadow:0 0 12px gold;
 }
 .member-card img { width:120px; border-radius:50%; }
-
 .progress { background:#222; height:10px; border-radius:5px; }
 .progress-bar { background:gold; height:100%; border-radius:5px; }
 
@@ -188,7 +155,7 @@ p {
 }
 .gallery-grid img:hover {
   transform: scale(1.06);
-  box-shadow: 0 0 15px gold;
+  box-shadow:0 0 15px gold;
 }
 
 /* ============ FOOTER ============ */
