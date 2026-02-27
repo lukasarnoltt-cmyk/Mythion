@@ -1,18 +1,17 @@
 /* RESET */
 * { margin:0; padding:0; box-sizing:border-box; }
 
-/* BODY STYLING */
+/* BODY */
 body {
   font-family:'Cinzel', serif;
-  background-color:#000;
+  background:#000;
   color:#f0f0f0;
   overflow-x:hidden;
 }
 
-/* HERO SECTION */
+/* HERO */
 .hero {
   height:100vh;
-  width:100%;
   display:grid;
   place-items:center;
   position:relative;
@@ -22,7 +21,7 @@ body {
   background-position:center;
 }
 
-/* HERO OVERLAY */
+/* OVERLAY */
 .hero::before {
   content:"";
   position:absolute;
@@ -31,7 +30,7 @@ body {
   z-index:1;
 }
 
-/* HERO GRADIENT */
+/* GRADIENT */
 .hero::after {
   content:"";
   position:absolute;
@@ -56,7 +55,6 @@ body {
 }
 .particles span {
   position:absolute;
-  display:block;
   width:4px;
   height:4px;
   background:rgba(255,255,255,0.8);
@@ -114,14 +112,8 @@ section {
   transform:translateY(50px);
   transition:all 1.2s ease;
 }
-h2 {
-  font-size:3rem;
-  margin-bottom:20px;
-}
-p {
-  font-size:1.5rem;
-  line-height:1.6;
-}
+h2 { font-size:3rem; margin-bottom:20px; }
+p { font-size:1.5rem; line-height:1.6; }
 
 /* MEMBERS */
 .member-card {
@@ -172,14 +164,11 @@ footer {
   padding:30px;
   text-align:center;
 }
-footer a {
-  color:gold;
-  text-decoration:none;
-}
+footer a { color:gold; text-decoration:none; }
 
 /* RESPONSIVE */
-@media(max-width:768px) {
-  .hero-content h1 { font-size:3rem; }
-  .hero-content p { font-size:1.2rem; }
-  .member-card { width:200px; }
+@media(max-width:768px){
+  .hero-content h1{ font-size:3rem; }
+  .hero-content p{ font-size:1.2rem; }
+  .member-card{ width:200px; }
 }
