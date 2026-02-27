@@ -82,7 +82,6 @@ p { font-size: 1.8rem !important; line-height: 1.5; }
   animation: float 6s ease-in-out infinite;
 }
 
-/* float animace */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-15px); }
