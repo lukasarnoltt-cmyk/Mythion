@@ -55,7 +55,7 @@ p { font-size: 1.8rem !important; line-height: 1.5; }
   background-image: url('../images/hero.jpg');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* parallax */
+  background-attachment: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
