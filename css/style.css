@@ -9,7 +9,7 @@ body {
 /* HERO */
 #hero {
   height: 100vh;
-  background-image: url('../images/hero.jpg'); /* cesta z css/style.css do images */
+  background-image: url('../images/hero.jpg'); /* cesta z css/style.css */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
