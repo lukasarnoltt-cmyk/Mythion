@@ -1,0 +1,76 @@
+body {
+  margin: 0;
+  font-family: 'Uncial Antiqua', sans-serif;
+  background-color: #0a0a0a;
+  color: #f0f0f0;
+}
+
+/* HERO */
+#hero {
+  height: 100vh;
+  background: url('../images/hero.jpg') center/cover no-repeat;
+  position: relative;
+}
+#hero .overlay {
+  background: rgba(0,0,0,0.6);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#hero h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 4rem;
+  color: gold;
+}
+.btn {
+  padding: 10px 30px;
+  background: purple;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+.btn:hover { background: darkmagenta; }
+
+/* SECTIONS */
+section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+/* MEMBERS */
+.member-card {
+  display: inline-block;
+  background: #111;
+  margin: 10px;
+  padding: 20px;
+  border-radius: 10px;
+}
+.progress {
+  width: 100%;
+  background: #333;
+  height: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.progress-bar {
+  height: 100%;
+  background: gold;
+  border-radius: 5px;
+}
+
+/* GALLERY */
+.gallery-grid img {
+  width: 200px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+/* FOOTER */
+footer {
+  background: #111;
+  padding: 20px;
+}
+footer a { color: gold; text-decoration: none; }
