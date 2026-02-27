@@ -18,7 +18,7 @@ section {
   font-size: 1.2rem;
 }
 
-h1 { font-size: 7rem; color: gold; margin: 0 0 15px 0; text-shadow: 3px 3px 10px rgba(0,0,0,0.8); }
+<h1 style="font-size: 9rem; color: gold;">MYTHION</h1>
 h2 { font-size: 3rem; margin-bottom: 20px; }
 h3 { font-size: 2rem; margin: 10px 0; }
 p { font-size: 1.5rem; line-height: 1.5; }
