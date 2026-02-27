@@ -23,9 +23,7 @@ for(let i=0;i<60;i++){
 document.querySelectorAll('.menu-link').forEach(link=>{
   link.addEventListener('click', e=>{
     e.preventDefault();
-    document.querySelector(link.getAttribute('href')).scrollIntoView({
-      behavior:'smooth'
-    });
+    document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior:'smooth' });
   });
 });
 
