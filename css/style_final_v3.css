@@ -1,9 +1,5 @@
 /* ================== RESET ================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin:0; padding:0; box-sizing:border-box; }
 
 /* ================== BODY ================== */
 body {
@@ -12,14 +8,37 @@ body {
   color: white;
 }
 
+/* ================== MENU ================== */
+.menu {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 10;
+}
+
+.menu-link {
+  color: gold;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: 0.3s;
+}
+
+.menu-link:hover {
+  color: white;
+  text-shadow: 0 0 10px gold;
+}
+
 /* ================== HERO ================== */
 .hero {
   position: relative;
   height: 100vh;
-  background-image: url('../images/hero_epic.jpg?v=6');
+  background-image: url('../images/hero_epic.jpg?v=7');
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,30 +46,30 @@ body {
 }
 
 .hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,0.7);
+}
+
+.hero::after {
+  content:"";
+  position:absolute;
+  bottom:0; left:0;
+  width:100%; height:35%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  z-index:2;
 }
 
 /* ================== PARTICLES ================== */
 .particles {
-  position: absolute;
-  top:0; left:0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
-  z-index:1;
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  pointer-events:none; overflow:hidden; z-index:1;
 }
 
 .particles span {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: rgba(255,255,255,0.8);
-  border-radius: 50%;
-  animation: float 10s linear infinite;
+  position:absolute; width:4px; height:4px; background:rgba(255,255,255,0.8);
+  border-radius:50%; animation:float 10s linear infinite;
 }
 
 @keyframes float {
@@ -62,11 +81,9 @@ body {
 /* ================== HERO CONTENT ================== */
 .hero-content {
   position: relative;
-  z-index: 2;
-  max-width: 900px;
-  padding: 20px;
-
-  /* cinematic zoom */
+  z-index:2;
+  max-width:900px;
+  padding:20px;
   animation: zoomInOut 20s ease-in-out infinite;
 }
 
@@ -75,110 +92,62 @@ body {
   50% { transform: scale(1.03) translateY(-10px); }
 }
 
-/* ================== HERO TEXT ================== */
 .hero h1 {
-  font-size: 5rem;
-  letter-spacing: 6px;
-  margin-bottom: 25px;
-  text-shadow:
-    0 0 15px rgba(255, 215, 0, 0.9),
-    0 0 30px rgba(255, 140, 0, 0.7),
-    0 0 50px rgba(255, 100, 0, 0.5);
+  font-size:5rem;
+  letter-spacing:6px;
+  margin-bottom:25px;
+  text-shadow:0 0 15px rgba(255,215,0,0.9),
+              0 0 30px rgba(255,140,0,0.7),
+              0 0 50px rgba(255,100,0,0.5);
   animation: glow 2s ease-in-out infinite alternate;
 }
 
 @keyframes glow {
-  0% { text-shadow: 0 0 10px rgba(255,215,0,0.7), 0 0 20px rgba(255,140,0,0.5); }
-  100% { text-shadow: 0 0 25px rgba(255,255,0,1), 0 0 50px rgba(255,140,0,0.8); }
+  0% { text-shadow:0 0 10px rgba(255,215,0,0.7),0 0 20px rgba(255,140,0,0.5); }
+  100% { text-shadow:0 0 25px rgba(255,255,0,1),0 0 50px rgba(255,140,0,0.8); }
 }
 
-.hero p {
-  font-size: 1.8rem;
-  line-height: 1.6;
-  margin-bottom: 35px;
-  text-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
-}
+.hero p { font-size:1.8rem; line-height:1.6; margin-bottom:35px; text-shadow:0 0 15px rgba(0,0,0,0.9); }
 
-.hero a {
-  display: inline-block;
-  padding: 15px 40px;
-  font-size: 1.3rem;
-  text-decoration: none;
-  color: white;
-  border: 2px solid gold;
-  border-radius: 10px;
-  transition: 0.3s;
-}
+.hero a { display:inline-block; padding:15px 40px; font-size:1.3rem; text-decoration:none; color:white; border:2px solid gold; border-radius:10px; transition:0.3s; }
 
-.hero a:hover {
-  background: gold;
-  color: black;
-  box-shadow: 0 0 25px gold;
-}
+.hero a:hover { background:gold; color:black; box-shadow:0 0 25px gold; }
 
 /* ================== SECTIONS ================== */
 section {
-  padding: 80px 20px;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(40px);
+  padding:80px 20px;
+  text-align:center;
+  opacity:0;
+  transform:translateY(40px);
   transition: all 1.2s ease;
 }
 
-h2 {
-  font-size: 3rem;
-  margin-bottom: 20px;
-}
-
-p {
-  font-size: 1.5rem;
-  line-height: 1.5;
-}
+h2 { font-size:3rem; margin-bottom:20px; }
+p { font-size:1.5rem; line-height:1.5; }
 
 /* ================== MEMBERS ================== */
 .member-card {
-  display: inline-block;
-  background: #111;
-  padding: 20px;
-  margin: 15px;
-  border-radius: 12px;
-  width: 250px;
+  display:inline-block;
+  background:#111;
+  padding:20px;
+  margin:15px;
+  border-radius:12px;
+  width:250px;
 }
+.member-card img { width:120px; border-radius:50%; }
 
-.member-card img {
-  width: 120px;
-  border-radius: 50%;
-}
-
-.progress {
-  background: #333;
-  height: 10px;
-  border-radius: 5px;
-  margin-top: 10px;
-}
-
-.progress-bar {
-  height: 100%;
-  background: gold;
-  border-radius: 5px;
-}
+.progress { background:#333; height:10px; border-radius:5px; margin-top:10px; }
+.progress-bar { height:100%; background:gold; border-radius:5px; }
 
 /* ================== GALLERY ================== */
-.gallery-grid img {
-  width: 200px;
-  margin: 10px;
-  border-radius: 10px;
-}
+.gallery-grid img { width:200px; margin:10px; border-radius:10px; }
 
 /* ================== FOOTER ================== */
-footer {
-  background: #111;
-  padding: 30px;
-}
+footer { background:#111; padding:30px; }
 
 /* ================== RESPONSIVE ================== */
-@media (max-width: 768px) {
-  .hero h1 { font-size: 3rem; }
-  .hero p { font-size: 1.2rem; }
-  .member-card { width: 200px; }
+@media(max-width:768px){
+  .hero h1{ font-size:3rem; }
+  .hero p{ font-size:1.2rem; }
+  .member-card{ width:200px; }
 }
