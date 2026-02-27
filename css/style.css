@@ -6,6 +6,7 @@ body {
   color: #f0f0f0;
 }
 
+/* HERO */
 #hero {
   position: relative;
   height: 100vh;
@@ -13,8 +14,8 @@ body {
   background-size: cover;
   background-position: center;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center;  /* horizontálně střed */
+  align-items: center;      /* vertikálně střed */
   text-align: center;
 }
 
@@ -24,7 +25,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.25); /* lehký tmavý filtr pro čitelnost textu */
+  background: rgba(0,0,0,0.25); /* lehký filtr pro kontrast textu */
   z-index: 1;
 }
 
@@ -38,14 +39,14 @@ body {
 
 #hero h1 {
   font-family: 'Cinzel', serif;
-  font-size: 7rem;      /* ZDE JE VELKÉ PÍSMO – hlavní nadpis */
+  font-size: 7rem; /* opravdu velký nadpis */
   color: gold;
   margin: 0 0 15px 0;
-  text-shadow: 3px 3px 10px rgba(0,0,0,0.8); /* stín pro kontrast */
+  text-shadow: 3px 3px 10px rgba(0,0,0,0.8);
 }
 
 #hero p {
-  font-size: 2.5rem;    /* ZDE JE VELKÝ PODNADPIS */
+  font-size: 2.5rem; /* opravdu čitelný podnadpis */
   margin: 0 0 20px 0;
   text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
 }
@@ -62,13 +63,6 @@ body {
 
 .btn:hover {
   background: darkmagenta;
-}
-
-/* RESPONSIVE: menší zařízení */
-@media (max-width: 768px) {
-  #hero h1 { font-size: 4rem; }      /* menší, aby se vešlo na mobil */
-  #hero p { font-size: 1.8rem; }
-  .btn { padding: 12px 25px; }
 }
 
 /* SECTIONS */
@@ -121,7 +115,7 @@ footer a { color: gold; text-decoration: none; }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  #hero h1 { font-size: 3rem; }
-  #hero p { font-size: 1.2rem; }
-  .btn { padding: 10px 20px; }
+  #hero h1 { font-size: 4rem; }
+  #hero p { font-size: 1.8rem; }
+  .btn { padding: 12px 25px; }
 }
