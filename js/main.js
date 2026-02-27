@@ -1,4 +1,4 @@
-// scroll fade effect
+// scroll fade
 window.addEventListener('scroll', () => {
   document.querySelectorAll('section').forEach(section => {
     const top = section.getBoundingClientRect().top;
@@ -9,32 +9,32 @@ window.addEventListener('scroll', () => {
   });
 });
 
-// particles in hero
-const particleContainer = document.querySelector('.particles');
-for(let i=0;i<50;i++){
+// particles
+const container = document.querySelector('.particles');
+for(let i=0;i<60;i++){
   const span = document.createElement('span');
   span.style.left = Math.random()*100 + "vw";
-  span.style.animationDelay = (Math.random()*10) + "s";
+  span.style.animationDelay = Math.random()*10 + "s";
   span.style.animationDuration = (8 + Math.random()*5) + "s";
-  particleContainer.appendChild(span);
+  container.appendChild(span);
 }
 
-// smooth scroll menu
+// smooth scroll
 document.querySelectorAll('.menu-link').forEach(link=>{
   link.addEventListener('click', e=>{
     e.preventDefault();
-    const target=document.querySelector(link.getAttribute('href'));
-    target.scrollIntoView({ behavior:'smooth' });
+    document.querySelector(link.getAttribute('href')).scrollIntoView({
+      behavior:'smooth'
+    });
   });
 });
 
-// parallax effect for hero and gallery
+// parallax
 window.addEventListener('scroll', () => {
   const scrolled = window.scrollY;
   const hero = document.querySelector('.hero');
   if(hero) hero.style.backgroundPositionY = -(scrolled * 0.2) + "px";
-
-  document.querySelectorAll('.gallery-grid img').forEach((img,i) => {
+  document.querySelectorAll('.gallery-grid img').forEach(img => {
     img.style.transform = `translateY(${scrolled * 0.1}px) scale(1.05)`;
   });
 });
