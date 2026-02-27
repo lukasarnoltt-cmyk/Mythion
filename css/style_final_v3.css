@@ -36,13 +36,14 @@ body {
 .hero {
   position: relative;
   height: 100vh;
-  background-image: url('../images/hero_epic.jpg?v=7');
+  background-image: url('../images/hero_epic.jpg?v=8');
   background-size: cover;
   background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+  overflow: hidden;
 }
 
 .hero::before {
@@ -133,6 +134,11 @@ p { font-size:1.5rem; line-height:1.5; }
   margin:15px;
   border-radius:12px;
   width:250px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.member-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 15px gold;
 }
 .member-card img { width:120px; border-radius:50%; }
 
@@ -140,7 +146,14 @@ p { font-size:1.5rem; line-height:1.5; }
 .progress-bar { height:100%; background:gold; border-radius:5px; }
 
 /* ================== GALLERY ================== */
-.gallery-grid img { width:200px; margin:10px; border-radius:10px; }
+.gallery-grid img {
+  width:200px; margin:10px; border-radius:10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.gallery-grid img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px gold;
+}
 
 /* ================== FOOTER ================== */
 footer { background:#111; padding:30px; }
