@@ -1,3 +1,4 @@
+/* GLOBAL */
 body {
   margin: 0;
   font-family: 'Uncial Antiqua', sans-serif;
@@ -8,7 +9,10 @@ body {
 /* HERO */
 #hero {
   height: 100vh;
-  background: url('../images/hero.jpg') center/cover no-repeat;
+  background-image: url('../images/hero.jpg'); /* cesta z css/style.css do images */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   position: relative;
 }
 #hero .overlay {
@@ -18,11 +22,17 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 #hero h1 {
   font-family: 'Cinzel', serif;
   font-size: 4rem;
   color: gold;
+}
+#hero p {
+  font-size: 1.5rem;
+  color: white;
+  margin-top: 10px;
 }
 .btn {
   padding: 10px 30px;
@@ -31,6 +41,7 @@ body {
   text-decoration: none;
   border-radius: 8px;
   margin-top: 20px;
+  font-weight: bold;
 }
 .btn:hover { background: darkmagenta; }
 
@@ -38,6 +49,9 @@ body {
 section {
   padding: 60px 20px;
   text-align: center;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1s ease;
 }
 
 /* MEMBERS */
@@ -47,6 +61,10 @@ section {
   margin: 10px;
   padding: 20px;
   border-radius: 10px;
+}
+.member-card img {
+  width: 150px;
+  border-radius: 50%;
 }
 .progress {
   width: 100%;
@@ -74,8 +92,3 @@ footer {
   padding: 20px;
 }
 footer a { color: gold; text-decoration: none; }
-section {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: all 1s ease;
-}
