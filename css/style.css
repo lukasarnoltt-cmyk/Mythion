@@ -9,14 +9,15 @@ body {
 /* HERO */
 #hero {
   height: 100vh;
-  background-image: url('../images/hero.jpg'); /* cesta z css/style.css */
+  background-image: url('../images/hero.jpg'); /* cesta z css/style.css do images */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
 }
+
 #hero .overlay {
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.3); /* lehký tmavý filtr přes obrázek, text bude čitelný */
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -24,16 +25,20 @@ body {
   align-items: center;
   text-align: center;
 }
+
 #hero h1 {
   font-family: 'Cinzel', serif;
   font-size: 4rem;
   color: gold;
+  margin: 0;
 }
+
 #hero p {
   font-size: 1.5rem;
   color: white;
   margin-top: 10px;
 }
+
 .btn {
   padding: 10px 30px;
   background: purple;
@@ -43,7 +48,10 @@ body {
   margin-top: 20px;
   font-weight: bold;
 }
-.btn:hover { background: darkmagenta; }
+
+.btn:hover { 
+  background: darkmagenta; 
+}
 
 /* SECTIONS */
 section {
