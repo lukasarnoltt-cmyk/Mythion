@@ -17,12 +17,12 @@ body {
 
 /* ================== HERO FULLSCREEN + CENTRING ================== */
 .hero {
-  height: 100vh;               /* přes celou výšku obrazovky */
+  height: 100vh;               
   width: 100%;
-  display: flex;               /* flex pro centrování obsahu */
-  justify-content: center;     /* horizontální centrování */
-  align-items: center;         /* vertikální centrování */
-  text-align: center;          /* text zarovnat doprostřed */
+  display: flex;               
+  justify-content: center;     
+  align-items: center;         
+  text-align: center;          
   position: relative;
   background-image: url('../images/hero_epic.jpg');
   background-size: cover;
