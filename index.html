@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mythion Guild</title>
 
-  <!-- CSS přejmenované pro odblokování cache -->
-  <link rel="stylesheet" href="css/style_final_v6.css">
+  <!-- Nová verze CSS -->
+  <link rel="stylesheet" href="css/style_final_v7.css">
 
   <!-- Fantasy fonty -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
@@ -22,50 +22,38 @@
     <div class="hero-content">
       <h1>MYTHION</h1>
       <p>World of Warcraft Guild – PvE / PvP</p>
-      <a href="#join">Join Us</a>
+      <div class="buttons">
+        <button data-section="join">Join</button>
+        <button data-section="rules">Rules</button>
+        <button data-section="about">About</button>
+      </div>
     </div>
     <div class="fog"></div>
   </section>
 
+  <!-- JOIN SECTION -->
+  <section id="join" class="tab-section">
+    <h2>Join Us</h2>
+    <p>Staň se součástí Mythion! Vyplň přihlášku na Discordu.</p>
+  </section>
+
+  <!-- RULES SECTION -->
+  <section id="rules" class="tab-section">
+    <h2>Rules</h2>
+    <p>Respekt, spolupráce a fair play. Dodržuj základní pravidla guildy.</p>
+  </section>
+
   <!-- ABOUT SECTION -->
-  <section id="about">
-    <h2>O guildě</h2>
-    <p>Mythion je elitní guilda na serveru DOPLŇ. Naše mise je sjednotit hráče a užít si epické raidy, PvP a roleplay zážitky. Připoj se k nám a staň se legendou!</p>
+  <section id="about" class="tab-section">
+    <h2>About</h2>
+    <p>Mythion je elitní guilda na serveru DOPLŇ. Připoj se a staň se legendou!</p>
   </section>
 
-  <!-- MEMBERS SECTION -->
-  <section id="members">
-    <h2>Členové & Progres</h2>
-    <div class="member-card">
-      <img src="images/member1.jpg" alt="Člen">
-      <h3>Tharion</h3>
-      <p>Role: Leader</p>
-      <div class="progress"><div class="progress-bar" style="width:90%"></div></div>
-    </div>
-    <div class="member-card">
-      <img src="images/member2.jpg" alt="Člen">
-      <h3>Lyra</h3>
-      <p>Role: Officer</p>
-      <div class="progress"><div class="progress-bar" style="width:70%"></div></div>
-    </div>
-  </section>
-
-  <!-- GALLERY SECTION -->
-  <section id="gallery">
-    <h2>Galerie</h2>
-    <div class="gallery-grid">
-      <img src="images/screenshot1.jpg" alt="Screenshot">
-      <img src="images/screenshot2.jpg" alt="Screenshot">
-    </div>
-  </section>
-
-  <!-- FOOTER SECTION -->
   <footer>
-    <p>Discord: <a href="https://discord.gg/DOPLŇ">Přidej se k nám</a></p>
-    <p>&copy; 2026 Mythion Guild</p>
+    <p>&copy; 2026 Mythion Guild | Discord: <a href="https://discord.gg/DOPLŇ">Přidej se</a></p>
   </footer>
 
-  <!-- JS přejmenované pro odblokování cache -->
-  <script src="js/main_v6.js"></script>
+  <!-- Nová verze JS -->
+  <script src="js/main_v7.js"></script>
 </body>
 </html>
