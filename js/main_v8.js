@@ -32,3 +32,11 @@ for (let i = 0; i < 40; i++) {
   p.style.animationDelay = Math.random() * 5 + 's';
   particlesContainer.appendChild(p);
 }
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('.navbar');
+  if (window.scrollY > 50) {
+    nav.style.boxShadow = "0 0 20px rgba(255,215,0,0.5)";
+  } else {
+    nav.style.boxShadow = "none";
+  }
+});
