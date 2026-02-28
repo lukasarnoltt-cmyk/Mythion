@@ -1,54 +1,67 @@
-<!DOCTYPE html>
-<html lang="cs">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MYTHION Guild</title>
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cinzel', serif;background:#000;color:#f0f0f0;overflow-x:hidden;}
 
-<link rel="stylesheet" href="css/style_final_v8.css">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
-</head>
-<body>
+/* HERO */
+.hero{
+  height:100vh;width:100%;
+  display:flex;justify-content:center;align-items:center;text-align:center;
+  position:relative;
+  background-image:url('../images/hero_epic.jpg');
+  background-size:cover;
+  background-position:center;
+  animation: zoomIn 20s ease-in-out infinite alternate;
+}
+@keyframes zoomIn{0%{transform:scale(1);}100%{transform:scale(1.05);}}
+.hero::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,0.7);z-index:1;}
 
-<!-- HERO -->
-<section class="hero">
-  <div class="particles">
-    <span></span><span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span><span></span>
-  </div>
-  <div class="hero-content">
-    <h1>MYTHION</h1>
-    <p>World of Warcraft Guild – PvE / PvP</p>
-    <div class="buttons">
-      <button data-section="join">Join</button>
-      <button data-section="rules">Rules</button>
-      <button data-section="about">About</button>
-    </div>
-  </div>
-  <div class="fog"></div>
-  <div class="light-flare"></div>
-</section>
+/* HERO CONTENT */
+.hero-content{position:relative;z-index:4;max-width:900px;padding:20px;}
+.hero-content h1{
+  font-size:5rem;color:gold;margin-bottom:20px;
+  text-shadow:0 0 15px rgba(255,215,0,0.9),0 0 30px rgba(255,140,0,0.7);
+  animation:textGlow 2s ease-in-out infinite alternate,pulseText 3s ease-in-out infinite alternate;
+}
+@keyframes textGlow{0%{text-shadow:0 0 10px rgba(255,215,0,0.7);}100%{text-shadow:0 0 25px rgba(255,255,0,1);}}
+@keyframes pulseText{0%{transform:scale(1);}100%{transform:scale(1.03);}}
+.hero-content p{font-size:1.8rem;margin-bottom:30px;}
+.hero-content .buttons button{
+  margin:5px;padding:12px 28px;font-size:1.2rem;color:white;background:transparent;
+  border:2px solid gold;border-radius:8px;cursor:pointer;transition:0.3s;
+}
+.hero-content .buttons button:hover{background:gold;color:black;box-shadow:0 0 20px gold;}
 
-<!-- SECTIONS -->
-<section id="join" class="tab-section">
-  <h2>Join Us</h2>
-  <p>Staň se součástí Mythion! Vyplň přihlášku na Discordu.</p>
-</section>
+/* FOG */
+.fog{position:absolute;bottom:0;left:0;width:100%;height:40%;background:linear-gradient(to top,rgba(255,255,255,0.15),transparent);z-index:3;}
 
-<section id="rules" class="tab-section">
-  <h2>Rules</h2>
-  <p>Respekt, spolupráce a fair play. Dodržuj základní pravidla guildy.</p>
-</section>
+/* LIGHT FLARE */
+.light-flare{
+  position:absolute;top:20%;left:50%;width:200px;height:200px;
+  background:radial-gradient(circle, rgba(255,255,200,0.4) 0%, transparent 70%);
+  filter:blur(40px);transform:translateX(-50%);
+  animation: flareMove 10s ease-in-out infinite alternate;
+  z-index:2;
+}
+@keyframes flareMove{0%{transform:translateX(-50%) translateY(0);}100%{transform:translateX(-50%) translateY(20px);}}
 
-<section id="about" class="tab-section">
-  <h2>About</h2>
-  <p>Mythion je elitní guilda na serveru DOPLŇ. Připoj se a staň se legendou!</p>
-</section>
+/* PARTICLES */
+.particles{position:absolute;width:100%;height:100%;top:0;left:0;pointer-events:none;overflow:hidden;z-index:2;}
+.particles span{position:absolute;width:4px;height:4px;background:rgba(255,255,255,0.8);border-radius:50%;animation:particleMove 10s linear infinite;}
+@keyframes particleMove{0%{transform:translateY(100vh) translateX(0);opacity:0;}50%{opacity:1;}100%{transform:translateY(-10vh) translateX(50px);opacity:0;}}
 
-<footer>
-  <p>&copy; 2026 Mythion Guild | Discord: <a href="https://discord.gg/DOPLŇ">Přidej se</a></p>
-</footer>
+/* SECTIONS */
+section{padding:80px 20px;opacity:0;transform:translateY(50px);transition:all 1s ease;display:none;}
+section.active{display:block;opacity:1;transform:translateY(0);}
+h2{font-size:3rem;margin-bottom:20px;}
+p{font-size:1.5rem;line-height:1.6;}
 
-<script src="js/main_v8.js"></script>
-</body>
-</html>
+/* FOOTER */
+footer{background:#111;padding:30px;text-align:center;}
+footer a{color:gold;text-decoration:none;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .hero-content h1{font-size:3rem;}
+  .hero-content p{font-size:1.2rem;}
+  .hero-content .buttons button{font-size:1rem;padding:10px 22px;}
+}
