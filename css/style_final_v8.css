@@ -331,3 +331,22 @@ html {
 .stat p {
   color: #ccc;
 }
+.raid-progress {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.progress-bar {
+  width: 60%;
+  height: 20px;
+  background: #222;
+  margin: 20px auto;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, gold, orange);
+  box-shadow: 0 0 15px gold;
+}
