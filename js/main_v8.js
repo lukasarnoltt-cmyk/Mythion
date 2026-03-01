@@ -64,3 +64,9 @@ setTimeout(() => {
   });
 
 });
+const flash = document.querySelector(".section-flash");
+flash.classList.add("active");
+
+setTimeout(() => {
+  flash.classList.remove("active");
+}, 300);
