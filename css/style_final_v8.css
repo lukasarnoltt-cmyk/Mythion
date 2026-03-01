@@ -199,3 +199,39 @@ html {
   from { transform: translateX(-5%); }
   to { transform: translateX(5%); }
 }
+#content-area {
+  padding: 100px 20px;
+  background: #0a0a0a;
+  min-height: 60vh;
+}
+
+.content-section {
+  display: none;
+  animation: fadeIn 0.6s ease;
+}
+
+.content-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.discord-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 15px 30px;
+  background: gold;
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.discord-btn:hover {
+  box-shadow: 0 0 20px gold;
+  transform: scale(1.05);
+}
