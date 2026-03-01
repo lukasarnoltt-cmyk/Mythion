@@ -542,3 +542,38 @@ html {
   background: linear-gradient(90deg, #9b59b6, #8e44ad);
   box-shadow: 0 0 8px #9b59b6;
 }
+.raid-block {
+  background: rgba(0,0,0,0.6);
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 35px;
+  border: 1px solid rgba(255,215,0,0.2);
+}
+
+.raid-block h3 {
+  font-family: 'Cinzel', serif;
+  color: gold;
+  margin-bottom: 15px;
+}
+
+.raid-tier {
+  margin-bottom: 10px;
+}
+
+.raid-tier span {
+  font-weight: bold;
+  display: inline-block;
+  width: 90px;
+}
+
+#void-normal, #march-normal, #dream-normal {
+  color: #2ecc71;
+}
+
+#void-heroic, #march-heroic, #dream-heroic {
+  color: #3498db;
+}
+
+#void-mythic, #march-mythic, #dream-mythic {
+  color: #9b59b6;
+}
