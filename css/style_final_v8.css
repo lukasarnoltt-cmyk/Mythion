@@ -306,3 +306,11 @@ html {
   border: 1px solid rgba(255,215,0,0.4);
   box-shadow: 0 0 40px rgba(255,180,0,0.2);
 }
+.navbar a {
+  transition: 0.3s;
+}
+
+.navbar a:hover {
+  color: gold;
+  text-shadow: 0 0 10px gold;
+}
