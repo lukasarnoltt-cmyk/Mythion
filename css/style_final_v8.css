@@ -382,3 +382,19 @@ html {
   background: radial-gradient(circle at 50% 20%, rgba(255,215,0,0.05), transparent 70%);
   pointer-events: none;
 }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.gallery img {
+  width: 100%;
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+}
