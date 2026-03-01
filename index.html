@@ -8,29 +8,40 @@
 <link rel="stylesheet" href="css/style_final_v8.css">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
 </head>
+
 <body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">MYTHION</div>
+  <ul>
+    <li><a href="#" data-target="join">Join</a></li>
+    <li><a href="#" data-target="rules">Rules</a></li>
+    <li><a href="#" data-target="lore">Lore</a></li>
+    <li><a href="https://discord.gg/DOPLŇ" target="_blank">Discord</a></li>
+  </ul>
+</nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="particles">
-    <div class="fog"></div>
-    <span></span><span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span><span></span>
-  </div>
+  <div class="particles"></div>
+
   <div class="hero-content">
     <h1>MYTHION</h1>
     <p>World of Warcraft Guild – PvE / PvP</p>
+
     <div class="buttons">
-    <button data-target="join">Join</button>
-<button data-target="rules">Pravidla</button>
-<button data-target="lore">Lore</button>
+      <button data-target="join">Join</button>
+      <button data-target="rules">Pravidla</button>
+      <button data-target="lore">Lore</button>
     </div>
   </div>
+
   <div class="fog"></div>
   <div class="light-flare"></div>
 </section>
 
-<!-- SECTIONS -->
+<!-- CONTENT -->
 <section id="content-area">
 
   <div id="join" class="content-section active">
@@ -41,51 +52,51 @@
     </a>
   </div>
 
-<div id="rules" class="content-section">
-  <div class="rules-box">
+  <div id="rules" class="content-section">
+    <div class="rules-box">
 
-    <h2>📜 Pravidla cechu Mythion</h2>
+      <h2>📜 Pravidla cechu Mythion</h2>
 
-    <div class="rule-item">
-      <h3>1️⃣ Respekt a slušnost</h3>
-      <p>Chovej se k ostatním tak, jak chceš, aby se chovali k tobě.</p>
-      <p>Rasismus, šikana nebo toxické chování = okamžitý ban.</p>
+      <div class="rule-item">
+        <h3>1️⃣ Respekt a slušnost</h3>
+        <p>Chovej se k ostatním tak, jak chceš, aby se chovali k tobě.</p>
+        <p>Rasismus, šikana nebo toxické chování = okamžitý ban.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>2️⃣ Discord & komunikace</h3>
+        <p>Voice je od toho, abychom se domluvili a zasmáli.</p>
+        <p>Mikrofon není povinný, ale při raidech / M+ poslouchej.</p>
+        <p>Hudba a memy patří do správných kanálů, ne do raid voice.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>3️⃣ Hraní a aktivita</h3>
+        <p>Když se domluvíš na event, přijď včas.</p>
+        <p>Nemůžeš? Dej vědět dopředu.</p>
+        <p>Pomáháme si – loot i klíče nejsou o jednom hráči.</p>
+      </div>
+
+      <div class="rule-item">
+        <h3>4️⃣ Loot a M+</h3>
+        <p>Loot řešíme férově – žádné ninja looty.</p>
+        <p>Respektuj role ostatních a hraj týmově.</p>
+        <p><em>Když wipe není tvá vina… je to vina healera 😂 (jen sranda ❤️)</em></p>
+      </div>
+
+      <div class="rule-item">
+        <h3>5️⃣ Přístup</h3>
+        <p>Jsme přátelský cech – progres i zábava.</p>
+        <p>Drama necháváme za dveřmi. Problémy řešíme v klidu s officery.</p>
+      </div>
+
+      <div class="rules-end">
+        ✅ Dodržování těchto pravidel zajistí, že Mythion bude místem,
+        kam se každý rád vrátí.
+      </div>
+
     </div>
-
-    <div class="rule-item">
-      <h3>2️⃣ Discord & komunikace</h3>
-      <p>Voice je od toho, abychom se domluvili a zasmáli.</p>
-      <p>Mikrofon není povinný, ale při raidech / M+ poslouchej.</p>
-      <p>Hudba a memy patří do správných kanálů, ne do raid voice.</p>
-    </div>
-
-    <div class="rule-item">
-      <h3>3️⃣ Hraní a aktivita</h3>
-      <p>Když se domluvíš na event, přijď včas.</p>
-      <p>Nemůžeš? Dej vědět dopředu.</p>
-      <p>Pomáháme si – loot i klíče nejsou o jednom hráči.</p>
-    </div>
-
-    <div class="rule-item">
-      <h3>4️⃣ Loot a M+</h3>
-      <p>Loot řešíme férově – žádné ninja looty.</p>
-      <p>Respektuj role ostatních a hraj týmově.</p>
-      <p><em>Když wipe není tvá vina… je to vina healera 😂 (jen sranda ❤️)</em></p>
-    </div>
-
-    <div class="rule-item">
-      <h3>5️⃣ Přístup</h3>
-      <p>Jsme přátelský cech – progres i zábava.</p>
-      <p>Drama necháváme za dveřmi. Problémy řešíme v klidu s officery.</p>
-    </div>
-
-    <div class="rules-end">
-      ✅ Dodržování těchto pravidel zajistí, že Mythion bude místem,
-      kam se každý rád vrátí.
-    </div>
-
   </div>
-</div>
 
   <div id="lore" class="content-section">
     <h2>Lore Guildy</h2>
@@ -95,18 +106,12 @@
 </section>
 
 <footer>
-  <p>&copy; 2026 Mythion Guild | Discord: <a href="https://discord.gg/DOPLŇ">Přidej se</a></p>
+  <p>&copy; 2026 Mythion Guild |
+     <a href="https://discord.gg/DOPLŇ" target="_blank">Discord</a>
+  </p>
 </footer>
 
 <script src="js/main_v8.js"></script>
+
 </body>
-  <nav class="navbar">
-  <div class="logo">MYTHION</div>
-  <ul>
-    <li><a href="#join">Join</a></li>
-    <li><a href="#rules">Rules</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="https://discord.gg/DOPLŇ" target="_blank">Discord</a></li>
-  </ul>
-</nav>
 </html>
