@@ -301,3 +301,8 @@ html {
 .section-flash.active {
   opacity: 1;
 }
+#lore .rules-box {
+  background: linear-gradient(145deg, #1b1405, #2a1e08);
+  border: 1px solid rgba(255,215,0,0.4);
+  box-shadow: 0 0 40px rgba(255,180,0,0.2);
+}
