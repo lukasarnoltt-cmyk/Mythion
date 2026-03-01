@@ -14,9 +14,16 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", function () {
       const target = this.getAttribute("data-target");
 
-      sections.forEach(section => {
-        section.classList.remove("active");
-      });
+   sections.forEach(section => {
+  section.classList.remove("active");
+});
+
+setTimeout(() => {
+  const activeSection = document.getElementById(target);
+  if (activeSection) {
+    activeSection.classList.add("active");
+  }
+}, 200);
 
       const activeSection = document.getElementById(target);
       if (activeSection) {
