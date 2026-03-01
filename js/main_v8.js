@@ -104,3 +104,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 20); // rychlost animace
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const progressFill = document.querySelector(".progress-fill");
+  const progressNumber = document.getElementById("progress-number");
+
+  let progress = 0;
+  const target = 0; // zatím 0%
+
+  const interval = setInterval(() => {
+    if (progress >= target) {
+      clearInterval(interval);
+    } else {
+      progress++;
+      progressFill.style.width = progress + "%";
+      progressNumber.textContent = progress;
+    }
+  }, 20);
+});
