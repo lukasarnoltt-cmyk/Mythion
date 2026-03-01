@@ -121,3 +121,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, 20);
 });
+document.addEventListener("DOMContentLoaded", () => {
+
+  animateProgress("normal", "normal-number", 0);   // změň číslo podle progresu
+  animateProgress("heroic", "heroic-number", 0);
+  animateProgress("mythic", "mythic-number", 0);
+
+});
+
+function animateProgress(className, numberId, target) {
+  const bar = document.querySelector("." + className);
+  const number = document.getElementById(numberId);
+
+  let progress = 0;
+
+  const interval = setInterval(() => {
+    if (progress >= target) {
+      clearInterval(interval);
+    } else {
+      progress++;
+      bar.style.width = progress + "%";
+      number.textContent = progress;
+    }
+  }, 20);
+}
