@@ -577,3 +577,22 @@ html {
 #void-mythic, #march-mythic, #dream-mythic {
   color: #9b59b6;
 }
+.stat-box {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px 30px;
+  border-radius: 12px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.stat-box h3 {
+  font-size: 28px;
+  color: gold;
+}
+
+.stat-box p {
+  margin-top: 5px;
+  color: white;
+  font-weight: 500;
+}
