@@ -235,3 +235,44 @@ html {
   box-shadow: 0 0 20px gold;
   transform: scale(1.05);
 }
+.rules-box {
+  max-width: 900px;
+  margin: auto;
+  padding: 50px;
+  background: linear-gradient(145deg, #111, #1a1a1a);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(255,215,0,0.15);
+}
+
+.rules-box h2 {
+  text-align: center;
+  color: gold;
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  text-shadow: 0 0 15px gold;
+}
+
+.rule-item {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.rule-item h3 {
+  color: #ffd700;
+  margin-bottom: 10px;
+}
+
+.rule-item p {
+  color: #ddd;
+  line-height: 1.6;
+}
+
+.rules-end {
+  margin-top: 30px;
+  text-align: center;
+  font-weight: bold;
+  color: gold;
+  font-size: 1.2rem;
+}
