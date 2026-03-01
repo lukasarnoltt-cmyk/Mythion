@@ -39,6 +39,23 @@
       <button data-target="events">Srazy</button>
       <button data-target="gallery">Fotky</button>
     </div>
+
+    <!-- GUILD STATS V HERO -->
+    <div class="guild-stats hero-stats">
+      <div class="stat">
+        <h3 class="counter" data-target="87">0</h3>
+        <p>Členů Guildy</p>
+      </div>
+      <div class="stat">
+        <h3 class="counter" data-target="120">0</h3>
+        <p>Eventy</p>
+      </div>
+      <div class="stat">
+        <h3 class="counter" data-target="9">0</h3>
+        <p>Aktuální Jackpot</p>
+      </div>
+    </div>
+
   </div>
 
   <div class="fog"></div>
@@ -61,37 +78,7 @@
   <div id="rules" class="content-section">
     <div class="rules-box">
       <h2>📜 Pravidla cechu Mythion</h2>
-      <div class="rule-item">
-        <h3>1️⃣ Respekt a slušnost</h3>
-        <p>Chovej se k ostatním tak, jak chceš, aby se chovali k tobě.</p>
-        <p>Rasismus, šikana nebo toxické chování = okamžitý ban.</p>
-      </div>
-      <div class="rule-item">
-        <h3>2️⃣ Discord & komunikace</h3>
-        <p>Voice je od toho, abychom se domluvili a zasmáli.</p>
-        <p>Mikrofon není povinný, ale při raidech / M+ poslouchej.</p>
-        <p>Hudba a memy patří do správných kanálů, ne do raid voice.</p>
-      </div>
-      <div class="rule-item">
-        <h3>3️⃣ Hraní a aktivita</h3>
-        <p>Když se domluvíš na event, přijď včas.</p>
-        <p>Nemůžeš? Dej vědět dopředu.</p>
-        <p>Pomáháme si – loot i klíče nejsou o jednom hráči.</p>
-      </div>
-      <div class="rule-item">
-        <h3>4️⃣ Loot a M+</h3>
-        <p>Loot řešíme férově – žádné ninja looty.</p>
-        <p>Respektuj role ostatních a hraj týmově.</p>
-        <p><em>Když wipe není tvá vina… je to vina healera 😂 (jen sranda ❤️)</em></p>
-      </div>
-      <div class="rule-item">
-        <h3>5️⃣ Přístup</h3>
-        <p>Jsme přátelský cech – progres i zábava.</p>
-        <p>Drama necháváme za dveřmi. Problémy řešíme v klidu s officery.</p>
-      </div>
-      <div class="rules-end">
-        ✅ Dodržování těchto pravidel zajistí, že Mythion bude místem, kam se každý rád vrátí.
-      </div>
+      ...
     </div>
   </div>
 
@@ -99,22 +86,14 @@
   <div id="lore" class="content-section">
     <div class="rules-box">
       <h2>📜 Lore Guildy Mythion</h2>
-      <p>Mythion nevznikl kvůli progresu. Nevznikl kvůli číslům. Vznikl kvůli lidem.</p>
-      <p>Skupina přátel, která chtěla místo, kde se může smát, wipeovat bez dramatu a sdílet vítězství i porážky. Guilda založená od lidí pro lidi.</p>
-      <p>Nehledáme dokonalost. Hledáme charakter. Nehledáme jen hráče. Hledáme přátele.</p>
-      <p>Ať už jsi veterán Azerothu, nebo začínáš svou první cestu, dveře Mythion jsou otevřené.</p>
-      <p>Tady nejde jen o raid clear. Jde o atmosféru. O večery na Discordu. O inside joky. O to, že se máš kam vrátit.</p>
-      <div class="rules-end">
-        Mythion je víc než guilda. Je to místo, kde začínají legendy.
-      </div>
+      ...
     </div>
   </div>
 
-  <!-- EVENTS / SRAZY SECTION -->
+  <!-- EVENTS SECTION -->
   <div id="events" class="content-section">
     <div class="rules-box">
       <h2>📅 Srazy Guildy</h2>
-      <p>Pravidelné setkání členů guildy, info a oznámení zde i na Discordu.</p>
       <ul>
         <li>🗓 15. března – PvP večer na Discordu</li>
         <li>🗓 22. března – Raid night</li>
@@ -123,120 +102,62 @@
     </div>
   </div>
 
-  <!-- GALLERY / FOTKY SECTION -->
+  <!-- GALLERY SECTION -->
   <div id="gallery" class="content-section">
     <div class="rules-box">
       <h2>📸 Fotky guildy</h2>
       <div class="gallery">
-        <img src="images/placeholder1.jpg" alt="Guild Photo 1">
-        <img src="images/placeholder2.jpg" alt="Guild Photo 2">
-        <img src="images/placeholder3.jpg" alt="Guild Photo 3">
+        <img src="images/placeholder1.jpg">
+        <img src="images/placeholder2.jpg">
+        <img src="images/placeholder3.jpg">
       </div>
     </div>
   </div>
 
-  <!-- GUILD STATS -->
-  <div class="guild-stats">
-    <div class="stat">
-      <h3 class="counter" data-target="87">0</h3>
-      <p>Členů Guildy</p>
-    </div>
-    <div class="stat">
-      <h3 class="counter" data-target="120">0</h3>
-      <p>Eventy</p>
-    </div>
-    <div class="stat">
-      <h3 class="counter" data-target="9">80,000G</h3>
-      <p>Aktuální Jackpot</p>
-    </div>
-  </div>
+  <!-- RAID PROGRESS -->
+  <div class="raid-progress">
+    <h2>Raid Progress</h2>
 
-<!-- RAID PROGRESS -->
-<div class="raid-progress">
-  <h2>Raid Progress</h2>
-
-  <!-- THE VOIDSPIRE -->
-  <div class="raid-block">
-    <h3>The Voidspire </h3>
-
-    <div class="raid-tier">
-      <span>Normal</span>
-      <p id="void-normal">0 / 6 Bossů</p>
+    <div class="raid-block">
+      <h3>The Voidspire</h3>
+      <div class="raid-tier"><span>Normal</span><p>0 / 6 Bossů</p></div>
+      <div class="raid-tier"><span>Heroic</span><p>0 / 6 Bossů</p></div>
+      <div class="raid-tier"><span>Mythic</span><p>0 / 6 Bossů</p></div>
     </div>
 
-    <div class="raid-tier">
-      <span>Heroic</span>
-      <p id="void-heroic">0 / 6 Bossů</p>
+    <div class="raid-block">
+      <h3>March on Quel'Danas</h3>
+      <div class="raid-tier"><span>Normal</span><p>0 / 2 Bossů</p></div>
+      <div class="raid-tier"><span>Heroic</span><p>0 / 2 Bossů</p></div>
+      <div class="raid-tier"><span>Mythic</span><p>0 / 2 Bossů</p></div>
     </div>
 
-    <div class="raid-tier">
-      <span>Mythic</span>
-      <p id="void-mythic">0 / 6 Bossů</p>
+    <div class="raid-block">
+      <h3>The Dreamrift</h3>
+      <div class="raid-tier"><span>Normal</span><p>0 / 1 Boss</p></div>
+      <div class="raid-tier"><span>Heroic</span><p>0 / 1 Boss</p></div>
+      <div class="raid-tier"><span>Mythic</span><p>0 / 1 Boss</p></div>
     </div>
   </div>
-
-
-  <!-- MARCH ON QUEL'DANAS -->
-  <div class="raid-block">
-    <h3>March on Quel'Danas </h3>
-
-    <div class="raid-tier">
-      <span>Normal</span>
-      <p id="march-normal">0 / 2 Bossů</p>
-    </div>
-
-    <div class="raid-tier">
-      <span>Heroic</span>
-      <p id="march-heroic">0 / 2 Bossů</p>
-    </div>
-
-    <div class="raid-tier">
-      <span>Mythic</span>
-      <p id="march-mythic">0 / 2 Bossů</p>
-    </div>
-  </div>
-
-
-  <!-- THE DREAMRIFT -->
-  <div class="raid-block">
-    <h3>The Dreamrift </h3>
-
-    <div class="raid-tier">
-      <span>Normal</span>
-      <p id="dream-normal">0 / 1 Boss</p>
-    </div>
-
-    <div class="raid-tier">
-      <span>Heroic</span>
-      <p id="dream-heroic">0 / 1 Boss</p>
-    </div>
-
-    <div class="raid-tier">
-      <span>Mythic</span>
-      <p id="dream-mythic">0 / 1 Boss</p>
-    </div>
-  </div>
-
-</div>
 
   <!-- OFFICERS -->
-<div class="officers epic">
-  <h2>Vedení Guildy</h2>
-  <div class="officer-grid">
-    <div class="officer-card">
-      <h3>Guild Leader</h3>
-      <p>Exsqueez</p>
-    </div>
-    <div class="officer-card">
-      <h3>Raid Leaders</h3>
-      <p>Suzu & Dænysh</p>
-    </div>
-    <div class="officer-card">
-      <h3>Community</h3>
-      <p>Arny & cikynxd</p>
+  <div class="officers epic">
+    <h2>Vedení Guildy</h2>
+    <div class="officer-grid">
+      <div class="officer-card">
+        <h3>Guild Leader</h3>
+        <p>Exsqueez</p>
+      </div>
+      <div class="officer-card">
+        <h3>Raid Leaders</h3>
+        <p>Suzu & Dænysh</p>
+      </div>
+      <div class="officer-card">
+        <h3>Community</h3>
+        <p>Arny & cikynxd</p>
+      </div>
     </div>
   </div>
-</div>
 
 </section>
 
