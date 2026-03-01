@@ -662,3 +662,14 @@ html {
 .raid-block .raid-tier:hover {
   transform: scale(1.03);
 }
+.hero-stats a.stat {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.hero-stats a.stat:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px gold;
+}
