@@ -596,3 +596,29 @@ html {
   color: white;
   font-weight: 500;
 }
+.hero-stats {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.hero-stats .stat {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px 35px;
+  border-radius: 12px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.hero-stats .stat h3 {
+  font-size: 28px;
+  color: gold;
+}
+
+.hero-stats .stat p {
+  margin-top: 5px;
+  color: white;
+}
