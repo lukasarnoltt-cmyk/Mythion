@@ -151,15 +151,34 @@
     </div>
   </div>
 
- <!-- RAID PROGRESS -->
+<!-- RAID PROGRESS -->
 <div class="raid-progress">
   <h2>Raid Progress</h2>
 
-  <div class="progress-bar">
-    <div class="progress-fill"></div>
+  <div class="raid-tier">
+    <span>Normal</span>
+    <div class="progress-bar">
+      <div class="progress-fill normal"></div>
+    </div>
+    <p><span id="normal-number">0</span>%</p>
   </div>
 
-  <p><span id="progress-number">0</span>% Vyčištěno</p>
+  <div class="raid-tier">
+    <span>Heroic</span>
+    <div class="progress-bar">
+      <div class="progress-fill heroic"></div>
+    </div>
+    <p><span id="heroic-number">0</span>%</p>
+  </div>
+
+  <div class="raid-tier">
+    <span>Mythic</span>
+    <div class="progress-bar">
+      <div class="progress-fill mythic"></div>
+    </div>
+    <p><span id="mythic-number">0</span>%</p>
+  </div>
+
 </div>
 
   <!-- OFFICERS -->
