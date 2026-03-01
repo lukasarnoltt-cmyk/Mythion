@@ -622,3 +622,43 @@ html {
   margin-top: 5px;
   color: white;
 }
+/* ========================================= */
+/* RAID TIER BARVY – FUNKČNÍ VERZE */
+/* ========================================= */
+
+.raid-block .raid-tier {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  transition: 0.3s;
+}
+
+/* NORMAL – zelená */
+.raid-block .raid-tier:nth-of-type(1) {
+  background: linear-gradient(90deg, #1e4620, #2ecc71);
+  box-shadow: 0 0 10px rgba(46,204,113,0.5);
+  color: #d4ffd4;
+}
+
+/* HEROIC – modrá */
+.raid-block .raid-tier:nth-of-type(2) {
+  background: linear-gradient(90deg, #102542, #3498db);
+  box-shadow: 0 0 10px rgba(52,152,219,0.5);
+  color: #d6eaff;
+}
+
+/* MYTHIC – fialová */
+.raid-block .raid-tier:nth-of-type(3) {
+  background: linear-gradient(90deg, #2a003f, #9b59b6);
+  box-shadow: 0 0 10px rgba(155,89,182,0.6);
+  color: #f3d9ff;
+}
+
+/* jemný hover efekt */
+.raid-block .raid-tier:hover {
+  transform: scale(1.03);
+}
