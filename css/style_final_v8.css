@@ -314,3 +314,20 @@ html {
   color: gold;
   text-shadow: 0 0 10px gold;
 }
+.guild-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.stat h3 {
+  font-size: 3rem;
+  color: gold;
+  text-shadow: 0 0 20px gold;
+}
+
+.stat p {
+  color: #ccc;
+}
