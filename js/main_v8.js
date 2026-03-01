@@ -88,3 +88,19 @@ counters.forEach(counter => {
 
   updateCount();
 });
+document.addEventListener('DOMContentLoaded', () => {
+  const progressFill = document.querySelector('.progress-fill');
+  const progressText = document.querySelector('.raid-progress p');
+
+  let width = 0;
+  const target = 75; // cílové %
+  const interval = setInterval(() => {
+    if(width >= target){
+      clearInterval(interval);
+    } else {
+      width++;
+      progressFill.style.width = width + '%';
+      progressText.textContent = width + '% Vyčištěno';
+    }
+  }, 20); // rychlost animace
+});
