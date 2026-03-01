@@ -40,3 +40,19 @@ window.addEventListener('scroll', () => {
     nav.style.boxShadow = "none";
   }
 });
+const buttons = document.querySelectorAll('button[data-target]');
+const sections = document.querySelectorAll('.content-section');
+
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.getAttribute('data-target');
+
+    sections.forEach(sec => sec.classList.remove('active'));
+
+    const activeSection = document.getElementById(target);
+    if (activeSection) {
+      activeSection.classList.add('active');
+      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+    }
+  });
+});
