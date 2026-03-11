@@ -24,6 +24,22 @@
   font-family: 'Cinzel', serif;
   text-shadow: 0 0 15px gold;
 }
+.back-btn {
+  display: inline-block;
+  margin: 0 auto 20px auto;
+  padding: 10px 20px;
+  background: rgba(255,215,0,0.2);
+  color: gold;
+  font-weight: bold;
+  border: 1px solid gold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.back-btn:hover {
+  background: rgba(255,215,0,0.4);
+  color: #fff;
+}
 </style>
 </head>
 
@@ -43,11 +59,19 @@
 <section id="content-area">
   <div class="content-section active">
     <h2>🎰 Guild Loterie</h2>
+    
+    <!-- Tlačítko zpět -->
+    <div style="text-align:center;">
+      <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
+    </div>
+    
+    <!-- Iframe loterie -->
     <iframe src="https://exsqueez.github.io/Guild-Lottery/" 
             class="lottery-frame"
             frameborder="0" 
             scrolling="yes">
     </iframe>
+    
     <p style="text-align:center; color:#fff; margin-top:15px;">
       Jackpot se automaticky aktualizuje – hodně štěstí! 🍀
     </p>
