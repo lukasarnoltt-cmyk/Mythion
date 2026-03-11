@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MYTHION Guild | Loterie</title>
+
+<link rel="stylesheet" href="css/style_final_v8.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+
+<style>
+/* Přizpůsobení iframe pro loterii */
+.lottery-frame {
+  width: 100%;
+  height: 900px;
+  border: 2px solid rgba(255,215,0,0.3);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255,215,0,0.2);
+}
+.content-section h2 {
+  text-align: center;
+  color: gold;
+  margin-bottom: 30px;
+  font-family: 'Cinzel', serif;
+  text-shadow: 0 0 15px gold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">MYTHION</div>
+  <ul>
+    <li><a href="index.html">Domů</a></li>
+    <li><a href="lottery.html" class="active">Guild Loterie</a></li>
+    <li><a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a></li>
+  </ul>
+</nav>
+
+<!-- HERO / Loterie -->
+<section id="content-area">
+  <div class="content-section active">
+    <h2>🎰 Guild Loterie</h2>
+    <iframe src="https://exsqueez.github.io/Guild-Lottery/" 
+            class="lottery-frame"
+            frameborder="0" 
+            scrolling="yes">
+    </iframe>
+    <p style="text-align:center; color:#fff; margin-top:15px;">
+      Jackpot se automaticky aktualizuje – hodně štěstí! 🍀
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>&copy; 2026 Mythion Guild | 
+     <a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a>
+  </p>
+</footer>
+
+</body>
+</html>
