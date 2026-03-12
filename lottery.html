@@ -5,38 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MYTHION Guild | Loterie</title>
 
-<link rel="stylesheet" href="css/style_final_v8.css">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-body { background:#050505; color:#fff; font-family:'Cinzel', serif; }
-.navbar { display:flex; justify-content:space-between; padding:15px; background:#111; }
-.navbar ul { list-style:none; display:flex; gap:15px; margin:0; padding:0; }
-.navbar a { color:gold; text-decoration:none; font-weight:bold; }
-.navbar a.active { text-decoration:underline; }
+/* --- Styl stránky --- */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Cinzel', serif; background:black; color:white; overflow-x:hidden; }
+.navbar { position:fixed; top:0; width:100%; display:flex; justify-content:space-between; align-items:center; padding:20px 40px; background: rgba(0,0,0,0.7); backdrop-filter:blur(10px); z-index:999; }
+.navbar .logo { color: gold; font-size:1.8rem; font-weight:bold; }
+.navbar ul { list-style:none; display:flex; gap:30px; }
+.navbar ul li a { text-decoration:none; color:white; transition:0.3s; }
+.navbar ul li a:hover, .navbar ul li a.active { color: gold; }
 
-.content-section { max-width:900px; margin:40px auto; text-align:center; }
-.back-btn { display:inline-block; margin:20px auto; padding:10px 20px; border:1px solid gold; border-radius:8px; background:rgba(255,215,0,0.2); color:gold; text-decoration:none; transition:0.3s; }
-.back-btn:hover { background:rgba(255,215,0,0.4); color:#fff; }
+#content-area { padding:120px 20px 60px 20px; background:#0a0a0a; min-height:70vh; max-width:1200px; margin:auto; }
+h2 { font-family:'Cinzel', serif; color: gold; text-align:center; margin-bottom:30px; font-size:3rem; text-shadow:0 0 15px gold; }
+.winning-box { text-align:center; margin-bottom:30px; }
+.winning-number { font-size:60px; color:gold; font-family:'Cinzel', serif; text-shadow:0 0 20px gold; }
 
-.lottery-frame { width:100%; height:500px; border:2px solid rgba(255,215,0,0.3); border-radius:12px; box-shadow:0 0 20px rgba(255,215,0,0.2); margin-top:20px; }
+.back-btn { display:inline-block; margin:0 auto 20px auto; padding:10px 20px; background: rgba(255,215,0,0.2); color: gold; font-weight:bold; border:1px solid gold; border-radius:8px; text-decoration:none; transition:0.3s; }
+.back-btn:hover { background: rgba(255,215,0,0.4); color:#fff; }
 
-.winning-box { margin:30px 0; }
-.winning-number { font-size:60px; color:gold; text-shadow:0 0 20px gold; }
+.stat-box { background: rgba(0,0,0,0.6); padding:20px 30px; border-radius:12px; text-align:center; backdrop-filter:blur(6px); border:1px solid rgba(255,215,0,0.3); margin-bottom:20px; }
+.stat-box h3 { font-size:28px; color: gold; }
+.stat-box p { margin-top:5px; color:white; font-weight:500; }
 
-#jackpot { font-size:24px; color:gold; margin-bottom:20px; }
+table { width:100%; border-collapse: collapse; margin-top:30px; background: rgba(0,0,0,0.6); border:1px solid gold; border-radius:12px; overflow:hidden; }
+th, td { padding:15px; text-align:center; border-bottom:1px solid rgba(255,215,0,0.2); }
+th { background: rgba(255,215,0,0.1); color: gold; }
+td { color:white; }
 
-#countdown { font-size:20px; margin-bottom:30px; }
-
-table { width:100%; border-collapse: collapse; margin-top:20px; }
-th, td { border:1px solid gold; padding:8px; color:#fff; }
-th { background:rgba(255,215,0,0.2); }
-
+footer { background:#111; padding:30px; text-align:center; margin-top:50px; }
 </style>
-</head>
 
+</head>
 <body>
 
 <nav class="navbar">
@@ -48,92 +50,77 @@ th { background:rgba(255,215,0,0.2); }
   </ul>
 </nav>
 
-<section class="content-section">
-  <h2>🎰 Guild Loterie</h2>
+<section id="content-area">
+  <div class="content-section">
 
-  <div style="text-align:center;">
-    <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
-  </div>
+    <h2>🎰 Guild Loterie</h2>
 
-  <div id="jackpot">💰 Aktuální jackpot: 80,000 🪙</div>
-  <div id="countdown">⏳ Odpočet do pátečního losování: --:--:--</div>
+    <div style="text-align:center;">
+      <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
+    </div>
 
-  <div class="winning-box">
+    <!-- Výherní číslo -->
+    <div class="winning-box">
       <h3>Výherní číslo týdne</h3>
       <div id="winningNumber" class="winning-number">?</div>
-      <button id="generateBtn" style="padding:10px 20px; margin-top:10px; border:none; border-radius:8px; background:gold; color:#000; font-weight:bold; cursor:pointer;">Generovat výherní číslo</button>
+    </div>
+
+    <!-- Jackpot -->
+    <div class="stat-box">
+      <h3>Aktuální Jackpot</h3>
+      <p id="jackpotDisplay">50,000 🪙</p>
+    </div>
+
+    <!-- Tabulka hráčů -->
+    <table id="playersTable">
+      <thead>
+        <tr>
+          <th>Hráč</th>
+          <th>Číslo</th>
+          <th>Sázenka</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Zde ručně doplňuj hráče -->
+        <tr><td>Exsqueez</td><td>42</td><td>100 🪙</td></tr>
+        <tr><td>Lukáš</td><td>17</td><td>50 🪙</td></tr>
+      </tbody>
+    </table>
+
   </div>
-
-  <h3>Seznam hráčů a jejich čísel</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Jméno</th>
-        <th>Vsazené číslo</th>
-        <th>Vsazená částka 🪙</th>
-      </tr>
-    </thead>
-    <tbody id="playersTable">
-      <tr><td>Exsqueez</td><td>42</td><td>500</td></tr>
-      <tr><td>Arny</td><td>7</td><td>300</td></tr>
-      <!-- sem dopisuješ hráče ručně -->
-    </tbody>
-  </table>
-
-  <!-- Iframe loterie / vizuální -->
-  <iframe src="https://exsqueez.github.io/Guild-Lottery/" 
-          class="lottery-frame"
-          frameborder="0"
-          scrolling="yes">
-  </iframe>
-
 </section>
 
-<footer style="text-align:center; margin:40px 0;">
-  <p>&copy; 2026 Mythion Guild | <a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a></p>
+<footer>
+  <p>&copy; 2026 Mythion Guild | 
+     <a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a>
+  </p>
 </footer>
 
 <script>
-// ---------- GENEROVÁNÍ VÝHERNÍHO ČÍSLA ----------
+// Funkce pro generování výherního čísla
 function generateNumber(){
-  let number = Math.floor(Math.random()*100)+1;
+  let number = Math.floor(Math.random() * 100) + 1;
   document.getElementById("winningNumber").innerText = number;
-
-  // Confetti
-  confetti({particleCount:200, spread:120, origin:{y:0.6}});
-
-  // Ulož do localStorage, aby číslo zůstalo
-  localStorage.setItem("mythionLotteryNumber",number);
+  confetti({ particleCount:200, spread:120, origin:{y:0.6} });
+  localStorage.setItem("mythionLotteryNumber", number);
 }
 
-// ---------- ODPOČET DO PÁTKU ----------
-function updateCountdown(){
-  const now = new Date();
-  let nextFriday = new Date();
-  nextFriday.setDate(now.getDate() + (5 - now.getDay() + 7) % 7); // příští pátek
-  nextFriday.setHours(20,0,0,0); // 20:00
-
-  let diff = nextFriday - now;
-
-  if(diff<0) diff=0;
-
-  let h = Math.floor(diff/1000/60/60);
-  let m = Math.floor((diff/1000/60)%60);
-  let s = Math.floor((diff/1000)%60);
-
-  document.getElementById("countdown").innerText = `⏳ Odpočet do pátečního losování: ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+// Spustí se každý pátek 20:00
+function checkFriday(){
+  let now = new Date();
+  if(now.getDay() === 5 && now.getHours() === 20 && now.getMinutes() === 0){
+    generateNumber();
+  }
 }
 
-setInterval(updateCountdown,1000);
-
-// ---------- Načtení uloženého čísla ----------
+// Načtení uloženého čísla
 let saved = localStorage.getItem("mythionLotteryNumber");
 if(saved){
   document.getElementById("winningNumber").innerText = saved;
 }
 
-// ---------- Tlačítko pro ruční generování ----------
-document.getElementById("generateBtn").addEventListener("click", generateNumber);
+// Kontrola každou minutu
+setInterval(checkFriday, 60000);
 </script>
 
 </body>
