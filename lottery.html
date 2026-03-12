@@ -5,40 +5,68 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MYTHION Guild | Loterie</title>
 
+<link rel="stylesheet" href="css/style_final_v8.css">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-/* --- Styl stránky --- */
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Cinzel', serif; background:black; color:white; overflow-x:hidden; }
-.navbar { position:fixed; top:0; width:100%; display:flex; justify-content:space-between; align-items:center; padding:20px 40px; background: rgba(0,0,0,0.7); backdrop-filter:blur(10px); z-index:999; }
+body {
+  background: black;
+  color: white;
+  font-family: 'Cinzel', serif;
+  overflow-x: hidden;
+}
+.navbar {
+  position: fixed;
+  top: 0; width: 100%;
+  padding: 20px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+  z-index: 999;
+}
 .navbar .logo { color: gold; font-size:1.8rem; font-weight:bold; }
 .navbar ul { list-style:none; display:flex; gap:30px; }
 .navbar ul li a { text-decoration:none; color:white; transition:0.3s; }
-.navbar ul li a:hover, .navbar ul li a.active { color: gold; }
+.navbar ul li a:hover, .navbar ul li a.active { color: gold; text-shadow:0 0 10px gold; }
 
-#content-area { padding:120px 20px 60px 20px; background:#0a0a0a; min-height:70vh; max-width:1200px; margin:auto; }
-h2 { font-family:'Cinzel', serif; color: gold; text-align:center; margin-bottom:30px; font-size:3rem; text-shadow:0 0 15px gold; }
-.winning-box { text-align:center; margin-bottom:30px; }
-.winning-number { font-size:60px; color:gold; font-family:'Cinzel', serif; text-shadow:0 0 20px gold; }
+section { padding:120px 20px 60px; text-align:center; min-height:80vh; position:relative; }
 
-.back-btn { display:inline-block; margin:0 auto 20px auto; padding:10px 20px; background: rgba(255,215,0,0.2); color: gold; font-weight:bold; border:1px solid gold; border-radius:8px; text-decoration:none; transition:0.3s; }
-.back-btn:hover { background: rgba(255,215,0,0.4); color:#fff; }
+.hero-bg {
+  position:absolute; inset:0; z-index:-2;
+  background: radial-gradient(circle at 50% 50%, rgba(255,215,0,0.05), transparent 70%);
+  overflow:hidden;
+}
+.particle {
+  position:absolute; width:4px; height:4px; background:white; border-radius:50%;
+  opacity:0; animation:floatUp linear infinite;
+}
+@keyframes floatUp { 0%{transform:translateY(100vh);opacity:0;} 20%{opacity:1;} 100%{transform:translateY(-10vh);opacity:0;} }
 
-.stat-box { background: rgba(0,0,0,0.6); padding:20px 30px; border-radius:12px; text-align:center; backdrop-filter:blur(6px); border:1px solid rgba(255,215,0,0.3); margin-bottom:20px; }
-.stat-box h3 { font-size:28px; color: gold; }
-.stat-box p { margin-top:5px; color:white; font-weight:500; }
+.content-section { max-width:900px; margin:auto; background: rgba(0,0,0,0.6); padding:30px; border-radius:12px; border:1px solid rgba(255,215,0,0.3); }
+.content-section h2 { color: gold; margin-bottom:20px; text-shadow:0 0 10px gold; }
 
-table { width:100%; border-collapse: collapse; margin-top:30px; background: rgba(0,0,0,0.6); border:1px solid gold; border-radius:12px; overflow:hidden; }
-th, td { padding:15px; text-align:center; border-bottom:1px solid rgba(255,215,0,0.2); }
-th { background: rgba(255,215,0,0.1); color: gold; }
-td { color:white; }
+.stat-box { display:inline-block; margin:15px; padding:20px 35px; border-radius:12px; backdrop-filter: blur(6px); border:1px solid rgba(255,215,0,0.3); }
+.stat-box h3 { font-size:28px; color:gold; }
+.stat-box p { color:white; margin-top:5px; font-weight:500; }
 
-footer { background:#111; padding:30px; text-align:center; margin-top:50px; }
+.winning-box { margin:30px 0; }
+.winning-number { font-size:60px; color:gold; text-shadow:0 0 20px gold; margin-top:10px; }
+
+.countdown { font-size:2rem; color:gold; text-shadow:0 0 10px gold; margin-bottom:30px; }
+
+.back-btn { display:inline-block; margin:0 auto 20px auto; padding:10px 20px; background:rgba(255,215,0,0.2); color:gold; font-weight:bold; border:1px solid gold; border-radius:8px; text-decoration:none; transition:0.3s; }
+.back-btn:hover { background:rgba(255,215,0,0.4); color:#fff; }
+
+table { width:100%; border-collapse:collapse; margin-top:20px; }
+table, th, td { border:1px solid gold; }
+th, td { padding:10px; text-align:center; }
+th { background:rgba(255,215,0,0.2); color:gold; }
+
+footer { background:#111; padding:30px; text-align:center; }
 </style>
-
 </head>
+
 <body>
 
 <nav class="navbar">
@@ -50,77 +78,72 @@ footer { background:#111; padding:30px; text-align:center; margin-top:50px; }
   </ul>
 </nav>
 
-<section id="content-area">
-  <div class="content-section">
-
+<section>
+  <div class="hero-bg"></div>
+  
+  <div class="content-section active">
     <h2>🎰 Guild Loterie</h2>
+    <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
 
-    <div style="text-align:center;">
-      <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
+    <div class="stat-box">
+      <h3>Aktuální Jackpot</h3>
+      <p id="jackpot">50,000 🪙</p>
     </div>
 
-    <!-- Výherní číslo -->
     <div class="winning-box">
       <h3>Výherní číslo týdne</h3>
       <div id="winningNumber" class="winning-number">?</div>
     </div>
 
-    <!-- Jackpot -->
-    <div class="stat-box">
-      <h3>Aktuální Jackpot</h3>
-      <p id="jackpotDisplay">50,000 🪙</p>
+    <div class="countdown">
+      Další losování za: <span id="countdownTimer">?</span>
     </div>
 
-    <!-- Tabulka hráčů -->
-    <table id="playersTable">
+    <h3>Hráči a jejich čísla</h3>
+    <table>
       <thead>
-        <tr>
-          <th>Hráč</th>
-          <th>Číslo</th>
-          <th>Sázenka</th>
-        </tr>
+        <tr><th>Jméno</th><th>Číslo</th></tr>
       </thead>
-      <tbody>
-        <!-- Zde ručně doplňuj hráče -->
-        <tr><td>Exsqueez</td><td>42</td><td>100 🪙</td></tr>
-        <tr><td>Lukáš</td><td>17</td><td>50 🪙</td></tr>
+      <tbody id="playersTable">
+        <tr><td>Lukáš</td><td>23</td></tr>
+        <tr><td>Arny</td><td>77</td></tr>
       </tbody>
     </table>
-
   </div>
 </section>
 
 <footer>
-  <p>&copy; 2026 Mythion Guild | 
-     <a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a>
-  </p>
+  &copy; 2026 Mythion Guild | <a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a>
 </footer>
 
 <script>
-// Funkce pro generování výherního čísla
-function generateNumber(){
-  let number = Math.floor(Math.random() * 100) + 1;
+function generateWinningNumber() {
+  let number = Math.floor(Math.random()*100)+1;
   document.getElementById("winningNumber").innerText = number;
-  confetti({ particleCount:200, spread:120, origin:{y:0.6} });
   localStorage.setItem("mythionLotteryNumber", number);
-}
-
-// Spustí se každý pátek 20:00
-function checkFriday(){
-  let now = new Date();
-  if(now.getDay() === 5 && now.getHours() === 20 && now.getMinutes() === 0){
-    generateNumber();
-  }
+  confetti({particleCount:200, spread:120, origin:{y:0.6}});
 }
 
 // Načtení uloženého čísla
-let saved = localStorage.getItem("mythionLotteryNumber");
-if(saved){
-  document.getElementById("winningNumber").innerText = saved;
-}
+let savedNumber = localStorage.getItem("mythionLotteryNumber");
+if(savedNumber) document.getElementById("winningNumber").innerText = savedNumber;
 
-// Kontrola každou minutu
-setInterval(checkFriday, 60000);
+// Odpočet do příštího pátku 20:00
+function updateCountdown() {
+  let now = new Date();
+  let nextFriday = new Date();
+  nextFriday.setDate(now.getDate() + (5 - now.getDay() + 7) % 7);
+  nextFriday.setHours(20,0,0,0);
+  let diff = nextFriday - now;
+  if(diff<=0){ generateWinningNumber(); nextFriday.setDate(nextFriday.getDate()+7); diff = nextFriday - now; }
+  let days = Math.floor(diff/(1000*60*60*24));
+  let hours = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  let minutes = Math.floor((diff%(1000*60*60))/(1000*60));
+  let seconds = Math.floor((diff%(1000*60))/1000);
+  document.getElementById("countdownTimer").innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
 </script>
 
 </body>
