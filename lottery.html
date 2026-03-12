@@ -11,25 +11,32 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-body {background:#050505; color:#fff; font-family:'Cinzel', serif;}
-.navbar {display:flex; justify-content:space-between; padding:15px; background:rgba(0,0,0,0.8);}
-.navbar a {color:gold; margin:0 10px; text-decoration:none;}
-.navbar a.active {text-decoration:underline;}
-.content-section {max-width:900px; margin:30px auto; padding:20px; background:rgba(15,15,15,0.8); border-radius:12px; border:1px solid rgba(255,215,0,0.3);}
-h2 {text-align:center; color:gold; text-shadow:0 0 15px gold; margin-bottom:20px;}
-.back-btn {display:inline-block; margin:0 auto 20px auto; padding:10px 20px; background:rgba(255,215,0,0.2); color:gold; font-weight:bold; border:1px solid gold; border-radius:8px; text-decoration:none; transition:0.3s;}
-.back-btn:hover {background:rgba(255,215,0,0.4); color:#fff;}
-.lottery-input {width:60px; padding:5px; margin-right:10px; border-radius:5px; border:none; text-align:center;}
-button.place-bet {padding:5px 10px; border:none; border-radius:5px; background:gold; color:#000; font-weight:bold; cursor:pointer; transition:0.3s;}
-button.place-bet:hover {background:#fff;}
-#winningNumber {font-size:50px; color:gold; text-shadow:0 0 20px gold; text-align:center; margin:15px 0;}
-table {width:100%; border-collapse:collapse; margin-top:20px;}
-th, td {padding:10px; border:1px solid gold; text-align:center;}
-th {background:rgba(255,215,0,0.2);}
-td {background:rgba(0,0,0,0.5);}
-.countdown {text-align:center; font-size:24px; margin:20px 0; color:gold;}
+body { background:#050505; color:#fff; font-family:'Cinzel', serif; }
+.navbar { display:flex; justify-content:space-between; padding:15px; background:#111; }
+.navbar ul { list-style:none; display:flex; gap:15px; margin:0; padding:0; }
+.navbar a { color:gold; text-decoration:none; font-weight:bold; }
+.navbar a.active { text-decoration:underline; }
+
+.content-section { max-width:900px; margin:40px auto; text-align:center; }
+.back-btn { display:inline-block; margin:20px auto; padding:10px 20px; border:1px solid gold; border-radius:8px; background:rgba(255,215,0,0.2); color:gold; text-decoration:none; transition:0.3s; }
+.back-btn:hover { background:rgba(255,215,0,0.4); color:#fff; }
+
+.lottery-frame { width:100%; height:500px; border:2px solid rgba(255,215,0,0.3); border-radius:12px; box-shadow:0 0 20px rgba(255,215,0,0.2); margin-top:20px; }
+
+.winning-box { margin:30px 0; }
+.winning-number { font-size:60px; color:gold; text-shadow:0 0 20px gold; }
+
+#jackpot { font-size:24px; color:gold; margin-bottom:20px; }
+
+#countdown { font-size:20px; margin-bottom:30px; }
+
+table { width:100%; border-collapse: collapse; margin-top:20px; }
+th, td { border:1px solid gold; padding:8px; color:#fff; }
+th { background:rgba(255,215,0,0.2); }
+
 </style>
 </head>
+
 <body>
 
 <nav class="navbar">
@@ -48,104 +55,85 @@ td {background:rgba(0,0,0,0.5);}
     <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
   </div>
 
-  <div class="countdown" id="countdown">Na páteční losování zbývá: --:--:--</div>
-
-  <div style="text-align:center; margin-bottom:20px;">
-    <input type="text" id="playerName" class="lottery-input" placeholder="Jméno">
-    <input type="number" id="playerNumber" class="lottery-input" placeholder="1-100" min="1" max="100">
-    <button class="place-bet" onclick="placeBet()">Vsadit</button>
-  </div>
+  <div id="jackpot">💰 Aktuální jackpot: 80,000 🪙</div>
+  <div id="countdown">⏳ Odpočet do pátečního losování: --:--:--</div>
 
   <div class="winning-box">
-    <h3>Výherní číslo týdne</h3>
-    <div id="winningNumber">?</div>
+      <h3>Výherní číslo týdne</h3>
+      <div id="winningNumber" class="winning-number">?</div>
+      <button id="generateBtn" style="padding:10px 20px; margin-top:10px; border:none; border-radius:8px; background:gold; color:#000; font-weight:bold; cursor:pointer;">Generovat výherní číslo</button>
   </div>
 
-  <h3 style="text-align:center; margin-top:30px;">Seznam vsazených čísel</h3>
-  <table id="playersTable">
+  <h3>Seznam hráčů a jejich čísel</h3>
+  <table>
     <thead>
       <tr>
         <th>Jméno</th>
-        <th>Číslo</th>
+        <th>Vsazené číslo</th>
+        <th>Vsazená částka 🪙</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody id="playersTable">
+      <tr><td>Exsqueez</td><td>42</td><td>500</td></tr>
+      <tr><td>Arny</td><td>7</td><td>300</td></tr>
+      <!-- sem dopisuješ hráče ručně -->
+    </tbody>
   </table>
+
+  <!-- Iframe loterie / vizuální -->
+  <iframe src="https://exsqueez.github.io/Guild-Lottery/" 
+          class="lottery-frame"
+          frameborder="0"
+          scrolling="yes">
+  </iframe>
 
 </section>
 
-<footer style="text-align:center; margin-top:30px;">
-  <p>&copy; 2026 Mythion Guild | 
-     <a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a>
-  </p>
+<footer style="text-align:center; margin:40px 0;">
+  <p>&copy; 2026 Mythion Guild | <a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a></p>
 </footer>
 
 <script>
-let players = JSON.parse(localStorage.getItem("lotteryPlayers")) || [];
-let winningNumber = localStorage.getItem("winningNumber") || "?";
+// ---------- GENEROVÁNÍ VÝHERNÍHO ČÍSLA ----------
+function generateNumber(){
+  let number = Math.floor(Math.random()*100)+1;
+  document.getElementById("winningNumber").innerText = number;
 
-function updateTable(){
-  const tbody = document.querySelector("#playersTable tbody");
-  tbody.innerHTML = "";
-  players.forEach(p => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${p.name}</td><td>${p.number}</td>`;
-    tbody.appendChild(tr);
-  });
+  // Confetti
+  confetti({particleCount:200, spread:120, origin:{y:0.6}});
+
+  // Ulož do localStorage, aby číslo zůstalo
+  localStorage.setItem("mythionLotteryNumber",number);
 }
 
-function placeBet(){
-  const name = document.getElementById("playerName").value.trim();
-  let number = parseInt(document.getElementById("playerNumber").value);
-  if(!name || isNaN(number) || number<1 || number>100){ alert("Vyplň jméno a číslo 1-100"); return; }
-  // omezíme jedno číslo na hráče
-  if(players.some(p=>p.name===name)){ alert("Hráč už vsadil!"); return; }
-  players.push({name,name, number});
-  localStorage.setItem("lotteryPlayers",JSON.stringify(players));
-  updateTable();
-  document.getElementById("playerName").value="";
-  document.getElementById("playerNumber").value="";
-}
-
-// Odpočet do pátečního losování
+// ---------- ODPOČET DO PÁTKU ----------
 function updateCountdown(){
   const now = new Date();
   let nextFriday = new Date();
-  nextFriday.setDate(now.getDate() + (5 - now.getDay() + 7) % 7);
-  nextFriday.setHours(20,0,0,0); // pátek 20:00
+  nextFriday.setDate(now.getDate() + (5 - now.getDay() + 7) % 7); // příští pátek
+  nextFriday.setHours(20,0,0,0); // 20:00
+
   let diff = nextFriday - now;
+
+  if(diff<0) diff=0;
+
   let h = Math.floor(diff/1000/60/60);
-  let m = Math.floor(diff/1000/60)%60;
-  let s = Math.floor(diff/1000)%60;
-  document.getElementById("countdown").innerText = `Na páteční losování zbývá: ${h.toString().padStart(2,"0")}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
+  let m = Math.floor((diff/1000/60)%60);
+  let s = Math.floor((diff/1000)%60);
+
+  document.getElementById("countdown").innerText = `⏳ Odpočet do pátečního losování: ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
+
 setInterval(updateCountdown,1000);
 
-// Losování každý pátek v 20:00
-function checkFriday(){
-  const now = new Date();
-  if(now.getDay()===5 && now.getHours()===20 && now.getMinutes()===0){
-    drawWinningNumber();
-  }
-}
-setInterval(checkFriday,60000);
-
-function drawWinningNumber(){
-  const number = Math.floor(Math.random()*100)+1;
-  winningNumber = number;
-  document.getElementById("winningNumber").innerText=number;
-  confetti({particleCount:200, spread:120, origin:{y:0.6}});
-  localStorage.setItem("winningNumber",number);
-  // Reset hráčů po losování
-  players=[];
-  localStorage.setItem("lotteryPlayers",JSON.stringify(players));
-  updateTable();
+// ---------- Načtení uloženého čísla ----------
+let saved = localStorage.getItem("mythionLotteryNumber");
+if(saved){
+  document.getElementById("winningNumber").innerText = saved;
 }
 
-// Načtení uložených hodnot při startu
-document.getElementById("winningNumber").innerText = winningNumber;
-updateTable();
-
+// ---------- Tlačítko pro ruční generování ----------
+document.getElementById("generateBtn").addEventListener("click", generateNumber);
 </script>
 
 </body>
