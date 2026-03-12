@@ -3,111 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mythion Loterie</title>
 
-<title>MYTHION Guild | Loterie</title>
-
-<link rel="stylesheet" href="css/style_final_v8.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
 <style>
-
 body{
-background:#0b0b0b;
-color:white;
 font-family:Arial;
-margin:0;
+background:#000;
+color:white;
 }
 
-.wrapper{
-max-width:900px;
-margin:auto;
-padding:40px 20px;
-text-align:center;
-}
-
-.mythion-title{
-font-size:60px;
-color:gold;
-font-weight:bold;
-text-shadow:0 0 25px gold;
-margin-bottom:10px;
-}
-
-.countdown{
-font-size:22px;
-margin-bottom:30px;
-color:#ffd700;
-}
-
-.number-box{
+.card{
 background:#111;
-border:2px solid gold;
-border-radius:15px;
-padding:30px;
-margin-bottom:30px;
-}
-
-.number{
-font-size:90px;
-color:gold;
-text-shadow:0 0 30px gold;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-background:#111;
+border:1px solid #444;
+padding:20px;
 border-radius:10px;
-overflow:hidden;
-}
-
-th{
-background:#1a1a1a;
-color:gold;
-padding:12px;
-}
-
-td{
-padding:12px;
-border-bottom:1px solid #333;
-}
-
-tr:hover{
-background:#181818;
 }
 
 </style>
 </head>
 
-<body>
+<body class="p-10">
 
-<div class="wrapper">
+<h1 class="text-4xl mb-4">MYTHION LOTERIE</h1>
 
-<div class="mythion-title">MYTHION LOTTERY</div>
-
-<div id="countdown" class="countdown">
-Losování se načítá...
+<div id="date-display" class="mb-4 text-yellow-400">
+Načítání...
 </div>
 
-<div class="number-box">
+<div class="card mb-6">
 
-<div style="font-size:22px;margin-bottom:10px;">Výherní číslo</div>
+<div class="text-sm text-gray-400">Vítězné číslo</div>
+<div id="winning-number-display" class="text-5xl font-bold">
+?
+</div>
 
-<div id="winningNumber" class="number">?</div>
+<div id="countdown-display" class="text-yellow-400 mt-2">
+odpočet...
+</div>
 
 </div>
 
-<table>
+<div class="card">
+
+<table class="w-full">
 
 <thead>
 <tr>
 <th>#</th>
 <th>Hráč</th>
 <th>Tip</th>
-<th>Stav</th>
 </tr>
 </thead>
 
-<tbody id="players"></tbody>
+<tbody id="lottery-table-body">
+</tbody>
 
 </table>
 
@@ -115,137 +68,152 @@ Losování se načítá...
 
 <script>
 
-const drawDay = 5
-const drawHour = 20
+// konfigurace
 
-let winningNumber = null
+const CONFIG={
+winningNumber:null,
+drawDay:5,
+drawHour:20
+}
 
-const players = [
-{name:"Exsqueez",bet:37},
-{name:"Luxes",bet:12},
-{name:"Arny",bet:55},
-{name:"Suzu",bet:13},
-{name:"Vecty",bet:77},
-{name:"Cikynxd",bet:88},
-{name:"Kubiinho",bet:92},
-{name:"Tony101",bet:44},
-{name:"Artimik",bet:61},
-{name:"Adamekdave",bet:5},
-{name:"Sajmon",bet:26},
-{name:"DreimorE3",bet:73},
-{name:"Faceless",bet:67},
-{name:"Daenysh",bet:45}
+// hráči
+
+const players=[
+{name:'Exsqueez',bet:137},
+{name:'Luxes',bet:null},
+{name:'Arny',bet:null},
+{name:'Suzu',bet:13},
+{name:'Vecty',bet:null},
+{name:'Cikynxd',bet:null},
+{name:'Kubiinho',bet:null},
+{name:'Tony101',bet:null},
+{name:'Artimik',bet:null},
+{name:'Adamekdave',bet:null},
+{name:'Sajmon',bet:null},
+{name:'DreimorE3',bet:176},
+{name:'Faceless',bet:67},
+{name:'Daenysh',bet:145}
 ]
 
-function getNextDraw(){
+lucide.createIcons()
 
-const now = new Date()
+renderTable()
 
-let days = (drawDay - now.getDay() + 7) % 7
+// tabulka
 
-if(days === 0 && now.getHours() >= drawHour){
-days = 7
-}
+function renderTable(){
 
-const draw = new Date()
-
-draw.setDate(now.getDate() + days)
-draw.setHours(drawHour,0,0,0)
-
-return draw
-
-}
-
-function startCountdown(){
-
-const el = document.getElementById("countdown")
-
-setInterval(()=>{
-
-const diff = getNextDraw() - new Date()
-
-const d = Math.floor(diff / 86400000)
-const h = Math.floor(diff / 3600000) % 24
-const m = Math.floor(diff / 60000) % 60
-const s = Math.floor(diff / 1000) % 60
-
-if(diff > 0){
-el.innerText = "Další losování za " + d+"d "+h+"h "+m+"m "+s+"s"
-}
-
-if(diff <= 0 && winningNumber === null){
-drawNumber()
-}
-
-},1000)
-
-}
-
-function drawNumber(){
-
-const display = document.getElementById("winningNumber")
-
-let rolls = 0
-
-const anim = setInterval(()=>{
-
-display.innerText = Math.floor(Math.random()*100)+1
-
-rolls++
-
-if(rolls > 30){
-
-clearInterval(anim)
-
-winningNumber = Math.floor(Math.random()*100)+1
-
-display.innerText = winningNumber
-
-renderPlayers()
-
-}
-
-},80)
-
-}
-
-function renderPlayers(){
-
-const body = document.getElementById("players")
-
-body.innerHTML = ""
+const tbody=document.getElementById("lottery-table-body")
+tbody.innerHTML=""
 
 players.forEach((p,i)=>{
 
-let status = "Čeká"
+const tr=document.createElement("tr")
 
-if(winningNumber !== null){
-
-if(p.bet === winningNumber){
-status = "🏆 VÍTĚZ"
-}
-else{
-status = "Prohrál"
-}
-
-}
-
-body.innerHTML += `
-<tr>
+tr.innerHTML=`
 <td>${i+1}</td>
 <td>${p.name}</td>
-<td>${p.bet}</td>
-<td>${status}</td>
-</tr>
+<td>${p.bet ?? "-"}</td>
 `
+
+tbody.appendChild(tr)
 
 })
 
 }
 
-renderPlayers()
+// datum losování
 
-startCountdown()
+function getNextDraw(){
+
+const now=new Date()
+const today=now.getDay()
+
+const diff=(CONFIG.drawDay-today+7)%7
+
+const next=new Date()
+
+next.setDate(now.getDate()+diff)
+next.setHours(CONFIG.drawHour,0,0,0)
+
+return next
+
+}
+
+const nextDraw=getNextDraw()
+
+document.getElementById("date-display").textContent=
+"Příští losování: "+nextDraw.toLocaleString("cs-CZ")
+
+// odpočet
+
+setInterval(()=>{
+
+const now=new Date()
+const diff=nextDraw-now
+
+if(diff<0){
+document.getElementById("countdown-display").textContent="LOSOVÁNÍ PROBÍHÁ"
+return
+}
+
+const d=Math.floor(diff/86400000)
+const h=Math.floor(diff/3600000)%24
+const m=Math.floor(diff/60000)%60
+const s=Math.floor(diff/1000)%60
+
+document.getElementById("countdown-display").textContent=
+`Zbývá ${d}d ${h}h ${m}m ${s}s`
+
+},1000)
+
+
+// AUTO LOSOVÁNÍ
+
+const saved=localStorage.getItem("mythion_win")
+
+if(saved){
+CONFIG.winningNumber=parseInt(saved)
+document.getElementById("winning-number-display").textContent=saved
+}
+
+checkDraw()
+
+setInterval(checkDraw,30000)
+
+function checkDraw(){
+
+if(CONFIG.winningNumber!==null)return
+
+const now=new Date()
+
+if(now.getDay()===CONFIG.drawDay && now.getHours()>=CONFIG.drawHour){
+
+const win=Math.floor(Math.random()*200)+1
+
+CONFIG.winningNumber=win
+
+localStorage.setItem("mythion_win",win)
+
+document.getElementById("winning-number-display").textContent=win
+
+launchConfetti()
+
+}
+
+}
+
+
+// konfety
+
+function launchConfetti(){
+
+confetti({
+particleCount:200,
+spread:100
+})
+
+}
 
 </script>
 
