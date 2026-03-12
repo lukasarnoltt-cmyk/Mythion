@@ -11,63 +11,156 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
+/* --- Epic background & particles --- */
 body {
   background: black;
-  color: white;
   font-family: 'Cinzel', serif;
+  color: white;
   overflow-x: hidden;
+  position: relative;
 }
-.navbar {
+
+#particles {
   position: fixed;
-  top: 0; width: 100%;
-  padding: 20px 40px;
-  display: flex; justify-content: space-between; align-items: center;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
-  z-index: 999;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
 }
-.navbar .logo { color: gold; font-size:1.8rem; font-weight:bold; }
-.navbar ul { list-style:none; display:flex; gap:30px; }
-.navbar ul li a { text-decoration:none; color:white; transition:0.3s; }
-.navbar ul li a:hover, .navbar ul li a.active { color: gold; text-shadow:0 0 10px gold; }
 
-section { padding:120px 20px 60px; text-align:center; min-height:80vh; position:relative; }
-
-.hero-bg {
-  position:absolute; inset:0; z-index:-2;
-  background: radial-gradient(circle at 50% 50%, rgba(255,215,0,0.05), transparent 70%);
-  overflow:hidden;
-}
 .particle {
-  position:absolute; width:4px; height:4px; background:white; border-radius:50%;
-  opacity:0; animation:floatUp linear infinite;
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: gold;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: floatUp linear infinite;
 }
-@keyframes floatUp { 0%{transform:translateY(100vh);opacity:0;} 20%{opacity:1;} 100%{transform:translateY(-10vh);opacity:0;} }
 
-.content-section { max-width:900px; margin:auto; background: rgba(0,0,0,0.6); padding:30px; border-radius:12px; border:1px solid rgba(255,215,0,0.3); }
-.content-section h2 { color: gold; margin-bottom:20px; text-shadow:0 0 10px gold; }
+@keyframes floatUp {
+  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
 
-.stat-box { display:inline-block; margin:15px; padding:20px 35px; border-radius:12px; backdrop-filter: blur(6px); border:1px solid rgba(255,215,0,0.3); }
-.stat-box h3 { font-size:28px; color:gold; }
-.stat-box p { color:white; margin-top:5px; font-weight:500; }
+/* --- Content Styling --- */
+section#lottery-section {
+  padding: 120px 20px;
+  text-align: center;
+  min-height: 100vh;
+  position: relative;
+}
 
-.winning-box { margin:30px 0; }
-.winning-number { font-size:60px; color:gold; text-shadow:0 0 20px gold; margin-top:10px; }
+h1, h2 {
+  color: gold;
+  text-shadow: 0 0 20px gold;
+  font-family: 'Cinzel', serif;
+}
 
-.countdown { font-size:2rem; color:gold; text-shadow:0 0 10px gold; margin-bottom:30px; }
+h2 {
+  margin-bottom: 40px;
+}
 
-.back-btn { display:inline-block; margin:0 auto 20px auto; padding:10px 20px; background:rgba(255,215,0,0.2); color:gold; font-weight:bold; border:1px solid gold; border-radius:8px; text-decoration:none; transition:0.3s; }
-.back-btn:hover { background:rgba(255,215,0,0.4); color:#fff; }
+.back-btn {
+  display: inline-block;
+  margin: 20px auto;
+  padding: 12px 25px;
+  background: rgba(255,215,0,0.2);
+  color: gold;
+  font-weight: bold;
+  border: 2px solid gold;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: 0.3s;
+}
 
-table { width:100%; border-collapse:collapse; margin-top:20px; }
-table, th, td { border:1px solid gold; }
-th, td { padding:10px; text-align:center; }
-th { background:rgba(255,215,0,0.2); color:gold; }
+.back-btn:hover {
+  background: gold;
+  color: black;
+}
 
-footer { background:#111; padding:30px; text-align:center; }
+/* --- Jackpot & Winning Number --- */
+#jackpot {
+  font-size: 2rem;
+  color: gold;
+  margin-bottom: 30px;
+  text-shadow: 0 0 15px gold;
+}
+
+#winner-number {
+  font-size: 5rem;
+  color: gold;
+  text-shadow: 0 0 30px gold;
+  margin-bottom: 20px;
+  animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+/* --- Countdown --- */
+#countdown {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #fff;
+  text-shadow: 0 0 10px gold;
+}
+
+/* --- Player Table --- */
+#player-table {
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto 50px;
+  border-collapse: collapse;
+}
+
+#player-table th, #player-table td {
+  border: 1px solid rgba(255,215,0,0.3);
+  padding: 12px 15px;
+  text-align: center;
+}
+
+#player-table th {
+  background: rgba(255,215,0,0.2);
+  color: gold;
+  font-weight: bold;
+}
+
+#player-table td {
+  color: #fff;
+}
+
+#player-table tr:hover {
+  background: rgba(255,215,0,0.1);
+  transform: scale(1.02);
+  transition: 0.3s;
+}
+
+/* --- Iframe --- */
+.lottery-iframe {
+  width: 100%;
+  height: 600px;
+  border: 2px solid rgba(255,215,0,0.3);
+  border-radius: 12px;
+  margin-bottom: 40px;
+}
+
+/* --- Footer --- */
+footer {
+  background: #111;
+  padding: 30px;
+  text-align: center;
+  color: #ccc;
+}
+
+/* --- Confetti button effect --- */
 </style>
 </head>
-
 <body>
+
+<div id="particles"></div>
 
 <nav class="navbar">
   <div class="logo">MYTHION</div>
@@ -78,38 +171,30 @@ footer { background:#111; padding:30px; text-align:center; }
   </ul>
 </nav>
 
-<section>
-  <div class="hero-bg"></div>
-  
-  <div class="content-section active">
-    <h2>🎰 Guild Loterie</h2>
-    <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
+<section id="lottery-section">
+  <h1>🎰 Guild Loterie</h1>
+  <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
 
-    <div class="stat-box">
-      <h3>Aktuální Jackpot</h3>
-      <p id="jackpot">50,000 🪙</p>
-    </div>
+  <div id="jackpot">💰 Aktuální Jackpot: 50,000 🪙</div>
+  <div id="winner-number">?</div>
+  <div id="countdown">Odpočet do pátečního losování: 00:00:00</div>
 
-    <div class="winning-box">
-      <h3>Výherní číslo týdne</h3>
-      <div id="winningNumber" class="winning-number">?</div>
-    </div>
+  <table id="player-table">
+    <thead>
+      <tr>
+        <th>Hráč</th>
+        <th>Číslo</th>
+        <th>Sázka</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Exsqueez</td><td>42</td><td>500 🪙</td></tr>
+      <tr><td>Lukáš</td><td>7</td><td>300 🪙</td></tr>
+      <tr><td>Arny</td><td>13</td><td>200 🪙</td></tr>
+    </tbody>
+  </table>
 
-    <div class="countdown">
-      Další losování za: <span id="countdownTimer">?</span>
-    </div>
-
-    <h3>Hráči a jejich čísla</h3>
-    <table>
-      <thead>
-        <tr><th>Jméno</th><th>Číslo</th></tr>
-      </thead>
-      <tbody id="playersTable">
-        <tr><td>Lukáš</td><td>23</td></tr>
-        <tr><td>Arny</td><td>77</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <iframe src="https://exsqueez.github.io/Guild-Lottery/" class="lottery-iframe"></iframe>
 </section>
 
 <footer>
@@ -117,33 +202,56 @@ footer { background:#111; padding:30px; text-align:center; }
 </footer>
 
 <script>
-function generateWinningNumber() {
-  let number = Math.floor(Math.random()*100)+1;
-  document.getElementById("winningNumber").innerText = number;
-  localStorage.setItem("mythionLotteryNumber", number);
-  confetti({particleCount:200, spread:120, origin:{y:0.6}});
+/* --- Particles --- */
+const particleCount = 50;
+const particleContainer = document.getElementById('particles');
+for(let i=0;i<particleCount;i++){
+  const p = document.createElement('div');
+  p.classList.add('particle');
+  p.style.left = Math.random()*100+'%';
+  p.style.animationDuration = 5 + Math.random()*5+'s';
+  p.style.width = 4+Math.random()*4+'px';
+  p.style.height = 4+Math.random()*4+'px';
+  particleContainer.appendChild(p);
 }
 
-// Načtení uloženého čísla
-let savedNumber = localStorage.getItem("mythionLotteryNumber");
-if(savedNumber) document.getElementById("winningNumber").innerText = savedNumber;
+/* --- Countdown to Friday 20:00 --- */
+function updateCountdown(){
+  const now = new Date();
+  const day = now.getDay();
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+  const second = now.getSeconds();
 
-// Odpočet do příštího pátku 20:00
-function updateCountdown() {
-  let now = new Date();
-  let nextFriday = new Date();
-  nextFriday.setDate(now.getDate() + (5 - now.getDay() + 7) % 7);
-  nextFriday.setHours(20,0,0,0);
-  let diff = nextFriday - now;
-  if(diff<=0){ generateWinningNumber(); nextFriday.setDate(nextFriday.getDate()+7); diff = nextFriday - now; }
-  let days = Math.floor(diff/(1000*60*60*24));
-  let hours = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-  let minutes = Math.floor((diff%(1000*60*60))/(1000*60));
-  let seconds = Math.floor((diff%(1000*60))/1000);
-  document.getElementById("countdownTimer").innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  let friday = new Date();
+  friday.setHours(20,0,0,0);
+  const diffDay = (5 + 7 - day) % 7;
+  friday.setDate(now.getDate() + diffDay);
+
+  const diff = friday - now;
+  const h = Math.floor(diff/1000/60/60);
+  const m = Math.floor((diff/1000/60)%60);
+  const s = Math.floor((diff/1000)%60);
+  document.getElementById('countdown').innerText = `Odpočet do pátečního losování: ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
-setInterval(updateCountdown,1000);
+
 updateCountdown();
+setInterval(updateCountdown,1000);
+
+/* --- Winning Number animation --- */
+function generateWinner(){
+  const number = Math.floor(Math.random()*100)+1;
+  document.getElementById('winner-number').innerText = number;
+  confetti({
+    particleCount:200,
+    spread:120,
+    origin:{y:0.6}
+  });
+}
+
+// Uncomment this line if you want to test winner generation immediately
+// generateWinner();
+
 </script>
 
 </body>
