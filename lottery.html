@@ -2,52 +2,77 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<title>Mythion Lottery</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MYTHION Guild | Loterie</title>
+
+<link rel="stylesheet" href="css/style_final_v8.css">
 
 <style>
 
 body{
-background:#050505;
+background:#0b0b0b;
 color:white;
 font-family:Arial;
+margin:0;
+}
+
+.wrapper{
+max-width:900px;
+margin:auto;
+padding:40px 20px;
 text-align:center;
 }
 
-h1{
+.mythion-title{
 font-size:60px;
 color:gold;
-margin-top:40px;
-text-shadow:0 0 20px gold;
+font-weight:bold;
+text-shadow:0 0 25px gold;
+margin-bottom:10px;
 }
 
 .countdown{
-font-size:20px;
-margin-top:10px;
+font-size:22px;
+margin-bottom:30px;
 color:#ffd700;
 }
 
+.number-box{
+background:#111;
+border:2px solid gold;
+border-radius:15px;
+padding:30px;
+margin-bottom:30px;
+}
+
 .number{
-font-size:80px;
-margin:40px;
-font-weight:bold;
+font-size:90px;
+color:gold;
 text-shadow:0 0 30px gold;
 }
 
 table{
-margin:auto;
-margin-top:40px;
+width:100%;
 border-collapse:collapse;
-width:600px;
+background:#111;
+border-radius:10px;
+overflow:hidden;
 }
 
-td,th{
+th{
+background:#1a1a1a;
+color:gold;
+padding:12px;
+}
+
+td{
 padding:12px;
 border-bottom:1px solid #333;
 }
 
-th{
-color:gold;
+tr:hover{
+background:#181818;
 }
 
 </style>
@@ -55,17 +80,24 @@ color:gold;
 
 <body>
 
-<h1>MYTHION</h1>
+<div class="wrapper">
+
+<div class="mythion-title">MYTHION LOTTERY</div>
 
 <div id="countdown" class="countdown">
-Načítání odpočtu...
+Losování se načítá...
 </div>
 
-<div class="number" id="winningNumber">
-?
+<div class="number-box">
+
+<div style="font-size:22px;margin-bottom:10px;">Výherní číslo</div>
+
+<div id="winningNumber" class="number">?</div>
+
 </div>
 
 <table>
+
 <thead>
 <tr>
 <th>#</th>
@@ -75,9 +107,11 @@ Načítání odpočtu...
 </tr>
 </thead>
 
-<tbody id="playersTable"></tbody>
+<tbody id="players"></tbody>
 
 </table>
+
+</div>
 
 <script>
 
@@ -87,7 +121,6 @@ const drawHour = 20
 let winningNumber = null
 
 const players = [
-
 {name:"Exsqueez",bet:37},
 {name:"Luxes",bet:12},
 {name:"Arny",bet:55},
@@ -102,10 +135,9 @@ const players = [
 {name:"DreimorE3",bet:73},
 {name:"Faceless",bet:67},
 {name:"Daenysh",bet:45}
-
 ]
 
-function nextDraw(){
+function getNextDraw(){
 
 const now = new Date()
 
@@ -124,13 +156,13 @@ return draw
 
 }
 
-function updateCountdown(){
+function startCountdown(){
 
 const el = document.getElementById("countdown")
 
 setInterval(()=>{
 
-const diff = nextDraw() - new Date()
+const diff = getNextDraw() - new Date()
 
 const d = Math.floor(diff / 86400000)
 const h = Math.floor(diff / 3600000) % 24
@@ -138,7 +170,7 @@ const m = Math.floor(diff / 60000) % 60
 const s = Math.floor(diff / 1000) % 60
 
 if(diff > 0){
-el.innerText = "Losování za: " + d+"d "+h+"h "+m+"m "+s+"s"
+el.innerText = "Další losování za " + d+"d "+h+"h "+m+"m "+s+"s"
 }
 
 if(diff <= 0 && winningNumber === null){
@@ -179,7 +211,7 @@ renderPlayers()
 
 function renderPlayers(){
 
-const body = document.getElementById("playersTable")
+const body = document.getElementById("players")
 
 body.innerHTML = ""
 
@@ -213,7 +245,7 @@ body.innerHTML += `
 
 renderPlayers()
 
-updateCountdown()
+startCountdown()
 
 </script>
 
