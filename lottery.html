@@ -4,163 +4,137 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MYTHION Guild | Loterie</title>
-
 <link rel="stylesheet" href="css/style_final_v8.css">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-/* --- Epic background & particles --- */
 body {
-  background: black;
   font-family: 'Cinzel', serif;
+  background: black;
   color: white;
   overflow-x: hidden;
-  position: relative;
+  margin: 0;
 }
 
-#particles {
+.navbar {
   position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
+  top: 0;
+  width: 100%;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(10px);
+  z-index: 999;
 }
 
-.particle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: gold;
-  border-radius: 50%;
-  opacity: 0.7;
-  animation: floatUp linear infinite;
-}
+.navbar .logo { color: gold; font-size: 1.8rem; font-weight: bold; }
+.navbar ul { list-style: none; display: flex; gap: 30px; }
+.navbar ul li a { text-decoration: none; color: white; font-size: 1rem; transition: 0.3s; }
+.navbar ul li a:hover { color: gold; }
 
-@keyframes floatUp {
-  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-}
-
-/* --- Content Styling --- */
-section#lottery-section {
-  padding: 120px 20px;
+.hero {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  min-height: 100vh;
   position: relative;
+  background: linear-gradient(135deg, #111, #222);
 }
 
-h1, h2 {
-  color: gold;
-  text-shadow: 0 0 20px gold;
-  font-family: 'Cinzel', serif;
-}
+.hero h1 { font-size: 3rem; color: gold; text-shadow: 0 0 15px gold; }
+.hero p { font-size: 1.2rem; color: #fff; margin-top: 10px; }
 
-h2 {
-  margin-bottom: 40px;
-}
-
-.back-btn {
-  display: inline-block;
-  margin: 20px auto;
-  padding: 12px 25px;
-  background: rgba(255,215,0,0.2);
-  color: gold;
-  font-weight: bold;
-  border: 2px solid gold;
-  border-radius: 10px;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.back-btn:hover {
-  background: gold;
-  color: black;
-}
-
-/* --- Jackpot & Winning Number --- */
-#jackpot {
+#countdown {
   font-size: 2rem;
-  color: gold;
-  margin-bottom: 30px;
+  margin-top: 10px;
+  color: #ffd700;
   text-shadow: 0 0 15px gold;
 }
 
-#winner-number {
-  font-size: 5rem;
-  color: gold;
-  text-shadow: 0 0 30px gold;
-  margin-bottom: 20px;
-  animation: pulse 2s infinite alternate;
+/* Hlavní sekce loterie */
+#lottery-section {
+  padding: 120px 20px 50px 20px;
+  max-width: 1000px;
+  margin: auto;
 }
 
-@keyframes pulse {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
-}
-
-/* --- Countdown --- */
-#countdown {
-  font-size: 2.5rem;
-  margin-bottom: 30px;
-  color: #fff;
-  text-shadow: 0 0 10px gold;
-}
-
-/* --- Player Table --- */
-#player-table {
-  width: 90%;
-  max-width: 900px;
-  margin: 0 auto 50px;
-  border-collapse: collapse;
-}
-
-#player-table th, #player-table td {
+.card {
+  background: rgba(0,0,0,0.6);
+  padding: 20px;
+  border-radius: 12px;
   border: 1px solid rgba(255,215,0,0.3);
-  padding: 12px 15px;
+  box-shadow: 0 0 30px rgba(255,215,0,0.2);
+  margin-bottom: 30px;
+}
+
+/* Výherní číslo */
+.winning-number {
+  font-size: 60px;
+  color: gold;
+  text-align: center;
+  margin: 20px 0;
+  text-shadow: 0 0 20px gold;
+}
+
+/* Tabulka hráčů */
+.players-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.players-table th, .players-table td {
+  border: 1px solid gold;
+  padding: 10px;
   text-align: center;
 }
 
-#player-table th {
+.players-table th {
   background: rgba(255,215,0,0.2);
+  color: black;
+}
+
+/* Jackpot */
+#jackpot {
+  font-size: 1.8rem;
   color: gold;
-  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px gold;
 }
 
-#player-table td {
-  color: #fff;
+/* Animace slotu */
+.slot {
+  display: inline-block;
+  font-size: 3rem;
+  margin: 0 5px;
+  color: gold;
+  text-shadow: 0 0 10px #fff;
+  animation: spin 1s ease-in-out infinite alternate;
 }
 
-#player-table tr:hover {
-  background: rgba(255,215,0,0.1);
-  transform: scale(1.02);
-  transition: 0.3s;
+@keyframes spin {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-20px); }
 }
 
-/* --- Iframe --- */
-.lottery-iframe {
-  width: 100%;
-  height: 600px;
-  border: 2px solid rgba(255,215,0,0.3);
-  border-radius: 12px;
-  margin-bottom: 40px;
-}
-
-/* --- Footer --- */
+/* Footer */
 footer {
   background: #111;
   padding: 30px;
   text-align: center;
+  margin-top: 50px;
   color: #ccc;
 }
-
-/* --- Confetti button effect --- */
 </style>
 </head>
-<body>
 
-<div id="particles"></div>
+<body>
 
 <nav class="navbar">
   <div class="logo">MYTHION</div>
@@ -171,30 +145,46 @@ footer {
   </ul>
 </nav>
 
+<div class="hero">
+  <div>
+    <h1>🎰 Guild Loterie</h1>
+    <p>Automatické losování každé pátek v 20:00</p>
+    <div id="countdown">Na losování zbývá: --:--:--</div>
+  </div>
+</div>
+
 <section id="lottery-section">
-  <h1>🎰 Guild Loterie</h1>
-  <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
 
-  <div id="jackpot">💰 Aktuální Jackpot: 50,000 🪙</div>
-  <div id="winner-number">?</div>
-  <div id="countdown">Odpočet do pátečního losování: 00:00:00</div>
+  <div id="jackpot" class="card">
+    Aktuální Jackpot: <span id="jackpotValue">80,000 🪙</span>
+  </div>
 
-  <table id="player-table">
-    <thead>
-      <tr>
-        <th>Hráč</th>
-        <th>Číslo</th>
-        <th>Sázka</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>Exsqueez</td><td>42</td><td>500 🪙</td></tr>
-      <tr><td>Lukáš</td><td>7</td><td>300 🪙</td></tr>
-      <tr><td>Arny</td><td>13</td><td>200 🪙</td></tr>
-    </tbody>
-  </table>
+  <div class="card">
+    <h2>Výherní číslo</h2>
+    <div id="winningNumber" class="winning-number">?</div>
+    <div class="slot">
+      <span>🎰</span><span>🎰</span><span>🎰</span>
+    </div>
+  </div>
 
-  <iframe src="https://exsqueez.github.io/Guild-Lottery/" class="lottery-iframe"></iframe>
+  <div class="card">
+    <h2>Hráči a sázky</h2>
+    <table class="players-table">
+      <thead>
+        <tr>
+          <th>Jméno</th>
+          <th>Sázka</th>
+          <th>Číslo</th>
+        </tr>
+      </thead>
+      <tbody id="playersBody">
+        <tr><td>Lukáš</td><td>1000 🪙</td><td>42</td></tr>
+        <tr><td>Exsqueez</td><td>500 🪙</td><td>7</td></tr>
+        <tr><td>Mimi</td><td>300 🪙</td><td>88</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </section>
 
 <footer>
@@ -202,56 +192,54 @@ footer {
 </footer>
 
 <script>
-/* --- Particles --- */
-const particleCount = 50;
-const particleContainer = document.getElementById('particles');
-for(let i=0;i<particleCount;i++){
-  const p = document.createElement('div');
-  p.classList.add('particle');
-  p.style.left = Math.random()*100+'%';
-  p.style.animationDuration = 5 + Math.random()*5+'s';
-  p.style.width = 4+Math.random()*4+'px';
-  p.style.height = 4+Math.random()*4+'px';
-  particleContainer.appendChild(p);
-}
+// --------------------------
+// Pátek 20:00 automatické losování
+// --------------------------
+function generateNumber() {
+  let number = Math.floor(Math.random() * 100) + 1;
+  document.getElementById("winningNumber").innerText = number;
 
-/* --- Countdown to Friday 20:00 --- */
-function updateCountdown(){
-  const now = new Date();
-  const day = now.getDay();
-  const hour = now.getHours();
-  const minute = now.getMinutes();
-  const second = now.getSeconds();
-
-  let friday = new Date();
-  friday.setHours(20,0,0,0);
-  const diffDay = (5 + 7 - day) % 7;
-  friday.setDate(now.getDate() + diffDay);
-
-  const diff = friday - now;
-  const h = Math.floor(diff/1000/60/60);
-  const m = Math.floor((diff/1000/60)%60);
-  const s = Math.floor((diff/1000)%60);
-  document.getElementById('countdown').innerText = `Odpočet do pátečního losování: ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-}
-
-updateCountdown();
-setInterval(updateCountdown,1000);
-
-/* --- Winning Number animation --- */
-function generateWinner(){
-  const number = Math.floor(Math.random()*100)+1;
-  document.getElementById('winner-number').innerText = number;
+  // konfety při losování
   confetti({
-    particleCount:200,
-    spread:120,
-    origin:{y:0.6}
+    particleCount: 200,
+    spread: 120,
+    origin: {y:0.6}
   });
+
+  localStorage.setItem("mythionLotteryNumber", number);
 }
 
-// Uncomment this line if you want to test winner generation immediately
-// generateWinner();
+// načtení uloženého čísla
+let savedNumber = localStorage.getItem("mythionLotteryNumber");
+if (savedNumber) document.getElementById("winningNumber").innerText = savedNumber;
 
+// Odpočet na pátek 20:00
+function updateCountdown() {
+  let now = new Date();
+  let nextFriday = new Date();
+  nextFriday.setDate(now.getDate() + ((5 - now.getDay() + 7) % 7));
+  nextFriday.setHours(20,0,0,0);
+
+  let diff = nextFriday - now;
+  if (diff < 0) diff += 7*24*60*60*1000;
+
+  let h = Math.floor(diff / (1000*60*60));
+  let m = Math.floor((diff % (1000*60*60)) / (1000*60));
+  let s = Math.floor((diff % (1000*60)) / 1000);
+
+  document.getElementById("countdown").innerText = `Na losování zbývá: ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+
+// kontrola pátečního losování
+function checkFriday() {
+  let now = new Date();
+  if(now.getDay()===5 && now.getHours()===20 && now.getMinutes()===0){
+    generateNumber();
+  }
+}
+
+setInterval(updateCountdown, 1000);
+setInterval(checkFriday, 60000);
 </script>
 
 </body>
