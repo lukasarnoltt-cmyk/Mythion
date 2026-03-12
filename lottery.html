@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MYTHION Guild Casino</title>
+<title>MYTHION Guild | Loterie</title>
 
 <link rel="stylesheet" href="css/style_final_v8.css">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
@@ -11,38 +11,27 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-.box{
-  text-align:center;
-  margin:40px 0;
-}
-.slot{
-  font-size:70px;
-  margin:20px;
-}
-input{
-  padding:8px;
-  margin:5px;
-}
-button{
-  padding:10px 20px;
-  margin:10px;
-  cursor:pointer;
-}
-.jackpot{
-  font-size:40px;
-  color:gold;
-  text-shadow:0 0 10px gold;
-}
+body { background:#050505; color:#fff; }
+.content-section h2 { text-align:center; color:gold; margin-bottom:20px; font-family:'Cinzel',serif; text-shadow:0 0 15px gold; }
+.lottery-container { max-width:900px; margin:0 auto; text-align:center; padding:20px; background:rgba(0,0,0,0.6); border-radius:12px; border:2px solid rgba(255,215,0,0.3); }
+.back-btn { display:inline-block;margin:10px auto;padding:10px 20px;background:rgba(255,215,0,0.2);color:gold;font-weight:bold;border:1px solid gold;border-radius:8px;text-decoration:none;transition:0.3s; }
+.back-btn:hover { background:rgba(255,215,0,0.4);color:#fff; }
+#winningNumber { font-size:60px; color:gold; text-shadow:0 0 20px gold; margin:10px 0; }
+#countdown { font-size:30px; margin:20px 0; color:#facc15; }
+#jackpot { font-size:36px; margin:10px 0; color:lime; }
+.history { margin-top:20px; text-align:left; max-height:150px; overflow-y:auto; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; }
+.history h3 { margin-top:0; color:gold; text-align:center; }
+.history ul { list-style:none; padding-left:10px; }
+.history li { margin-bottom:5px; }
 </style>
 </head>
-
 <body>
 
 <nav class="navbar">
   <div class="logo">MYTHION</div>
   <ul>
     <li><a href="index.html">Domů</a></li>
-    <li><a href="lottery.html">Guild Casino</a></li>
+    <li><a href="lottery.html" class="active">Guild Loterie</a></li>
     <li><a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a></li>
   </ul>
 </nav>
@@ -50,220 +39,127 @@ button{
 <section id="content-area">
   <div class="content-section active">
 
-<h2>🎰 Mythion Guild Casino</h2>
+    <h2>🎰 Guild Loterie</h2>
 
-<!-- JACKPOT -->
-<div class="box">
-<h3>Guild Jackpot</h3>
-<div id="jackpot" class="jackpot">100</div>
-</div>
+    <div style="text-align:center;">
+      <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
+    </div>
 
-<!-- LOTTERY BETS -->
-<div class="box">
-<h3>🎟 Loterie – sázky</h3>
-<input id="betName" placeholder="Jméno">
-<input id="betNumber" type="number" min="1" max="100" placeholder="Číslo">
-<button onclick="addBet()">Přidat sázku</button>
-<ul id="betList"></ul>
-</div>
+    <div class="lottery-container">
 
-<!-- LOSOVÁNÍ -->
-<div class="box">
-<h3>Losování čísla</h3>
-<div id="winningNumber" style="font-size:60px;color:gold">?</div>
-<button onclick="drawLottery()">Losovat</button>
-</div>
+      <div id="jackpot">Jackpot: 50,000 🪙</div>
+      <div id="countdown">Odpočet do losování: --:--:--</div>
 
-<!-- SLOT -->
-<div class="box">
-<h3>🎰 Mythion Automat</h3>
-<input id="playerName" placeholder="Jméno hráče">
-<button onclick="loadPlayer()">Načíst hráče</button>
-<div>Coins: <span id="playerCoins">0</span></div>
-<div id="slotDisplay" class="slot">❓ ❓ ❓</div>
-<button onclick="spinSlot()">Protočit (5 coinů)</button>
-<div id="slotResult"></div>
-</div>
+      <div>
+        <h3>Výherní číslo týdne</h3>
+        <div id="winningNumber">?</div>
+      </div>
 
-<!-- HISTORIE -->
-<div class="box">
-<h3>🏆 Historie výher</h3>
-<ul id="historyList"></ul>
-</div>
+      <div class="history">
+        <h3>Historie vítězů</h3>
+        <ul id="winnerHistory">
+          <!-- Zde se automaticky doplní -->
+        </ul>
+      </div>
 
-<!-- LEADERBOARD -->
-<div class="box">
-<h3>👑 Top hráči</h3>
-<ul id="leaderboard"></ul>
-</div>
-
-</div>
+    </div>
+  </div>
 </section>
 
 <footer>
-<p>&copy; 2026 Mythion Guild</p>
+  <p>&copy; 2026 Mythion Guild |
+     <a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a>
+  </p>
 </footer>
 
 <script>
-/* DATA */
-let bets=JSON.parse(localStorage.getItem("bets"))||[];
-let players=JSON.parse(localStorage.getItem("players"))||{};
-let history=JSON.parse(localStorage.getItem("history"))||[];
-let jackpot=Number(localStorage.getItem("jackpot"))||100;
-let currentPlayer=null;
+// ============================
+// KONFIGURACE
+// ============================
+const jackpotKey = "mythionLotteryJackpot";
+const winningKey = "mythionLotteryNumber";
+const historyKey = "mythionLotteryHistory";
+const baseJackpot = 50000; // start jackpotu
+const fridayHour = 20; // 20:00 pátek
+const fridayMinute = 0;
 
-function save(){
-  localStorage.setItem("bets",JSON.stringify(bets));
-  localStorage.setItem("players",JSON.stringify(players));
-  localStorage.setItem("history",JSON.stringify(history));
-  localStorage.setItem("jackpot",jackpot);
+// ============================
+// Inicializace
+// ============================
+let jackpot = localStorage.getItem(jackpotKey);
+if(!jackpot) jackpot = baseJackpot;
+document.getElementById("jackpot").innerText = `Jackpot: ${parseInt(jackpot).toLocaleString()} 🪙`;
+
+let savedNumber = localStorage.getItem(winningKey);
+if(savedNumber) document.getElementById("winningNumber").innerText = savedNumber;
+
+let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+updateHistory();
+
+// ============================
+// Funkce
+// ============================
+
+// Countdown do pátku 20:00
+function updateCountdown(){
+  const now = new Date();
+  let nextFriday = new Date();
+  nextFriday.setDate(now.getDate() + (5 - now.getDay() + 7) % 7);
+  nextFriday.setHours(fridayHour, fridayMinute, 0, 0);
+  const diff = nextFriday - now;
+  if(diff <= 0) return;
+
+  let h = Math.floor(diff/1000/60/60);
+  let m = Math.floor(diff/1000/60) % 60;
+  let s = Math.floor(diff/1000) % 60;
+  document.getElementById("countdown").innerText = `Odpočet do losování: ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
 
-/* BETS */
-function addBet(){
-  let name=document.getElementById("betName").value;
-  let number=document.getElementById("betNumber").value;
-  if(!name||!number) return;
-  bets.push({name:name,number:Number(number)});
-  renderBets();
-  save();
+// Losování
+function drawWinner(){
+  const winner = Math.floor(Math.random()*100)+1;
+  document.getElementById("winningNumber").innerText = winner;
+  confetti({particleCount:200,spread:120,origin:{y:0.6}});
+  localStorage.setItem(winningKey,winner);
+
+  // Přidání do historie
+  const entry = `Výherní číslo: ${winner} (Jackpot ${parseInt(jackpot).toLocaleString()} 🪙)`;
+  history.unshift(entry);
+  if(history.length>10) history.pop();
+  localStorage.setItem(historyKey,JSON.stringify(history));
+  updateHistory();
+
+  // Reset jackpot
+  jackpot = baseJackpot;
+  localStorage.setItem(jackpotKey,jackpot);
+  document.getElementById("jackpot").innerText = `Jackpot: ${parseInt(jackpot).toLocaleString()} 🪙`;
 }
 
-function renderBets(){
-  let list=document.getElementById("betList");
-  list.innerHTML="";
-  bets.forEach(b=>{
-    let li=document.createElement("li");
-    li.innerText=b.name+" → "+b.number;
-    list.appendChild(li);
+function updateHistory(){
+  const ul = document.getElementById("winnerHistory");
+  ul.innerHTML = "";
+  history.forEach(item=>{
+    const li = document.createElement("li");
+    li.innerText = item;
+    ul.appendChild(li);
   });
 }
 
-/* LOTTERY */
-function drawLottery(){
-  let num=Math.floor(Math.random()*100)+1;
-  document.getElementById("winningNumber").innerText=num;
-
-  let winner="Nikdo";
-  bets.forEach(b=>{
-    if(b.number===num) winner=b.name;
-  });
-
-  history.unshift({number:num,winner:winner});
-
-  if(winner!=="Nikdo"){
-    confetti({particleCount:200,spread:120});
-    bets=[];
-    jackpot=100;
-  }else{
-    jackpot+=20;
+// ============================
+// Automatické losování každý pátek 20:00
+// ============================
+setInterval(()=>{
+  const now = new Date();
+  if(now.getDay()===5 && now.getHours()===fridayHour && now.getMinutes()===fridayMinute){
+    drawWinner();
   }
+},60000);
 
-  updateJackpot();
-  renderHistory();
-  renderBets();
-  save();
-}
-
-/* JACKPOT */
-function updateJackpot(){
-  document.getElementById("jackpot").innerText=jackpot;
-}
-
-/* CASINO */
-const symbols=["🐉","🪙","⭐","💀","🔥"];
-
-function loadPlayer(){
-  let name=document.getElementById("playerName").value;
-  if(!players[name]){
-    players[name]={coins:20};
-  }
-  currentPlayer=name;
-  updateCoins();
-  renderLeaderboard();
-  save();
-}
-
-function updateCoins(){
-  if(!currentPlayer) return;
-  document.getElementById("playerCoins").innerText=players[currentPlayer].coins;
-}
-
-function spinSlot(){
-  if(!currentPlayer) return;
-  if(players[currentPlayer].coins<5){
-    document.getElementById("slotResult").innerText="Nemáš coin!";
-    return;
-  }
-  players[currentPlayer].coins-=5;
-  jackpot+=2;
-  updateJackpot();
-
-  let display=document.getElementById("slotDisplay");
-  let spins=0;
-  let interval=setInterval(()=>{
-    let a=symbols[Math.floor(Math.random()*symbols.length)];
-    let b=symbols[Math.floor(Math.random()*symbols.length)];
-    let c=symbols[Math.floor(Math.random()*symbols.length)];
-    display.innerText=a+" "+b+" "+c;
-    spins++;
-    if(spins>20){
-      clearInterval(interval);
-      checkWin(a,b,c);
-    }
-  },100);
-}
-
-function checkWin(a,b,c){
-  let reward=0;
-  if(a===b&&b===c){
-    if(a==="🐉") reward=100;
-    if(a==="🪙") reward=50;
-    if(a==="⭐") reward=jackpot;
-  }
-  if(reward>0){
-    players[currentPlayer].coins+=reward;
-    confetti({particleCount:150,spread:100});
-    document.getElementById("slotResult").innerText="🎉 Výhra "+reward+" coinů";
-    jackpot=100;
-  }else{
-    document.getElementById("slotResult").innerText="Nic";
-  }
-  updateCoins();
-  updateJackpot();
-  renderLeaderboard();
-  save();
-}
-
-/* LEADERBOARD */
-function renderLeaderboard(){
-  let list=document.getElementById("leaderboard");
-  list.innerHTML="";
-  let sorted=Object.entries(players)
-    .sort((a,b)=>b[1].coins-a[1].coins);
-  sorted.forEach(p=>{
-    let li=document.createElement("li");
-    li.innerText=p[0]+" — "+p[1].coins+" coinů";
-    list.appendChild(li);
-  });
-}
-
-/* HISTORY */
-function renderHistory(){
-  let list=document.getElementById("historyList");
-  list.innerHTML="";
-  history.forEach(h=>{
-    let li=document.createElement("li");
-    li.innerText="Číslo "+h.number+" | vítěz: "+h.winner;
-    list.appendChild(li);
-  });
-}
-
-/* INIT */
-updateJackpot();
-renderBets();
-renderHistory();
-renderLeaderboard();
+// ============================
+// Aktualizace countdown
+// ============================
+setInterval(updateCountdown,1000);
+updateCountdown();
 
 </script>
 
