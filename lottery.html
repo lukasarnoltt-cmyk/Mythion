@@ -11,141 +11,152 @@
 <style>
 body {
     font-family: 'Inter', sans-serif;
-    background: black;
-    color: #f3f3f3;
-    min-height: 100vh;
+    background: #050505;
+    color: white;
+    overflow-x: hidden;
+}
+.hero {
+    height: 60vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-}
-.container {
-    max-width: 900px;
-    width: 100%;
     text-align: center;
+    position: relative;
 }
-h1 {
+.hero h1 {
     font-family: 'Cinzel', serif;
-    font-size: 4rem;
+    font-size: 5rem;
     color: gold;
     text-shadow: 0 0 20px gold;
-    margin-bottom: 10px;
-    animation: glow 2s infinite alternate;
+    animation: glow 2.5s infinite alternate;
 }
 @keyframes glow {
-    0% { text-shadow: 0 0 10px gold; }
-    100% { text-shadow: 0 0 30px gold; }
+    from { text-shadow: 0 0 10px gold; }
+    to { text-shadow: 0 0 40px gold, 0 0 60px orange; }
 }
+.fog-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
+}
+.fog {
+    position: absolute;
+    width: 300vw;
+    height: 100vh;
+    background: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png') repeat-x;
+    animation: fogmove 60s linear infinite;
+    opacity: 0.15;
+}
+.fog:nth-child(2) {
+    animation-direction: reverse;
+    top: 20%;
+    opacity: 0.1;
+}
+@keyframes fogmove { 0% { transform: translateX(0); } 100% { transform: translateX(-200vw); } }
 .card {
-    background: rgba(20,20,20,0.85);
-    border: 1px solid gold;
-    border-radius: 15px;
+    background: rgba(15, 15, 15, 0.8);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 16px;
     padding: 20px;
-    margin: 15px 0;
-    backdrop-filter: blur(8px);
-}
-.countdown {
-    font-family: 'Inter', monospace;
-    font-size: 1.5rem;
-    margin: 10px 0;
-    color: #ffd700;
-    animation: pulse 1.5s infinite alternate;
-}
-@keyframes pulse {
-    0% { text-shadow: 0 0 10px #ffd700; }
-    100% { text-shadow: 0 0 25px #fff700; }
+    margin: 20px auto;
+    max-width: 900px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 30px rgba(212,175,55,0.2);
 }
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
-}
-th, td {
-    padding: 8px;
-    border: 1px solid #444;
     text-align: center;
 }
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
 th {
-    background: rgba(255,215,0,0.2);
     color: gold;
+    font-family: 'Cinzel', serif;
 }
-td.winner {
-    background: green;
-    color: #fff;
-    font-weight: bold;
-    animation: winnerGlow 1s infinite alternate;
+td {
+    font-family: monospace;
 }
-@keyframes winnerGlow {
-    0% { box-shadow: 0 0 5px gold; }
-    100% { box-shadow: 0 0 20px gold; }
+#winner-number {
+    font-size: 4rem;
+    font-family: 'Cinzel', serif;
+    color: orange;
+    margin: 10px 0;
+    animation: pulse 1.5s infinite alternate;
 }
-.animated-number {
-    display: inline-block;
-    animation: numberAnim 2s infinite alternate;
+@keyframes pulse { 0%{ transform: scale(1); } 100%{ transform: scale(1.2); } }
+#countdown {
+    font-family: monospace;
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: yellow;
+    animation: glowcount 1.5s infinite alternate;
 }
-@keyframes numberAnim {
-    0% { transform: scale(1); color: #ffd700; }
-    50% { transform: scale(1.3); color: #fff; }
-    100% { transform: scale(1); color: #ffd700; }
-}
+@keyframes glowcount { 0%{ text-shadow: 0 0 5px yellow;} 100%{ text-shadow: 0 0 20px gold;} }
 </style>
 </head>
 <body>
-<div class="container">
-    <h1>Mythion Loterie</h1>
-    <div class="card">
-        <div>Odpočet do losování (Pátek 20:00):</div>
-        <div id="countdown" class="countdown">Načítání...</div>
-    </div>
-    <div class="card">
-        <div>Vítězné číslo:</div>
-        <div id="winning-number" class="text-6xl my-3 animated-number">?</div>
-    </div>
-    <div class="card">
-        <div>Seznam hráčů:</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Hráč</th>
-                    <th>Vsazeno (g)</th>
-                    <th>Tip</th>
-                    <th>Rozdíl</th>
-                    <th>Stav</th>
-                </tr>
-            </thead>
-            <tbody id="player-table">
-                <!-- Naplní JS -->
-            </tbody>
-        </table>
-    </div>
+<div class="fog-container">
+    <div class="fog"></div>
+    <div class="fog"></div>
+</div>
+
+<div class="hero">
+    <h1>Mythion</h1>
+</div>
+
+<div class="card">
+    <h2 class="text-2xl mb-2 font-cinzel">Guildová Loterie</h2>
+    <div>Celkový Jackpot: <span id="jackpot">0</span> g</div>
+    <div id="countdown">Načítání odpočtu...</div>
+    <div id="winner-number">?</div>
+
+    <h3 class="mt-4 font-bold">Sázky hráčů</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Hráč</th>
+                <th>Vsazeno</th>
+                <th>Tip</th>
+                <th>Stav</th>
+            </tr>
+        </thead>
+        <tbody id="players-table">
+        </tbody>
+    </table>
 </div>
 
 <script>
-// =================== KONFIGURACE ===================
-const entryFee = 5000;
-const drawDay = 5; // Pátek
-const drawHour = 20; // 20:00
-let winningNumber = null; // bude vybráno automaticky
+// ==================== KONFIG ====================
+const ENTRY_FEE = 5000;
+const JACKPOT = 0; // nastavíš sám
+const DRAW_DAY = 5; // Pátek
+const DRAW_HOUR = 20; // 20:00
+
+// hráči
 const players = [
-    {name:'Exsqueez', bet: 0},
-    {name:'Luxes', bet:0},
-    {name:'Arny', bet:0},
-    {name:'Suzu', bet:0},
-    {name:'Vecty', bet:0},
-    {name:'Cikynxd', bet:0}
+    { name: 'Exsqueez', bet: null },
+    { name: 'Luxes', bet: null },
+    { name: 'Arny', bet: null },
+    { name: 'Suzu', bet: null },
+    { name: 'Vecty', bet: null },
 ];
 
-// =================== FUNKCE ===================
+// ==================== FUNKCE ====================
 function getNextDraw() {
     const now = new Date();
     const today = now.getDay();
-    const daysUntil = (drawDay - today + 7) % 7;
-    const nextDraw = new Date(now);
-    nextDraw.setDate(now.getDate() + daysUntil);
-    nextDraw.setHours(drawHour,0,0,0);
-    if (daysUntil === 0 && now.getHours() >= drawHour) nextDraw.setDate(nextDraw.getDate() + 7);
-    return nextDraw;
+    let daysUntil = (DRAW_DAY - today + 7) % 7;
+    if(daysUntil === 0 && now.getHours() >= DRAW_HOUR) daysUntil = 7;
+    const next = new Date(now);
+    next.setDate(now.getDate() + daysUntil);
+    next.setHours(DRAW_HOUR,0,0,0);
+    return next;
 }
 
 function updateCountdown() {
@@ -153,60 +164,50 @@ function updateCountdown() {
     const nextDraw = getNextDraw();
     const now = new Date();
     const diff = nextDraw - now;
-    if (diff <= 0) {
+    if(diff<=0){
         countdownEl.textContent = "Losování probíhá...";
-        autoDraw();
+        drawNumber();
         return;
     }
     const d = Math.floor(diff/1000/60/60/24);
-    const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-    const m = Math.floor((diff % (1000*60*60)) / (1000*60));
-    const s = Math.floor((diff % (1000*60))/1000);
-    countdownEl.textContent = `${d}d ${h}h ${m}m ${s}s`;
+    const h = Math.floor((diff/1000/60/60)%24);
+    const m = Math.floor((diff/1000/60)%60);
+    const s = Math.floor((diff/1000)%60);
+    countdownEl.textContent = `Zbývá: ${d}d ${h}h ${m}m ${s}s`;
 }
+setInterval(updateCountdown,1000);
 
-// =================== LOSOVÁNÍ ===================
-function autoDraw() {
-    if(winningNumber !== null) return;
-    const animEl = document.getElementById('winning-number');
-    let count = 0;
+// ==================== LOSOVÁNÍ ====================
+function drawNumber() {
+    const winnerNumber = Math.floor(Math.random()*100)+1;
+    const winnerEl = document.getElementById('winner-number');
+    let current = 0;
     const interval = setInterval(()=>{
-        const rand = Math.floor(Math.random()*100)+1;
-        animEl.textContent = rand;
-        count++;
-        if(count>30){ // 30 animací = vybráno
-            clearInterval(interval);
-            winningNumber = Math.floor(Math.random()*100)+1;
-            animEl.textContent = winningNumber;
-            updateTable();
-            confetti({particleCount:100, spread:100, origin:{y:0.6}});
-        }
+        current = Math.floor(Math.random()*100)+1;
+        winnerEl.textContent = current;
     },50);
+    setTimeout(()=>{
+        clearInterval(interval);
+        winnerEl.textContent = winnerNumber;
+        confetti({particleCount: 100, spread: 360, origin:{y:0.4}});
+    },2000);
 }
 
-// =================== TABULKA ===================
-function updateTable(){
-    const tbody = document.getElementById('player-table');
-    tbody.innerHTML='';
+// ==================== RENDER HRÁČI ====================
+function renderPlayers(){
+    const tbody = document.getElementById('players-table');
+    tbody.innerHTML = '';
     players.forEach((p,i)=>{
-        const diff = winningNumber ? Math.abs(p.bet-winningNumber) : '-';
-        const status = p.bet===winningNumber?'VÍTĚZ':(p.bet? 'Zaplatil':'Čekání');
-        const tr = document.createElement('tr');
-        tr.innerHTML=`
+        tbody.innerHTML += `<tr>
             <td>${i+1}</td>
             <td>${p.name}</td>
-            <td>${entryFee}</td>
-            <td>${p.bet||'-'}</td>
-            <td>${diff}</td>
-            <td class="${status==='VÍTĚZ'?'winner':''}">${status}</td>
-        `;
-        tbody.appendChild(tr);
+            <td>${ENTRY_FEE}</td>
+            <td>${p.bet!==null?p.bet:'?'}</td>
+            <td>${p.bet!==null?'Vsazeno':'Čeká'}</td>
+        </tr>`;
     });
 }
-
-// =================== INITIAL ===================
-setInterval(updateCountdown,1000);
-updateTable();
+renderPlayers();
 </script>
 </body>
 </html>
