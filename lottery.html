@@ -4,183 +4,267 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mythion Casino | Loterie</title>
-
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #050505;
-    background-image: radial-gradient(circle at 50% 0%, rgba(212,175,55,0.2), transparent 70%), linear-gradient(180deg, #111 0%, #000 100%);
-    color: #e5e7eb;
-    min-height: 100vh;
-    overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55,0.2), transparent 70%),
+              linear-gradient(180deg,#111,#000);
+  color: #e5e7eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin:0;
 }
-.card { background: rgba(15,15,15,0.8); border: 1px solid rgba(255,215,0,0.2); backdrop-filter: blur(12px); transition: all 0.3s ease; box-shadow: 0 4px 30px rgba(0,0,0,0.5); border-radius: 12px; padding: 16px; }
-.card:hover { transform: translateY(-2px); border-color: rgba(255,215,0,0.5); box-shadow: 0 10px 40px rgba(212,175,55,0.15); }
-.glow { animation: glow-pulse 3s infinite; }
-@keyframes glow-pulse { 0%,100%{text-shadow:0 0 10px #FFD700}50%{text-shadow:0 0 25px #FFD700} }
+
+.container {
+  max-width: 800px;
+  width: 90%;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.7);
+  border: 2px solid rgba(212,175,55,0.4);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 0 40px rgba(212,175,55,0.3);
+}
+
+h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 3rem;
+  color: gold;
+  text-shadow: 0 0 20px gold;
+  margin-bottom:10px;
+}
+
+#countdown {
+  font-family: 'Courier New', monospace;
+  font-size:1.2rem;
+  color:#FFD700;
+  margin-bottom:20px;
+  animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+  from { text-shadow: 0 0 10px #FFD700; }
+  to { text-shadow: 0 0 25px #FFD700; }
+}
+
+#winning-number {
+  font-size: 5rem;
+  color: #FFD700;
+  text-shadow: 0 0 20px gold, 0 0 40px orange;
+  margin:20px 0;
+  min-height: 70px;
+}
+
+.table-container {
+  overflow-x:auto;
+  margin-top:20px;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  text-align:center;
+}
+
+th, td {
+  padding:10px;
+  border-bottom:1px solid rgba(255,215,0,0.2);
+}
+
+th {
+  color: gold;
+}
+
+tr.winner td {
+  background: rgba(255,215,0,0.2);
+  font-weight:bold;
+}
+
+#jackpot {
+  font-size:2rem;
+  color:#FFD700;
+  margin-bottom:10px;
+}
+
+button {
+  background: gold;
+  color:black;
+  padding:10px 20px;
+  font-weight:bold;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:10px;
+  transition:0.3s;
+}
+
+button:hover {
+  background: orange;
+}
+
 </style>
 </head>
-<body class="p-4">
+<body>
 
-<h1 class="text-4xl md:text-5xl font-bold text-yellow-400 text-center mb-6 glow">Mythion Casino | Loterie</h1>
+<div class="container">
+  <h1>Mythion Casino | Guild Loterie</h1>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="card text-center">
-        <h2 class="text-yellow-300 font-bold">Celkový Jackpot</h2>
-        <p class="text-white font-bold text-2xl" id="jackpot">0</p>
-    </div>
-    <div class="card text-center">
-        <h2 class="text-yellow-300 font-bold">Vítězné číslo</h2>
-        <p class="text-white font-bold text-3xl" id="winning-number">?</p>
-    </div>
-    <div class="card text-center">
-        <h2 class="text-yellow-300 font-bold">Čas do losování</h2>
-        <p class="text-white font-bold" id="countdown">Načítání...</p>
-    </div>
-    <div class="card text-center">
-        <h2 class="text-yellow-300 font-bold">Vítězové</h2>
-        <p id="winner-display" class="text-gray-300">Čekání...</p>
-    </div>
-</div>
+  <div id="jackpot">Jackpot: <span id="jackpot-value">--</span> g</div>
+  <div id="countdown">Načítání...</div>
 
-<div class="card overflow-x-auto">
-    <table class="w-full text-left border-collapse">
-        <thead>
-            <tr class="bg-black/80 text-gray-400 text-sm uppercase">
-                <th class="p-2 text-center">#</th>
-                <th class="p-2">Hráč</th>
-                <th class="p-2 text-center">Vsazeno</th>
-                <th class="p-2 text-center">Tip</th>
-                <th class="p-2 text-center">Rozdíl</th>
-                <th class="p-2 text-center">Stav</th>
-            </tr>
-        </thead>
-        <tbody id="players-table"></tbody>
+  <div id="winning-number">?</div>
+
+  <button id="draw-button">Spustit losování</button>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Hráč</th>
+          <th>Vsazeno</th>
+          <th>Tip</th>
+          <th>Rozdíl</th>
+          <th>Stav</th>
+        </tr>
+      </thead>
+      <tbody id="players-table">
+      </tbody>
     </table>
+  </div>
 </div>
 
 <script>
 // =================================
 // KONFIGURACE
 // =================================
-const entryFee = 5000;
-const drawDay = 5; // pátek
-const drawHour = 20; // 20:00
+const CONFIG = {
+  entryFee: 5000,           // Cena tiketu
+  drawDurationSec: 5        // délka animace losování
+};
 
-// seznam hráčů
-let players = [
-  { name: 'Exsqueez', bet: 14 },
-  { name: 'Luxes', bet: 27 },
-  { name: 'Arny', bet: 88 },
-  { name: 'Suzu', bet: 13 },
-  { name: 'Vecty', bet: 55 },
-  { name: 'Cikynxd', bet: 91 },
-  { name: 'Kubiinho', bet: 36 },
-  { name: 'Tony101', bet: 72 },
-  { name: 'Artimik', bet: 44 },
-  { name: 'Adamekdave', bet: 7 },
-  { name: 'Sajmon', bet: 99 },
-  { name: 'DreimorE3', bet: 63 },
-  { name: 'Faceless', bet: 67 },
-  { name: 'Daenysh', bet: 45 }
+// Hráči
+const players = [
+  { name:'Exsqueez', bet: null },
+  { name:'Luxes', bet: null },
+  { name:'Arny', bet: null },
+  { name:'Suzu', bet: null },
+  { name:'Vecty', bet: null },
+  { name:'Cikynxd', bet: null },
+  { name:'Kubiinho', bet: null },
+  { name:'Tony101', bet: null },
+  { name:'Artimik', bet: null },
+  { name:'Adamekdave', bet: null },
+  { name:'Sajmon', bet: null },
+  { name:'DreimorE3', bet: null },
+  { name:'Faceless', bet: null },
+  { name:'Daenysh', bet: null }
 ];
 
-let winningNumber = null;
+// Jackpot ručně
+const jackpotValue = 100000;
+document.getElementById('jackpot-value').textContent = jackpotValue.toLocaleString('cs-CZ');
 
 // =================================
 // FUNKCE
 // =================================
-function getNextDraw() {
-    const now = new Date();
-    const today = now.getDay();
-    const daysUntil = (drawDay - today + 7) % 7;
-    const next = new Date(now);
-    next.setDate(now.getDate() + daysUntil);
-    next.setHours(drawHour, 0, 0, 0);
-    if(daysUntil===0 && now.getHours()>=drawHour) next.setDate(next.getDate()+7);
-    return next;
-}
 
-function updateCountdown() {
-    const now = new Date();
-    const diff = nextDraw - now;
-    const countdownEl = document.getElementById('countdown');
+// Inicializace tabulky
+function renderTable(winningNumber=null) {
+  const tbody = document.getElementById('players-table');
+  tbody.innerHTML = '';
+  players.forEach((p,i)=>{
+    let diff='-';
+    let status='Čekání';
+    let trClass='';
+    if(p.bet!==null && winningNumber!==null){
+      const delta=Math.abs(p.bet-winningNumber);
+      diff = delta===0?'JACKPOT!': delta<=5?`±${delta} (Těsně!)`:`±${delta}`;
+      if(delta===0) { status='VÍTĚZ'; trClass='winner'; }
+      else status='Zaplaceno';
+    } else if(p.bet!==null) { status='Zaplaceno'; }
 
-    if(diff <= 0 && !winningNumber) {
-        winningNumber = Math.floor(Math.random()*100)+1;
-        renderTable();
-        showWinners();
-        launchConfetti();
-    }
+    const betDisplay = p.bet!==null?p.bet:'-';
 
-    if(winningNumber) {
-        countdownEl.textContent = "Losování hotovo!";
-        return;
-    }
-
-    const d = Math.floor(diff/(1000*60*60*24));
-    const h = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-    const m = Math.floor((diff%(1000*60*60))/(1000*60));
-    const s = Math.floor((diff%(1000*60))/1000);
-
-    countdownEl.textContent = `${d}d ${h}h ${m}m ${s}s`;
-}
-
-function renderTable() {
-    const tbody = document.getElementById('players-table');
-    tbody.innerHTML = '';
-    players.forEach((p,i)=>{
-        let diff = winningNumber!==null ? Math.abs(p.bet-winningNumber) : '-';
-        let status='';
-        if(winningNumber!==null){
-            if(diff===0) status='VÍTĚZ';
-            else status='Prohrál';
-        } else {
-            status='Čeká';
-        }
-        tbody.innerHTML += `<tr class="border-b border-gray-700 hover:bg-white/5">
-            <td class="p-2 text-center">${i+1}</td>
-            <td class="p-2">${p.name}</td>
-            <td class="p-2 text-center">${entryFee}</td>
-            <td class="p-2 text-center">${p.bet}</td>
-            <td class="p-2 text-center">${diff}</td>
-            <td class="p-2 text-center font-bold text-yellow-400">${status}</td>
-        </tr>`;
-    });
-
-    document.getElementById('winning-number').textContent = winningNumber!==null ? winningNumber : '?';
-}
-
-function showWinners() {
-    const winnerEl = document.getElementById('winner-display');
-    const winners = players.filter(p => p.bet===winningNumber);
-    if(winners.length>0){
-        winnerEl.innerHTML = winners.map(w=>`👑 ${w.name} 👑`).join('<br>');
-    } else {
-        winnerEl.innerHTML = '<span class="text-red-400">☠️ NIKDO NEVYHRÁL ☠️</span>';
-    }
-}
-
-function launchConfetti() {
-    confetti({
-        particleCount: 100,
-        spread: 360,
-        origin: { y: 0.6 },
-        colors: ['#FFD700','#FFA500','#DAA520','#FFFFFF']
-    });
+    const tr = document.createElement('tr');
+    if(trClass) tr.classList.add(trClass);
+    tr.innerHTML=`
+      <td>${i+1}</td>
+      <td>${p.name}</td>
+      <td>${CONFIG.entryFee.toLocaleString()}</td>
+      <td>${betDisplay}</td>
+      <td>${diff}</td>
+      <td>${status}</td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 // =================================
-// SPUŠTĚNÍ
+// ODPOČET + LOSOVÁNÍ
 // =================================
-const nextDraw = getNextDraw();
-setInterval(updateCountdown, 1000);
+
+let countdown = 10; // sekundy do losování
+const countdownEl = document.getElementById('countdown');
+const winningNumberEl = document.getElementById('winning-number');
+
+function startCountdown(){
+  const interval = setInterval(()=>{
+    countdownEl.textContent = `Losování za ${countdown}s`;
+    countdown--;
+    if(countdown<0){
+      clearInterval(interval);
+      drawNumber();
+    }
+  },1000);
+}
+
+// Funkce losování
+function drawNumber(){
+  const duration = CONFIG.drawDurationSec * 1000;
+  const start = Date.now();
+  let lastNum=null;
+
+  const anim = setInterval(()=>{
+    const now = Date.now();
+    if(now-start>=duration){
+      clearInterval(anim);
+      const winning = Math.floor(Math.random()*100)+1;
+      winningNumberEl.textContent = winning;
+      players.forEach(p=>{if(p.bet===null)p.bet=Math.floor(Math.random()*100)+1;});
+      renderTable(winning);
+      confetti({particleCount:150, spread: 120, origin:{y:0.6}});
+      countdownEl.textContent='Losování dokončeno!';
+      return;
+    }
+    const num = Math.floor(Math.random()*100)+1;
+    if(num!==lastNum){
+      winningNumberEl.textContent = num;
+      lastNum=num;
+    }
+  },50);
+}
+
+document.getElementById('draw-button').addEventListener('click',()=>{
+  // reset
+  players.forEach(p=>p.bet=null);
+  winningNumberEl.textContent='?';
+  renderTable();
+  countdown=10;
+  startCountdown();
+});
+
+// =================================
+// start tabulky
 renderTable();
-</script>
 
+</script>
 </body>
 </html>
