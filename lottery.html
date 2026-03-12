@@ -8,8 +8,10 @@
 <link rel="stylesheet" href="css/style_final_v8.css">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <style>
-/* Přizpůsobení iframe pro loterii */
+
 .lottery-frame {
   width: 100%;
   height: 900px;
@@ -17,6 +19,7 @@
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(255,215,0,0.2);
 }
+
 .content-section h2 {
   text-align: center;
   color: gold;
@@ -24,6 +27,7 @@
   font-family: 'Cinzel', serif;
   text-shadow: 0 0 15px gold;
 }
+
 .back-btn {
   display: inline-block;
   margin: 0 auto 20px auto;
@@ -36,16 +40,31 @@
   text-decoration: none;
   transition: 0.3s;
 }
+
 .back-btn:hover {
   background: rgba(255,215,0,0.4);
   color: #fff;
 }
+
+/* Výherní číslo */
+
+.winning-box{
+text-align:center;
+margin-bottom:30px;
+}
+
+.winning-number{
+font-size:60px;
+color:gold;
+font-family:'Cinzel',serif;
+text-shadow:0 0 20px gold;
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar">
   <div class="logo">MYTHION</div>
   <ul>
@@ -55,35 +74,80 @@
   </ul>
 </nav>
 
-<!-- HERO / Loterie -->
 <section id="content-area">
   <div class="content-section active">
+
     <h2>🎰 Guild Loterie</h2>
-    
-    <!-- Tlačítko zpět -->
+
     <div style="text-align:center;">
       <a href="index.html" class="back-btn">⏎ Zpět na hlavní</a>
     </div>
-    
-    <!-- Iframe loterie -->
+
+    <!-- Výherní číslo -->
+    <div class="winning-box">
+        <h3>Výherní číslo týdne</h3>
+        <div id="winningNumber" class="winning-number">?</div>
+    </div>
+
+    <!-- Iframe -->
     <iframe src="https://exsqueez.github.io/Guild-Lottery/" 
             class="lottery-frame"
-            frameborder="0" 
+            frameborder="0"
             scrolling="yes">
     </iframe>
-    
+
     <p style="text-align:center; color:#fff; margin-top:15px;">
       Jackpot se automaticky aktualizuje – hodně štěstí! 🍀
     </p>
+
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <p>&copy; 2026 Mythion Guild | 
+  <p>&copy; 2026 Mythion Guild |
      <a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a>
   </p>
 </footer>
+
+<script>
+
+function generateNumber(){
+
+let number = Math.floor(Math.random()*100)+1;
+
+document.getElementById("winningNumber").innerText = number;
+
+confetti({
+particleCount:200,
+spread:120,
+origin:{y:0.6}
+});
+
+localStorage.setItem("mythionLotteryNumber",number);
+
+}
+
+function checkFriday(){
+
+let now = new Date();
+
+if(now.getDay()===5 && now.getHours()===20 && now.getMinutes()===0){
+
+generateNumber();
+
+}
+
+}
+
+let saved = localStorage.getItem("mythionLotteryNumber");
+
+if(saved){
+document.getElementById("winningNumber").innerText=saved;
+}
+
+setInterval(checkFriday,60000);
+
+</script>
 
 </body>
 </html>
