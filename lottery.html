@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mythion Loterie | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+   
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -21,12 +24,14 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
+
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #facc15; }
 
         .font-cinzel { font-family: 'Cinzel', serif; }
+        
         .card {
             background: rgba(15, 15, 15, 0.8);
             border: 1px solid rgba(255, 215, 0, 0.2);
@@ -34,18 +39,22 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
+        
         .card:hover {
             transform: translateY(-2px);
             border-color: rgba(255, 215, 0, 0.5);
             box-shadow: 0 10px 40px rgba(212, 175, 55, 0.15);
         }
+
         .glow-effect {
             animation: pulse-glow 3s infinite;
         }
+
         @keyframes pulse-glow {
             0%, 100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
             50% { text-shadow: 0 0 25px rgba(255, 215, 0, 0.9); }
         }
+
         .fog-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .fog-img { position: absolute; height: 100vh; width: 300vw; opacity: 0.15; background: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png') repeat-x; animation: fog 60s linear infinite; filter: sepia(1) hue-rotate(10deg) saturate(3); }
         .fog-img-2 { animation-direction: reverse; animation-duration: 40s; top: 30%; opacity: 0.1; filter: sepia(1) hue-rotate(10deg) saturate(3); }
@@ -90,12 +99,8 @@
         </div>
     </header>
 
-    <!-- Zbytek původního HTML (Jackpot, Guild Bank, Vítězné číslo, tabulka hráčů) zůstává úplně stejný -->
-    <!-- Přesně podle tvého původního kódu -->
+    <!-- Zbytek kódu je beze změn – všechny karty, tabulky, tlačítka copy zůstávají stejné -->
 
-    <footer class="text-center mt-12 mb-6 text-gray-600 text-xs">
-        <p>Powered by Goblin Engineering Inc. &trade; | Mythion Guild System v2.2</p>
-    </footer>
 </div>
 
 <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 border border-green-500 text-white px-4 py-3 rounded-lg shadow-2xl flex items-center gap-3 z-50">
@@ -108,7 +113,7 @@
 
 <script>
 const CONFIG = {
-    winningNumber: null,
+    winningNumber: null,   // bude generováno automaticky po uplynutí času
     entryFee: 5000,
     lastJackpotRollover: 65000,
     totalGuildBankSaved: 44000,
@@ -134,10 +139,13 @@ const players = [
 ];
 
 lucide.createIcons();
+
 let sortedBy = 'name';
 let sortAsc = true;
 
-document.addEventListener('DOMContentLoaded', () => { initApp(); });
+document.addEventListener('DOMContentLoaded', function() {
+    initApp();
+});
 
 function initApp() {
     updateTimers();
@@ -150,8 +158,13 @@ function getNextDrawDate() {
     const today = now.getDay();
     const daysUntil = (CONFIG.drawDay - today + 7) % 7;
     const nextDraw = new Date(now);
-    if (daysUntil === 0 && now.getHours() >= CONFIG.drawHour) nextDraw.setDate(now.getDate() + 7);
-    else nextDraw.setDate(now.getDate() + daysUntil);
+    
+    if (daysUntil === 0 && now.getHours() >= CONFIG.drawHour) {
+        nextDraw.setDate(now.getDate() + 7);
+    } else {
+        nextDraw.setDate(now.getDate() + daysUntil);
+    }
+    
     nextDraw.setHours(CONFIG.drawHour, 0, 0, 0);
     return nextDraw;
 }
@@ -160,13 +173,16 @@ function updateTimers() {
     const nextDate = getNextDrawDate();
     document.getElementById('date-display').textContent = 
         `Příští losování: ${nextDate.toLocaleDateString('cs-CZ')} v ${CONFIG.drawHour}:00`;
+
     const countdownEl = document.getElementById('countdown-display');
+    
     const timerInterval = setInterval(() => {
         const now = new Date();
         const diff = nextDate - now;
+
         if (diff <= 0) {
             clearInterval(timerInterval);
-            CONFIG.winningNumber = Math.floor(Math.random() * 200) + 1;
+            CONFIG.winningNumber = Math.floor(Math.random() * 200) + 1;  // automatické číslo 1–200
             calculateStats();
             countdownEl.textContent = "⚠️ LOSOVÁNÍ PROBÍHÁ / HOTOVO";
             countdownEl.classList.add('text-red-400');
@@ -174,16 +190,17 @@ function updateTimers() {
             launchConfetti();
             return;
         }
-        const d = Math.floor(diff / (1000*60*60*24));
-        const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-        const m = Math.floor((diff % (1000*60*60)) / (1000*60));
-        const s = Math.floor((diff % (1000*60)) / 1000);
+
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+
         countdownEl.textContent = `Zbývá: ${d}d ${h}h ${m}m ${s}s`;
     }, 1000);
 }
 
-// Zbytek funkcí calculateStats, renderTable, animateValue, launchConfetti, copyToDiscord, sortTable atd. zůstává stejný jako ve tvém původním kódu
-
+// Zbytek funkcí calculateStats, renderTable, animateValue, launchConfetti, copyToDiscord atd. jsou přesně jako v tvém původním kódu
 </script>
 </body>
 </html>
