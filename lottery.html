@@ -1,268 +1,445 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mythion Loterie | Dashboard</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mythion Loterie | Dashboard</title>
 
-<style>
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #050505;
-  background-image:
-    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.2), transparent 70%),
-    linear-gradient(180deg, #111111 0%, #000000 100%);
-  color: #e5e7eb;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: #0a0a0a; }
-::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #facc15; }
-.font-cinzel { font-family: 'Cinzel', serif; }
-.card { background: rgba(15,15,15,0.8); border:1px solid rgba(255,215,0,0.2); backdrop-filter: blur(12px); transition: all 0.3s ease; box-shadow: 0 4px 30px rgba(0,0,0,0.5);}
-.card:hover { transform: translateY(-2px); border-color: rgba(255,215,0,0.5); box-shadow: 0 10px 40px rgba(212,175,55,0.15);}
-.glow-effect { animation: pulse-glow 3s infinite; }
-@keyframes pulse-glow {0%,100%{text-shadow:0 0 10px rgba(255,215,0,0.5);}50%{text-shadow:0 0 25px rgba(255,215,0,0.9);}}
-.fog-container{position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none; overflow:hidden;}
-.fog-img{position:absolute; height:100vh; width:300vw; opacity:0.15; background:url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png') repeat-x; animation:fog 60s linear infinite; filter: sepia(1) hue-rotate(10deg) saturate(3);}
-.fog-img-2{animation-direction: reverse; animation-duration:40s; top:30%; opacity:0.1; filter: sepia(1) hue-rotate(10deg) saturate(3);}
-@keyframes fog{0%{transform:translate3d(0,0,0);}100%{transform:translate3d(-200vw,0,0);}}
-</style>
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonty -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide ikony -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            background-image: radial-gradient(circle at 50% 0%, rgba(212,175,55,0.2), transparent 70%),
+                              linear-gradient(180deg, #111111 0%, #000000 100%);
+            color: #e5e7eb;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #facc15; }
+
+        .font-cinzel { font-family: 'Cinzel', serif; }
+
+        .glow-effect {
+            animation: pulse-glow 3s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%,100% { text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+            50% { text-shadow: 0 0 25px rgba(255,215,0,0.9); }
+        }
+
+        /* EPIC CARD STYL */
+        .epic-card {
+            background: rgba(10,10,10,0.8);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+
+        .epic-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,215,0,0.6);
+            box-shadow: 0 0 30px rgba(255,215,0,0.2);
+        }
+
+        /* EPIC BUTTON */
+        .epic-btn {
+            background: linear-gradient(135deg, #d4af37, #facc15);
+            color: black;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 12px;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+        .epic-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(255,215,0,0.7);
+        }
+
+        /* FOG efekt */
+        .fog-container { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none; overflow:hidden; }
+        .fog-img { position:absolute; height:100vh; width:300vw; opacity:0.15; background:url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png') repeat-x; animation:fog 60s linear infinite; filter:sepia(1) hue-rotate(10deg) saturate(3); }
+        .fog-img-2 { animation-direction: reverse; animation-duration: 40s; top: 30%; opacity:0.1; filter:sepia(1) hue-rotate(10deg) saturate(3); }
+        @keyframes fog { 0%{transform:translate3d(0,0,0);} 100%{transform:translate3d(-200vw,0,0);} }
+    </style>
 </head>
 <body>
-
-<div class="fog-container">
-  <div class="fog-img"></div>
-  <div class="fog-img-2"></div>
-</div>
-
-<div class="container mx-auto p-4 md:p-8 max-w-6xl relative z-10">
-
-  <!-- TLAČÍTKO NAHLAVU -->
-  <div class="mb-6 text-left">
-    <a href="index.html" class="bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow-lg shadow-yellow-500/20 inline-flex items-center gap-2">
-      <i data-lucide="arrow-left" class="w-4 h-4"></i> Vrátit se na hlavní stránku
-    </a>
-  </div>
-
-  <header class="flex flex-col items-center mb-12 text-center">
-    <div class="relative group">
-      <div class="absolute -inset-1 bg-gradient-to-r from-yellow-600 to-amber-400 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-      <div class="relative w-32 h-32 rounded-full bg-black border-2 border-yellow-500 flex items-center justify-center overflow-hidden shadow-2xl group-hover:border-yellow-400 transition-colors">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-900/40 via-black to-black"></div>
-        <span class="relative z-10 text-7xl font-black font-cinzel bg-clip-text text-transparent bg-gradient-to-b from-yellow-100 via-yellow-400 to-amber-700 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] glow-effect mt-2">M</span>
-      </div>
-    </div>
-    <h1 class="mt-6 text-5xl md:text-7xl font-bold uppercase tracking-widest font-cinzel bg-clip-text text-transparent bg-gradient-to-b from-yellow-200 via-white to-yellow-600 drop-shadow-lg">Mythion</h1>
-    <div class="flex items-center gap-2 mt-2 text-yellow-300/70 text-sm uppercase tracking-widest font-semibold">
-      <span class="w-8 h-[1px] bg-yellow-500/50"></span>
-      Guildovní Loterie
-      <span class="w-8 h-[1px] bg-yellow-500/50"></span>
-    </div>
-    <div class="mt-4 flex items-center gap-4 bg-black/50 px-4 py-2 rounded-full border border-yellow-500/30 backdrop-blur-sm">
-      <i data-lucide="calendar" class="w-4 h-4 text-yellow-400"></i>
-      <span id="date-display" class="text-gray-300 font-mono text-sm">Načítání data...</span>
-    </div>
-  </header>
-
-  <!-- GRID KARTY -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-    <!-- Jackpot -->
-    <div class="card rounded-xl p-6 relative overflow-hidden group">
-      <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-        <i data-lucide="coins" class="w-16 h-16 text-yellow-400"></i>
-      </div>
-      <h2 class="text-sm font-bold text-yellow-500 uppercase tracking-wider mb-2">Celkový Jackpot</h2>
-      <div class="flex items-baseline gap-1">
-        <span id="jackpot-amount" class="text-4xl font-bold text-white glow-effect">0</span>
-        <span class="text-yellow-500 font-cinzel">g</span>
-      </div>
-      <p id="rollover-info" class="text-xs text-gray-500 mt-2 h-4"></p>
-      <div class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
-        <div class="bg-gradient-to-r from-yellow-600 to-amber-400 h-full w-[60%]"></div>
-      </div>
-      <p class="text-[10px] text-right text-gray-500 mt-1">60% prizepool</p>
+    <div class="fog-container">
+        <div class="fog-img"></div>
+        <div class="fog-img-2"></div>
     </div>
 
-    <!-- Bank -->
-    <div class="card rounded-xl p-6 relative overflow-hidden group border-amber-500/20">
-      <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-        <i data-lucide="landmark" class="w-16 h-16 text-amber-500"></i>
-      </div>
-      <h2 class="text-sm font-bold text-amber-500 uppercase tracking-wider mb-2">Celkem v Guild Bance</h2>
-      <div class="flex items-baseline gap-1">
-        <span id="bank-total-amount" class="text-4xl font-bold text-white">0</span>
-        <span class="text-yellow-500 font-cinzel">g</span>
-      </div>
-      <p id="bank-weekly-gain" class="text-xs text-green-400 mt-2">+0g tento týden</p>
-      <div class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
-        <div class="bg-amber-600 h-full w-full opacity-50"></div>
-      </div>
-      <p class="text-[10px] text-right text-gray-500 mt-1">Historický výdělek (40% cut)</p>
-    </div>
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl relative z-10">
+        <!-- HLAVIČKA + BACK BUTTON -->
+        <header class="flex flex-col items-center mb-12 text-center">
+            <div class="w-full flex justify-start mb-6">
+                <a href="index.html" class="epic-btn flex items-center gap-2">
+                    ⬅️ Zpět na hlavní stránku
+                </a>
+            </div>
 
-    <!-- Winning number -->
-    <div class="card rounded-xl p-6 relative overflow-hidden text-center border-yellow-500/40">
-      <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Vítězné Číslo</h2>
-      <div class="relative inline-block">
-        <div class="absolute -inset-2 bg-yellow-600 blur-lg opacity-20 rounded-full"></div>
-        <span id="winning-number-display" class="relative text-6xl font-black font-mono text-white z-10">?</span>
-      </div>
-      <div id="countdown-display" class="mt-4 text-xs font-mono text-yellow-300 bg-yellow-900/30 py-1 px-2 rounded inline-block border border-yellow-500/20">---</div>
-    </div>
+            <div class="relative">
+                <div class="absolute -inset-2 bg-yellow-500 blur-2xl opacity-30 rounded-full"></div>
+                <div class="w-28 h-28 rounded-full border-2 border-yellow-400 flex items-center justify-center text-5xl font-cinzel bg-black shadow-2xl">
+                    M
+                </div>
+            </div>
 
-    <!-- Winners -->
-    <div class="card rounded-xl p-6 flex flex-col justify-center text-center relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-b from-green-900/10 to-transparent pointer-events-none"></div>
-      <h2 class="text-sm font-bold text-green-400 uppercase tracking-wider mb-2">Vítězové</h2>
-      <div id="winner-container" class="flex-1 flex items-center justify-center">
-        <span id="winner-name" class="text-2xl font-bold text-gray-500">Čekání na los...</span>
-      </div>
-      <button onclick="copyToDiscord()" class="mt-4 flex items-center justify-center gap-2 text-xs bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition-colors shadow-lg shadow-yellow-500/20">
-        <i data-lucide="copy" class="w-3 h-3"></i> Zkopírovat pro Discord
-      </button>
-    </div>
-  </div>
+            <h1 class="mt-6 text-6xl font-cinzel font-bold text-yellow-400 glow-effect">
+                Mythion
+            </h1>
+            <p class="text-gray-400 uppercase tracking-widest text-sm mt-2">
+                Guildovní Loterie
+            </p>
+            <div class="mt-4 bg-black/50 px-4 py-2 rounded-full border border-yellow-500/30">
+                <span id="date-display"></span>
+            </div>
+        </header>
 
-  <!-- Table of bets -->
-  <div class="card rounded-xl overflow-hidden">
-    <div class="p-4 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <h2 class="text-xl font-cinzel font-bold text-yellow-200 flex items-center gap-2">
-        <i data-lucide="scroll" class="w-5 h-5 text-yellow-500"></i> Svitky Osudu (Sázky)
-      </h2>
-      <div class="flex gap-2 text-sm">
-        <div class="bg-black/80 px-3 py-1 rounded border border-yellow-700/50">
-          Celkem vsazeno: <span id="total-bets-sum" class="text-white font-bold">0</span><span class="text-yellow-500">g</span>
+        <!-- ZÁKLADNÍ CARDY -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="epic-card">
+                <h2 class="text-sm font-bold text-yellow-500 uppercase tracking-wider mb-2">Celkový Jackpot</h2>
+                <div class="flex items-baseline gap-1">
+                    <span id="jackpot-amount" class="text-4xl font-bold text-white glow-effect">0</span>
+                    <span class="text-yellow-500 font-cinzel">g</span>
+                </div>
+            </div>
+
+            <div class="epic-card">
+                <h2 class="text-sm font-bold text-amber-500 uppercase tracking-wider mb-2">Celkem v Guild Bance</h2>
+                <div class="flex items-baseline gap-1">
+                    <span id="bank-total-amount" class="text-4xl font-bold text-white">0</span>
+                    <span class="text-yellow-500 font-cinzel">g</span>
+                </div>
+            </div>
+
+            <div class="epic-card text-center">
+                <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Vítězné Číslo</h2>
+                <span id="winning-number-display" class="text-7xl font-black font-mono text-yellow-400 glow-effect">?</span>
+                <div class="mt-2 text-xs text-yellow-500 animate-pulse">✨ Osud rozhoduje...</div>
+            </div>
+
+            <div class="epic-card text-center">
+                <h2 class="text-sm font-bold text-green-400 uppercase tracking-wider mb-2">Vítězové</h2>
+                <span id="winner-name" class="text-gray-500 text-sm italic">Čekání na los...</span>
+            </div>
         </div>
-        <div class="bg-black/80 px-3 py-1 rounded border border-yellow-700/50">
-          Hráčů: <span id="total-players-count" class="text-white font-bold">0</span>
+          <!-- TABULKA SÁZEK -->
+        <div class="epic-card overflow-x-auto">
+            <div class="p-4 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <h2 class="text-xl font-cinzel font-bold text-yellow-200 flex items-center gap-2">
+                    Svitky Osudu (Sázky)
+                </h2>
+                <div class="flex gap-2 text-sm">
+                    <div class="bg-black/80 px-3 py-1 rounded border border-yellow-700/50">
+                        Celkem vsazeno: <span id="total-bets-sum" class="text-white font-bold">0</span><span class="text-yellow-500">g</span>
+                    </div>
+                    <div class="bg-black/80 px-3 py-1 rounded border border-yellow-700/50">
+                        Hráčů: <span id="total-players-count" class="text-white font-bold">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-black/90 text-xs uppercase tracking-wider text-gray-400">
+                        <th class="p-4 text-center w-16">#</th>
+                        <th class="p-4">Hráč</th>
+                        <th class="p-4 text-center">Vklad</th>
+                        <th class="p-4 text-center">Tip</th>
+                        <th class="p-4 text-center">Rozdíl</th>
+                        <th class="p-4 text-right">Stav</th>
+                    </tr>
+                </thead>
+                <tbody id="lottery-table-body" class="divide-y divide-gray-800 text-sm">
+                    <!-- Hráči budou doplněni JS -->
+                </tbody>
+            </table>
         </div>
-      </div>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr class="bg-black/90 text-xs uppercase tracking-wider text-gray-400">
-            <th class="p-4 text-center w-16">#</th>
-            <th class="p-4 cursor-pointer hover:text-white transition-colors group" onclick="sortTable('name')">
-              Hráč <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-50 group-hover:opacity-100"></i>
-            </th>
-            <th class="p-4 text-center">Vklad</th>
-            <th class="p-4 text-center cursor-pointer hover:text-white transition-colors group" onclick="sortTable('bet')">
-              Tip <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-50 group-hover:opacity-100"></i>
-            </th>
-            <th class="p-4 text-center">Rozdíl</th>
-            <th class="p-4 text-right">Stav</th>
-          </tr>
-        </thead>
-        <tbody id="lottery-table-body" class="divide-y divide-gray-800 text-sm"></tbody>
-      </table>
-    </div>
-  </div>
 
-  <footer class="text-center mt-12 mb-6 text-gray-600 text-xs">
-    <p>Powered by Goblin Engineering Inc. &trade; | Mythion Guild System v2.2</p>
-  </footer>
-</div>
+        <!-- FOOTER -->
+        <footer class="text-center mt-12 mb-6 text-gray-600 text-xs">
+            <p>Powered by Goblin Engineering Inc. &trade; | Mythion Guild System v2.2</p>
+        </footer>
+    </div>
 
-<div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 border border-green-500 text-white px-4 py-3 rounded-lg shadow-2xl flex items-center gap-3 z-50">
-  <div class="bg-green-500/20 p-2 rounded-full"><i data-lucide="check" class="w-4 h-4 text-green-400"></i></div>
-  <div>
-    <h4 class="font-bold text-sm text-yellow-400">Zkopírováno!</h4>
-    <p class="text-xs text-gray-400">Výsledky pro Mythion jsou ve schránce.</p>
-  </div>
-</div>
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 border border-green-500 text-white px-4 py-3 rounded-lg shadow-2xl flex items-center gap-3 z-50">
+        <div class="bg-green-500/20 p-2 rounded-full"><i data-lucide="check" class="w-4 h-4 text-green-400"></i></div>
+        <div>
+            <h4 class="font-bold text-sm text-yellow-400">Zkopírováno!</h4>
+            <p class="text-xs text-gray-400">Výsledky pro Mythion jsou ve schránce.</p>
+        </div>
+    </div>
 
 <script>
-// ================= KONFIGURACE =================
+// ===================================================================================
+// KONFIGURACE 
+// ===================================================================================
 const CONFIG = {
-  winningNumber: 188,
-  entryFee: 5000,
-  lastJackpotRollover: 65000,
-  totalGuildBankSaved: 44000,
-  drawDay: 5,
-  drawHour: 20
+    winningNumber: 188,
+    entryFee: 5000,
+    lastJackpotRollover: 65000,
+    totalGuildBankSaved: 44000,
+    drawDay: 5,
+    drawHour: 20,
 };
 
+// Seznam hráčů { name, bet }
 const players = [
-  { name: 'Exsqueez', bet: 137 },
-  { name: 'Luxes', bet: null },
-  { name: 'Arny', bet: null },
-  { name: 'Suzu', bet: 13 },
-  { name: 'Vecty', bet: null },
-  { name: 'Cikynxd', bet: null },
-  { name: 'Kubiinho', bet: null },
-  { name: 'Tony101', bet: null },
-  { name: 'Artimik', bet: null },
-  { name: 'Adamekdave', bet: null },
-  { name: 'Sajmon', bet: null },
-  { name: 'DreimorE3', bet: 176 },
-  { name: 'Faceless', bet: 67 },
-  { name: 'Daenysh', bet: 145 }
+    { name: 'Exsqueez', bet: 137 },
+    { name: 'Luxes', bet: null },
+    { name: 'Arny', bet: null },
+    { name: 'Suzu', bet: 13 },
+    { name: 'Vecty', bet: null },
+    { name: 'Cikynxd', bet: null },
+    { name: 'Kubiinho', bet: null },
+    { name: 'Tony101', bet: null },
+    { name: 'Artimik', bet: null },
+    { name: 'Adamekdave', bet: null },
+    { name: 'Sajmon', bet: null },
+    { name: 'DreimorE3', bet: 176 },
+    { name: 'Faceless', bet: 67 },
+    { name: 'Daenysh', bet: 145 }
 ];
 
+// ===================================================================================
+// SYSTEM CORE
+// ===================================================================================
+
+lucide.createIcons();
 let sortedBy = 'name';
 let sortAsc = true;
 
 document.addEventListener('DOMContentLoaded', function() {
-  lucide.createIcons();
-  initApp();
+    initApp();
 });
 
 function initApp() {
-  updateTimers();
-  renderTable();
-  calculateStats();
-  const winners = getWinners();
-  if(winners.length>0){launchConfetti();}
+    updateTimers();
+    renderTable();
+    calculateStats();
 }
 
-// ==================== FUNKCE ====================
-
-function getNextDrawDate(){
-  const now = new Date();
-  const today = now.getDay();
-  const daysUntil = (CONFIG.drawDay - today + 7) % 7;
-  const nextDraw = new Date(now);
-  if(daysUntil===0 && now.getHours()>=CONFIG.drawHour){nextDraw.setDate(now.getDate()+7);}
-  else{nextDraw.setDate(now.getDate()+daysUntil);}
-  nextDraw.setHours(CONFIG.drawHour,0,0,0);
-  return nextDraw;
-}
-
-// Odpočet a aktualizace času
-function updateTimers(){
-  const nextDate = getNextDrawDate();
-  document.getElementById('date-display').textContent = 
-    `Příští losování: ${nextDate.toLocaleDateString('cs-CZ')} v ${CONFIG.drawHour}:00`;
-
-  const countdownEl = document.getElementById('countdown-display');
-  
-  setInterval(()=>{
+function getNextDrawDate() {
     const now = new Date();
-    const diff = nextDate-now;
-    if(diff<0){
-      countdownEl.textContent = "⚠️ LOSOVÁNÍ PROBÍHÁ / HOTOVO";
-      countdownEl.classList.add('text-red-400');
-      countdownEl.classList.remove('text-yellow-300');
-      return;
+    const today = now.getDay();
+    const daysUntil = (CONFIG.drawDay - today + 7) % 7;
+    const nextDraw = new Date(now);
+
+    if(daysUntil===0 && now.getHours() >= CONFIG.drawHour) {
+        nextDraw.setDate(now.getDate() + 7);
+    } else {
+        nextDraw.setDate(now.getDate() + daysUntil);
     }
-    const d=Math.floor(diff/(1000*60*60*24));
-    const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-    const m=Math.floor((diff%(1000*60*60))/(1000*60));
-    const s=Math.floor((diff%(1000*60))/1000);
-    countdownEl.textContent=`Zbývá: ${d}d ${h}h ${m}m ${s}s`;
-  },1000);
+
+    nextDraw.setHours(CONFIG.drawHour,0,0,0);
+    return nextDraw;
 }
 
-function getWinners(){
-  if(CONFIG.winningNumber===null)return[];
-  return players.filter(p
+function updateTimers() {
+    const nextDate = getNextDrawDate();
+    document.getElementById('date-display').textContent = 
+        `Příští losování: ${nextDate.toLocaleDateString('cs-CZ')} v ${CONFIG.drawHour}:00`;
+
+    const countdownEl = document.getElementById('countdown-display');
+    setInterval(() => {
+        const now = new Date();
+        const diff = nextDate - now;
+        if(diff < 0) {
+            countdownEl.textContent = "⚠️ LOSOVÁNÍ PROBÍHÁ / HOTOVO";
+            return;
+        }
+        const d = Math.floor(diff / (1000*60*60*24));
+        const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+        const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+        const s = Math.floor((diff % (1000*60)) / 1000);
+        countdownEl.textContent = `Zbývá: ${d}d ${h}h ${m}m ${s}s`;
+    },1000);
+}
+
+function calculateStats() {
+    const payingPlayers = players.filter(p => p.bet !== null);
+    const pot = payingPlayers.length * CONFIG.entryFee;
+    const currentPrizePool = pot * 0.6;
+    const currentGuildCut = pot * 0.4;
+
+    const totalJackpot = CONFIG.lastJackpotRollover + currentPrizePool;
+    const totalGuildBank = CONFIG.totalGuildBankSaved + currentGuildCut;
+
+    animateValue("jackpot-amount",0,totalJackpot,1500);
+    animateValue("bank-total-amount",0,totalGuildBank,1500);
+
+    document.getElementById('total-bets-sum').textContent = pot.toLocaleString('cs-CZ');
+    document.getElementById('total-players-count').textContent = payingPlayers.length;
+}
+
+function animateValue(id,start,end,duration){
+    const obj=document.getElementById(id);
+    let startTimestamp=null;
+    const step=(timestamp)=>{
+        if(!startTimestamp) startTimestamp=timestamp;
+        const progress=Math.min((timestamp-startTimestamp)/duration,1);
+        const value=Math.floor(progress*(end-start)+start);
+        obj.innerHTML=value.toLocaleString('cs-CZ');
+        if(progress<1){window.requestAnimationFrame(step);}
+    };
+    window.requestAnimationFrame(step);
+}
+  function getWinners() {
+    if(CONFIG.winningNumber===null) return [];
+    return players.filter(p=>p.bet===CONFIG.winningNumber);
+}
+
+function renderTable(){
+    const tbody=document.getElementById('lottery-table-body');
+    tbody.innerHTML='';
+
+    const sortedPlayers=[...players].sort((a,b)=>{
+        let valA=a[sortedBy];
+        let valB=b[sortedBy];
+        if(valA===null && valB!==null) return 1;
+        if(valA!==null && valB===null) return -1;
+        if(valA===null && valB===null) return 0;
+
+        if(typeof valA==='string') valA=valA.toLowerCase();
+        if(typeof valB==='string') valB=valB.toLowerCase();
+        if(valA<valB) return sortAsc?-1:1;
+        if(valA>valB) return sortAsc?1:-1;
+        return 0;
+    });
+
+    sortedPlayers.forEach((p,index)=>{
+        const tr=document.createElement('tr');
+        tr.className="hover:bg-white/5 transition-colors border-b border-gray-800/50";
+        const isWinner=CONFIG.winningNumber!==null && p.bet===CONFIG.winningNumber;
+        if(isWinner) tr.classList.add('bg-green-900/30','border-green-500/30');
+        else if(p.bet===null) tr.classList.add('opacity-50');
+
+        let diffText="-";
+        let diffClass="text-gray-600";
+        if(p.bet!==null && CONFIG.winningNumber!==null){
+            const diff=Math.abs(p.bet-CONFIG.winningNumber);
+            if(diff===0){diffText="JACKPOT!";diffClass="text-green-400 font-bold";}
+            else if(diff<=5){diffText=`±${diff} (Těsně!)`;diffClass="text-amber-400";}
+            else{diffText=`±${diff}`;diffClass="text-gray-500";}
+        }
+
+        const nameColor='text-yellow-200';
+        const betDisplay=p.bet!==null?`<span class="font-mono text-white">${p.bet}</span>`:'<span class="text-gray-700">-</span>';
+        const feeDisplay=`<span class="text-gray-400">${CONFIG.entryFee.toLocaleString()}</span>`;
+
+        let statusBadge='';
+        if(isWinner) statusBadge='<span class="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded">VÍTĚZ</span>';
+        else if(p.bet!==null) statusBadge='<span class="bg-yellow-900/50 text-yellow-300 text-xs px-2 py-1 rounded border border-yellow-500/30">Zaplaceno</span>';
+        else statusBadge='<span class="text-gray-600 text-xs">Čekání</span>';
+
+        tr.innerHTML=`
+            <td class="p-4 text-center text-gray-600 font-mono text-xs">${index+1}</td>
+            <td class="p-4 font-bold ${nameColor}">${p.name}</td>
+            <td class="p-4 text-center text-xs">${feeDisplay}</td>
+            <td class="p-4 text-center">${betDisplay}</td>
+            <td class="p-4 text-center text-xs ${diffClass}">${diffText}</td>
+            <td class="p-4 text-right">${statusBadge}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function launchConfetti(){
+    const duration=3000;
+    const animationEnd=Date.now()+duration;
+    const defaults={startVelocity:30,spread:360,ticks:60,zIndex:0,colors:['#FFD700','#FFA500','#DAA520','#FFFFFF']};
+    const randomInRange=(min,max)=>Math.random()*(max-min)+min;
+
+    const interval=setInterval(function(){
+        const timeLeft=animationEnd-Date.now();
+        if(timeLeft<=0) return clearInterval(interval);
+        const particleCount=50*(timeLeft/duration);
+        confetti(Object.assign({},defaults,{particleCount,origin:{x:randomInRange(0.1,0.3),y:Math.random()-0.2}}));
+        confetti(Object.assign({},defaults,{particleCount,origin:{x:randomInRange(0.7,0.9),y:Math.random()-0.2}}));
+    },250);
+}
+
+function displayWinners(){
+    const winnerContainer=document.getElementById('winner-name');
+    const winners=getWinners();
+    if(CONFIG.winningNumber===null){
+        winnerContainer.innerHTML='<span class="text-gray-500 text-sm italic">Osud ještě nebyl zpečetěn...</span>';
+    } else if(winners.length>0){
+        winnerContainer.innerHTML='';
+        winners.forEach(w=>{
+            const div=document.createElement('div');
+            div.className='text-yellow-400 font-bold text-xl animate-bounce';
+            div.textContent=`👑 ${w.name} 👑`;
+            winnerContainer.appendChild(div);
+        });
+        launchConfetti();
+    } else {
+        winnerContainer.innerHTML='<span class="text-red-400 font-bold">☠️ NIKDO NEVYHRÁL ☠️</span><br><span class="text-xs text-gray-400">Jackpot se přesouvá!</span>';
+    }
+}
+
+function copyToDiscord(){
+    const payingPlayers=players.filter(p=>p.bet!==null);
+    const pot=payingPlayers.length*CONFIG.entryFee;
+    const currentPrizePool=pot*0.6;
+    const currentGuildCut=pot*0.4;
+    const totalJackpot=CONFIG.lastJackpotRollover+currentPrizePool;
+    const winners=getWinners();
+    let winnerText=winners.length>0?`🏆 **VÍTĚZOVÉ:** ${winners.map(w=>w.name).join(', ')}`:`☠️ **NIKDO NEVYHRÁL** (Jackpot ${totalJackpot.toLocaleString()}g se přesouvá!)`;
+    const report=`
+>>> **🎲 MYTHION LOTERIE - VÝSLEDKY 🎲**
+📅 Datum: ${new Date().toLocaleDateString('cs-CZ')}
+💰 **Celkový Jackpot:** ${totalJackpot.toLocaleString()}g
+🏦 **Do Guild Banky (tento týden):** ${currentGuildCut.toLocaleString()}g
+🔢 **Vítězné číslo:** \`${CONFIG.winningNumber!==null?CONFIG.winningNumber:'?'}\`
+${winnerText}
+👥 Účastníků: ${payingPlayers.length}
+📜 Gratulujeme vítězům a čest poraženým!
+`;
+    navigator.clipboard.writeText(report).then(()=>{
+        const toast=document.getElementById('toast');
+        toast.classList.remove('translate-y-20','opacity-0');
+        setTimeout(()=>{toast.classList.add('translate-y-20','opacity-0');},3000);
+    });
+}
+
+// =========================================
+// TLACÍTKO NAVRATU NA HLAVNI STRANKU
+// =========================================
+const returnBtn=document.createElement('button');
+returnBtn.textContent='🏠 Návrat na hlavní stránku';
+returnBtn.className='fixed top-5 left-5 bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow-lg z-50 transition-colors';
+returnBtn.onclick=()=>{window.location.href='/';};
+document.body.appendChild(returnBtn);
+
+// =========================================
+// INIT
+// =========================================
+document.addEventListener('DOMContentLoaded',()=>{
+    renderTable();
+    displayWinners();
+});
