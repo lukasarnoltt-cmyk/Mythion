@@ -1,88 +1,85 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mythion Loterie | Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mythion Loterie | Dashboard</title>
 
-    <!-- TailwindCSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<!-- TailwindCSS -->
+<script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <!-- Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+<!-- Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #050505;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.2), transparent 70%),
-                linear-gradient(180deg, #111111 0%, #000000 100%);
-            color: #e5e7eb;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+<style>
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #050505;
+    background-image: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.2), transparent 70%), linear-gradient(180deg, #111111 0%, #000000 100%);
+    color: #e5e7eb;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #facc15; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #facc15; }
 
-        .font-cinzel { font-family: 'Cinzel', serif; }
-        
-        .card {
-            background: rgba(15, 15, 15, 0.8);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            backdrop-filter: blur(12px);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        }
+.font-cinzel { font-family: 'Cinzel', serif; }
 
-        .card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(255, 215, 0, 0.5);
-            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.15);
-        }
+.card {
+    background: rgba(15, 15, 15, 0.8);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
 
-        .glow-effect {
-            animation: pulse-glow 3s infinite;
-        }
+.card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 215, 0, 0.5);
+    box-shadow: 0 10px 40px rgba(212, 175, 55, 0.15);
+}
 
-        @keyframes pulse-glow {
-            0%, 100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-            50% { text-shadow: 0 0 25px rgba(255, 215, 0, 0.9); }
-        }
+.glow-effect {
+    animation: pulse-glow 3s infinite;
+}
 
-        .fog-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
-        .fog-img { position: absolute; height: 100vh; width: 300vw; opacity: 0.15; background: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png') repeat-x; animation: fog 60s linear infinite; filter: sepia(1) hue-rotate(10deg) saturate(3); }
-        .fog-img-2 { animation-direction: reverse; animation-duration: 40s; top: 30%; opacity: 0.1; filter: sepia(1) hue-rotate(10deg) saturate(3); }
-        @keyframes fog { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-200vw, 0, 0); } }
+@keyframes pulse-glow {
+    0%, 100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+    50% { text-shadow: 0 0 25px rgba(255, 215, 0, 0.9); }
+}
 
-        /* Hezké tlačítko návratu */
-        .btn-back {
-            background: linear-gradient(90deg, #FFD700, #FFA500);
-            color: black;
-            font-weight: bold;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            border: 2px solid #D4AF37;
-            text-shadow: 0 0 5px #fff;
-            transition: all 0.3s ease;
-        }
-        .btn-back:hover {
-            background: linear-gradient(90deg, #FFA500, #FFD700);
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #FFD700;
-        }
-    </style>
+.fog-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
+.fog-img { position: absolute; height: 100vh; width: 300vw; opacity: 0.15; background: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png') repeat-x; animation: fog 60s linear infinite; filter: sepia(1) hue-rotate(10deg) saturate(3); }
+.fog-img-2 { animation-direction: reverse; animation-duration: 40s; top: 30%; opacity: 0.1; filter: sepia(1) hue-rotate(10deg) saturate(3); }
+@keyframes fog { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-200vw, 0, 0); } }
+
+.btn-back {
+    background: linear-gradient(90deg, #FFD700, #FFA500);
+    color: black;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 2px solid #D4AF37;
+    text-shadow: 0 0 5px #fff;
+    transition: all 0.3s ease;
+}
+.btn-back:hover {
+    background: linear-gradient(90deg, #FFA500, #FFD700);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #FFD700;
+}
+</style>
 </head>
 <body>
 
@@ -92,7 +89,7 @@
 </div>
 
 <div class="container mx-auto p-4 md:p-8 max-w-6xl relative z-10">
-    
+
     <!-- HLAVIČKA -->
     <header class="flex flex-col items-center mb-12 text-center">
         <div class="relative group">
@@ -102,7 +99,7 @@
                  <span class="relative z-10 text-7xl font-black font-cinzel bg-clip-text text-transparent bg-gradient-to-b from-yellow-100 via-yellow-400 to-amber-700 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] glow-effect mt-2">M</span>
             </div>
         </div>
-        
+
         <h1 class="mt-6 text-5xl md:text-7xl font-bold uppercase tracking-widest font-cinzel bg-clip-text text-transparent bg-gradient-to-b from-yellow-200 via-white to-yellow-600 drop-shadow-lg">
             Mythion
         </h1>
@@ -111,124 +108,129 @@
             Guildovní Loterie
             <span class="w-8 h-[1px] bg-yellow-500/50"></span>
         </div>
-        
+
         <div class="mt-4 flex items-center gap-4 bg-black/50 px-4 py-2 rounded-full border border-yellow-500/30 backdrop-blur-sm">
             <i data-lucide="calendar" class="w-4 h-4 text-yellow-400"></i>
             <span id="date-display" class="text-gray-300 font-mono text-sm">Načítání data...</span>
         </div>
     </header>
-      <!-- HLAVNÍ KARTY -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        
-        <!-- Celkový Jackpot -->
-        <div class="card rounded-xl p-6 relative overflow-hidden group">
-            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <i data-lucide="coins" class="w-16 h-16 text-yellow-400"></i>
-            </div>
-            <h2 class="text-sm font-bold text-yellow-500 uppercase tracking-wider mb-2">Celkový Jackpot</h2>
-            <div class="flex items-baseline gap-1">
-                <span id="jackpot-amount" class="text-4xl font-bold text-white glow-effect">0</span>
-                <span class="text-yellow-500 font-cinzel">g</span>
-            </div>
-            <p id="rollover-info" class="text-xs text-gray-500 mt-2 h-4"></p>
-            <div class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
-                <div class="bg-gradient-to-r from-yellow-600 to-amber-400 h-full w-[60%]"></div>
-            </div>
-            <p class="text-[10px] text-right text-gray-500 mt-1">60% prizepool</p>
-        </div>
 
-        <!-- Celkem v Guild Bance -->
-        <div class="card rounded-xl p-6 relative overflow-hidden group border-amber-500/20">
-            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <i data-lucide="landmark" class="w-16 h-16 text-amber-500"></i>
-            </div>
-            <h2 class="text-sm font-bold text-amber-500 uppercase tracking-wider mb-2">Celkem v Guild Bance</h2>
-            <div class="flex items-baseline gap-1">
-                <span id="bank-total-amount" class="text-4xl font-bold text-white">0</span>
-                <span class="text-yellow-500 font-cinzel">g</span>
-            </div>
-            <p id="bank-weekly-gain" class="text-xs text-green-400 mt-2">+0g tento týden</p>
-            <div class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
-                <div class="bg-amber-600 h-full w-full opacity-50"></div>
-            </div>
-            <p class="text-[10px] text-right text-gray-500 mt-1">Historický výdělek (40% cut)</p>
-        </div>
+<!-- ČÁST 1 KONČÍ ZDE – DALŠÍ KARTY A TABULKY JS PŘÍŠTĚ -->
+<!-- HLAVNÍ KARTY -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
 
-        <!-- Vítězné číslo -->
-        <div class="card rounded-xl p-6 relative overflow-hidden text-center border-yellow-500/40">
-            <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Vítězné Číslo</h2>
-            <div class="relative inline-block">
-                <div class="absolute -inset-2 bg-yellow-600 blur-lg opacity-20 rounded-full"></div>
-                <span id="winning-number-display" class="relative text-6xl font-black font-mono text-white z-10">?</span>
-            </div>
-            <div id="countdown-display" class="mt-4 text-xs font-mono text-yellow-300 bg-yellow-900/30 py-1 px-2 rounded inline-block border border-yellow-500/20">
-                ---
-            </div>
+    <!-- Celkový Jackpot -->
+    <div class="card rounded-xl p-6 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i data-lucide="coins" class="w-16 h-16 text-yellow-400"></i>
         </div>
+        <h2 class="text-sm font-bold text-yellow-500 uppercase tracking-wider mb-2">Celkový Jackpot</h2>
+        <div class="flex items-baseline gap-1">
+            <span id="jackpot-amount" class="text-4xl font-bold text-white glow-effect">0</span>
+            <span class="text-yellow-500 font-cinzel">g</span>
+        </div>
+        <p id="rollover-info" class="text-xs text-gray-500 mt-2 h-4"></p>
+        <div class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
+            <div class="bg-gradient-to-r from-yellow-600 to-amber-400 h-full w-[60%]"></div>
+        </div>
+        <p class="text-[10px] text-right text-gray-500 mt-1">60% prizepool</p>
+    </div>
 
-        <!-- Vítězové -->
-        <div class="card rounded-xl p-6 flex flex-col justify-center text-center relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-b from-green-900/10 to-transparent pointer-events-none"></div>
-            <h2 class="text-sm font-bold text-green-400 uppercase tracking-wider mb-2">Vítězové</h2>
-            <div id="winner-container" class="flex-1 flex items-center justify-center">
-                <span id="winner-name" class="text-2xl font-bold text-gray-500">Čekání na los...</span>
-            </div>
-            <button onclick="copyToDiscord()" class="mt-4 flex items-center justify-center gap-2 text-xs bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition-colors shadow-lg shadow-yellow-500/20">
-                <i data-lucide="copy" class="w-3 h-3"></i> Zkopírovat pro Discord
-            </button>
+    <!-- Celkem v Guild Bance -->
+    <div class="card rounded-xl p-6 relative overflow-hidden group border-amber-500/20">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i data-lucide="landmark" class="w-16 h-16 text-amber-500"></i>
+        </div>
+        <h2 class="text-sm font-bold text-amber-500 uppercase tracking-wider mb-2">Celkem v Guild Bance</h2>
+        <div class="flex items-baseline gap-1">
+            <span id="bank-total-amount" class="text-4xl font-bold text-white">0</span>
+            <span class="text-yellow-500 font-cinzel">g</span>
+        </div>
+        <p id="bank-weekly-gain" class="text-xs text-green-400 mt-2">+0g tento týden</p>
+        <div class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
+            <div class="bg-amber-600 h-full w-full opacity-50"></div>
+        </div>
+        <p class="text-[10px] text-right text-gray-500 mt-1">Historický výdělek (40% cut)</p>
+    </div>
+
+    <!-- Vítězné číslo -->
+    <div class="card rounded-xl p-6 relative overflow-hidden text-center border-yellow-500/40">
+        <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Vítězné Číslo</h2>
+        <div class="relative inline-block">
+            <div class="absolute -inset-2 bg-yellow-600 blur-lg opacity-20 rounded-full"></div>
+            <span id="winning-number-display" class="relative text-6xl font-black font-mono text-white z-10">?</span>
+        </div>
+        <div id="countdown-display" class="mt-4 text-xs font-mono text-yellow-300 bg-yellow-900/30 py-1 px-2 rounded inline-block border border-yellow-500/20">
+            ---
         </div>
     </div>
 
-    <!-- Tlačítko návratu na hlavní stránku -->
-    <div class="flex justify-center mb-12">
-        <a href="http://mythion.eu" class="btn-back">⬅️ Návrat na hlavní stránku</a>
+    <!-- Vítězové -->
+    <div class="card rounded-xl p-6 flex flex-col justify-center text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-green-900/10 to-transparent pointer-events-none"></div>
+        <h2 class="text-sm font-bold text-green-400 uppercase tracking-wider mb-2">Vítězové</h2>
+        <div id="winner-container" class="flex-1 flex items-center justify-center">
+            <span id="winner-name" class="text-2xl font-bold text-gray-500">Čekání na los...</span>
+        </div>
+        <button onclick="copyToDiscord()" class="mt-4 flex items-center justify-center gap-2 text-xs bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition-colors shadow-lg shadow-yellow-500/20">
+            <i data-lucide="copy" class="w-3 h-3"></i> Zkopírovat pro Discord
+        </button>
     </div>
+</div>
 
-    <!-- Tabulka sázek -->
-    <div class="card rounded-xl overflow-hidden">
-        <div class="p-4 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <h2 class="text-xl font-cinzel font-bold text-yellow-200 flex items-center gap-2">
-                <i data-lucide="scroll" class="w-5 h-5 text-yellow-500"></i> Svitky Osudu (Sázky)
-            </h2>
-            <div class="flex gap-2 text-sm">
-                <div class="bg-black/80 px-3 py-1 rounded border border-yellow-700/50">
-                    Celkem vsazeno: <span id="total-bets-sum" class="text-white font-bold">0</span><span class="text-yellow-500">g</span>
-                </div>
-                <div class="bg-black/80 px-3 py-1 rounded border border-yellow-700/50">
-                    Hráčů: <span id="total-players-count" class="text-white font-bold">0</span>
-                </div>
+<!-- Tlačítko návratu na hlavní stránku -->
+<div class="flex justify-center mb-12">
+    <a href="http://mythion.eu" class="btn-back">⬅️ Návrat na hlavní stránku</a>
+</div>
+
+<!-- Tabulka sázek -->
+<div class="card rounded-xl overflow-hidden">
+    <div class="p-4 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <h2 class="text-xl font-cinzel font-bold text-yellow-200 flex items-center gap-2">
+            <i data-lucide="scroll" class="w-5 h-5 text-yellow-500"></i> Svitky Osudu (Sázky)
+        </h2>
+        <div class="flex gap-2 text-sm">
+            <div class="bg-black/80 px-3 py-1 rounded border border-yellow-700/50">
+                Celkem vsazeno: <span id="total-bets-sum" class="text-white font-bold">0</span><span class="text-yellow-500">g</span>
+            </div>
+            <div class="bg-black/80 px-3 py-1 rounded border border-yellow-700/50">
+                Hráčů: <span id="total-players-count" class="text-white font-bold">0</span>
             </div>
         </div>
-        
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-black/90 text-xs uppercase tracking-wider text-gray-400">
-                        <th class="p-4 text-center w-16">#</th>
-                        <th class="p-4 cursor-pointer hover:text-white transition-colors group" onclick="sortTable('name')">
-                            Hráč <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-50 group-hover:opacity-100"></i>
-                        </th>
-                        <th class="p-4 text-center">Vklad</th>
-                        <th class="p-4 text-center cursor-pointer hover:text-white transition-colors group" onclick="sortTable('bet')">
-                            Tip <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-50 group-hover:opacity-100"></i>
-                        </th>
-                        <th class="p-4 text-center">Rozdíl</th>
-                        <th class="p-4 text-right">Stav</th>
-                    </tr>
-                </thead>
-                <tbody id="lottery-table-body" class="divide-y divide-gray-800 text-sm">
-                    <!-- JS doplní hráče -->
-                </tbody>
-            </table>
-        </div>
     </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-black/90 text-xs uppercase tracking-wider text-gray-400">
+                    <th class="p-4 text-center w-16">#</th>
+                    <th class="p-4 cursor-pointer hover:text-white transition-colors group" onclick="sortTable('name')">
+                        Hráč <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-50 group-hover:opacity-100"></i>
+                    </th>
+                    <th class="p-4 text-center">Vklad</th>
+                    <th class="p-4 text-center cursor-pointer hover:text-white transition-colors group" onclick="sortTable('bet')">
+                        Tip <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-50 group-hover:opacity-100"></i>
+                    </th>
+                    <th class="p-4 text-center">Rozdíl</th>
+                    <th class="p-4 text-right">Stav</th>
+                </tr>
+            </thead>
+            <tbody id="lottery-table-body" class="divide-y divide-gray-800 text-sm">
+                <!-- JS doplní hráče -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+// ===================== CONFIG & Hráči =====================
 const CONFIG = {
-    winningNumber: 188,           // Zadej číslo po losování (null = nelosováno)
-    entryFee: 5000,               // Cena tiketu
-    lastJackpotRollover: 65000,   // Převod jackpotu z minula
-    totalGuildBankSaved: 44000,   // CELKOVÝ HISTORICKÝ VÝDĚLEK GUILDY (bez aktuálního týdne)
-    drawDay: 5,                   // 5 = Pátek (0=Ne, 1=Po...)
-    drawHour: 20,                 // Hodina losování (20:00)
+    winningNumber: 188,
+    entryFee: 5000,
+    lastJackpotRollover: 65000,
+    totalGuildBankSaved: 44000,
+    drawDay: 5,
+    drawHour: 20
 };
 
 // Seznam hráčů { name: 'Nick', bet: vsazené číslo nebo null }
@@ -248,11 +250,9 @@ const players = [
     { name: 'Faceless', bet: 67 },
     { name: 'Daenysh', bet: 145 }
 ];
-
-// ===================================================================================
-// 🧙‍♂️ SYSTEM CORE 
-// ===================================================================================
-
+</script>
+<script>
+// ===================== INITIALIZACE =====================
 lucide.createIcons();
 
 let sortedBy = 'name';
@@ -266,25 +266,24 @@ function initApp() {
     updateTimers();
     renderTable();
     calculateStats();
-    
+
     const winners = getWinners();
-    if (winners.length > 0) {
-        launchConfetti();
-    }
+    if (winners.length > 0) launchConfetti();
 }
 
+// ===================== ČASOVÉ FUNKCE =====================
 function getNextDrawDate() {
     const now = new Date();
     const today = now.getDay();
     const daysUntil = (CONFIG.drawDay - today + 7) % 7;
     const nextDraw = new Date(now);
-    
+
     if (daysUntil === 0 && now.getHours() >= CONFIG.drawHour) {
         nextDraw.setDate(now.getDate() + 7);
     } else {
         nextDraw.setDate(now.getDate() + daysUntil);
     }
-    
+
     nextDraw.setHours(CONFIG.drawHour, 0, 0, 0);
     return nextDraw;
 }
@@ -316,6 +315,7 @@ function updateTimers() {
     }, 1000);
 }
 
+// ===================== VÝPOČTY =====================
 function getWinners() {
     if (CONFIG.winningNumber === null) return [];
     return players.filter(p => p.bet === CONFIG.winningNumber);
@@ -324,18 +324,17 @@ function getWinners() {
 function calculateStats() {
     const payingPlayers = players.filter(p => p.bet !== null);
     const pot = payingPlayers.length * CONFIG.entryFee;
-    
     const currentPrizePool = pot * 0.6;
     const currentGuildCut = pot * 0.4;
     
     const totalJackpot = CONFIG.lastJackpotRollover + currentPrizePool;
-    const totalGuildBank = CONFIG.totalGuildBankSaved + currentGuildCut; 
+    const totalGuildBank = CONFIG.totalGuildBankSaved + currentGuildCut;
 
     animateValue("jackpot-amount", 0, totalJackpot, 1500);
     animateValue("bank-total-amount", 0, totalGuildBank, 1500);
-    
+
     document.getElementById('bank-weekly-gain').textContent = `+${currentGuildCut.toLocaleString('cs-CZ')}g tento týden`;
-    
+
     document.getElementById('total-bets-sum').textContent = pot.toLocaleString('cs-CZ');
     document.getElementById('total-players-count').textContent = payingPlayers.length;
 
@@ -345,9 +344,7 @@ function calculateStats() {
 
     const winDisplay = document.getElementById('winning-number-display');
     winDisplay.textContent = CONFIG.winningNumber !== null ? CONFIG.winningNumber : '?';
-    if (CONFIG.winningNumber !== null) {
-        winDisplay.classList.add('text-yellow-400');
-    }
+    if (CONFIG.winningNumber !== null) winDisplay.classList.add('text-yellow-400');
 
     const winnerContainer = document.getElementById('winner-name');
     const winners = getWinners();
@@ -368,13 +365,10 @@ function calculateStats() {
     }
 }
 
+// ===================== TABULKA =====================
 function sortTable(criteria) {
-    if (sortedBy === criteria) {
-        sortAsc = !sortAsc;
-    } else {
-        sortedBy = criteria;
-        sortAsc = true;
-    }
+    if (sortedBy === criteria) sortAsc = !sortAsc;
+    else { sortedBy = criteria; sortAsc = true; }
     renderTable();
 }
 
@@ -385,14 +379,11 @@ function renderTable() {
     const sortedPlayers = [...players].sort((a, b) => {
         let valA = a[sortedBy];
         let valB = b[sortedBy];
-
         if (valA === null && valB !== null) return 1;
         if (valA !== null && valB === null) return -1;
         if (valA === null && valB === null) return 0;
-
         if (typeof valA === 'string') valA = valA.toLowerCase();
         if (typeof valB === 'string') valB = valB.toLowerCase();
-
         if (valA < valB) return sortAsc ? -1 : 1;
         if (valA > valB) return sortAsc ? 1 : -1;
         return 0;
@@ -401,13 +392,10 @@ function renderTable() {
     sortedPlayers.forEach((p, index) => {
         const tr = document.createElement('tr');
         tr.className = "hover:bg-white/5 transition-colors border-b border-gray-800/50";
-        
+
         const isWinner = CONFIG.winningNumber !== null && p.bet === CONFIG.winningNumber;
-        if (isWinner) {
-            tr.classList.add('bg-green-900/30', 'border-green-500/30');
-        } else if (p.bet === null) {
-            tr.classList.add('opacity-50');
-        }
+        if (isWinner) tr.classList.add('bg-green-900/30', 'border-green-500/30');
+        else if (p.bet === null) tr.classList.add('opacity-50');
 
         let diffText = "-";
         let diffClass = "text-gray-600";
@@ -418,7 +406,7 @@ function renderTable() {
             else { diffText = `±${diff}`; diffClass = "text-gray-500"; }
         }
 
-        const nameColor = 'text-yellow-200'; 
+        const nameColor = 'text-yellow-200';
         const betDisplay = p.bet !== null ? `<span class="font-mono text-white">${p.bet}</span>` : '<span class="text-gray-700">-</span>';
         const feeDisplay = `<span class="text-gray-400">${CONFIG.entryFee.toLocaleString()}</span>`;
 
@@ -439,6 +427,7 @@ function renderTable() {
     });
 }
 
+// ===================== ANIMACE ČÍSEL =====================
 function animateValue(id, start, end, duration) {
     const obj = document.getElementById(id);
     let startTimestamp = null;
@@ -447,13 +436,12 @@ function animateValue(id, start, end, duration) {
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const value = Math.floor(progress * (end - start) + start);
         obj.innerHTML = value.toLocaleString('cs-CZ');
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        }
+        if (progress < 1) window.requestAnimationFrame(step);
     };
     window.requestAnimationFrame(step);
 }
 
+// ===================== CONFETTI =====================
 function launchConfetti() {
     const duration = 3000;
     const animationEnd = Date.now() + duration;
@@ -463,10 +451,7 @@ function launchConfetti() {
 
     const interval = setInterval(function() {
         const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-            return clearInterval(interval);
-        }
+        if (timeLeft <= 0) return clearInterval(interval);
 
         const particleCount = 50 * (timeLeft / duration);
         confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
@@ -474,6 +459,7 @@ function launchConfetti() {
     }, 250);
 }
 
+// ===================== KOPÍROVÁNÍ PRO DISCORD =====================
 function copyToDiscord() {
     const payingPlayers = players.filter(p => p.bet !== null);
     const pot = payingPlayers.length * CONFIG.entryFee;
@@ -499,13 +485,7 @@ ${winnerText}
 👥 Účastníků: ${payingPlayers.length}
 📜 Gratulujeme vítězům a čest poraženým!
 `;
-    
-    navigator.clipboard.writeText(report).then(() => {
-        const toast = document.getElementById('toast');
-        toast.classList.remove('translate-y-20', 'opacity-0');
-        setTimeout(() => {
-            toast.classList.add('translate-y-20', 'opacity-0');
-        }, 3000);
-    });
+
+    navigator.clipboard.writeText(report);
 }
 </script>
