@@ -180,8 +180,27 @@ body {
 
 <!-- Tlačítko návratu na hlavní stránku -->
 <div class="flex justify-center mb-12">
-    <a href="http://mythion.eu" class="btn-back">⬅️ Návrat na hlavní stránku</a>
+  <a href="http://mythion.eu" class="btn-epic relative inline-block px-6 py-3 font-bold text-black uppercase tracking-wider rounded-full bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 shadow-lg hover:scale-110 transition-transform duration-300 overflow-hidden">
+    <span class="relative z-10">⬅️ Návrat na hlavní stránku</span>
+    <span class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/50 via-yellow-300/30 to-white/50 opacity-30 blur-lg animate-epic-light"></span>
+  </a>
 </div>
+
+<style>
+.btn-epic {
+    text-shadow: 0 0 5px #fff, 0 0 15px #FFD700, 0 0 25px #FFA500;
+}
+@keyframes epic-light {
+    0%, 100% { transform: translateX(-100%) rotate(10deg); }
+    50% { transform: translateX(100%) rotate(-10deg); }
+}
+.animate-epic-light {
+    animation: epic-light 2.5s infinite;
+}
+.btn-epic:hover {
+    box-shadow: 0 0 25px #FFD700, 0 0 40px #FFA500, 0 0 60px #FFD700;
+}
+</style>
 
 <!-- Tabulka sázek -->
 <div class="card rounded-xl overflow-hidden">
