@@ -1,17 +1,3 @@
-Jasná věc, jdeme do „Full Hardcore“ režimu! Uděláme z toho nekonečnou věž, kde se platformy generují náhodně, jak stoupáš výš, takže hra nikdy nekončí a "M+ score" může jít do tisíců.
-
-Co jsem vylepšil:
-Nekonečný svět: Kamera tě sleduje nahoru. Jakmile vyskočíš výš, staré platformy mizí a nové se generují nad tebou.
-
-Epické pozadí: Přidal jsem dynamický gradient (mění barvu, čím jsi výš) a efekt "paralaxních hvězd", aby to vypadalo jako cesta do vesmíru/Argusu.
-
-Větší obtížnost: Platformy se postupně zmenšují.
-
-Mechanika Jump King: Musíš fakt precizně nabíjet skok, jinak letíš dolů.
-
-Tady je tvůj nový hra.html. Zkopíruj ho celý:
-
-HTML
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -19,20 +5,20 @@ HTML
     <title>Mythion: M+ Infinite Climb</title>
     <style>
         body { margin: 0; background: #05050a; display: flex; flex-direction: column; align-items: center; color: #f0ebe0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
-        canvas { border: 2px solid #c49642; background: #0a0a1a; margin-top: 10px; box-shadow: 0 0 50px #000; }
-        .ui { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.7); padding: 15px; border: 1px solid #c49642; border-radius: 8px; pointer-events: none; }
-        .stats { font-size: 24px; color: #c49642; font-weight: bold; }
-        .power-bar-bg { width: 200px; height: 10px; background: #222; border: 1px solid #c49642; margin-top: 10px; }
-        #powerBar { width: 0%; height: 100%; background: linear-gradient(to right, #4a7c2c, #ffcc00, #ff4444); }
-        .controls-hint { font-size: 14px; color: #888; margin-top: 5px; }
+        canvas { border: 3px solid #c49642; background: #0a0a1a; margin-top: 10px; box-shadow: 0 0 50px #000; cursor: none; }
+        .ui { position: absolute; top: 20px; left: 20px; background: rgba(11, 13, 18, 0.9); padding: 15px; border: 2px solid #c49642; border-radius: 8px; pointer-events: none; min-width: 180px; }
+        .stats { font-size: 26px; color: #c49642; font-weight: bold; text-shadow: 2px 2px 0px #000; }
+        .power-bar-bg { width: 100%; height: 12px; background: #222; border: 1px solid #c49642; margin-top: 10px; border-radius: 6px; overflow: hidden; }
+        #powerBar { width: 0%; height: 100%; background: linear-gradient(to right, #4a7c2c, #ffcc00, #ff4444); box-shadow: 0 0 10px rgba(74, 124, 44, 0.8); }
+        .controls-hint { font-size: 13px; color: #aaa; margin-top: 8px; line-height: 1.4; }
     </style>
 </head>
 <body>
     <div class="ui">
-        <div class="stats">M+ Score: <span id="height">0</span> yd</div>
-        <div style="font-size: 14px;">Season Best: <span id="best">0</span> yd</div>
+        <div class="stats"><span style="font-size: 16px; color: #888;">M+ SCORE</span><br><span id="height">0</span> yd</div>
+        <div style="font-size: 14px; margin-top: 5px;">Season Best: <span id="best" style="color: #c49642;">0</span> yd</div>
         <div class="power-bar-bg"><div id="powerBar"></div></div>
-        <div class="controls-hint">DRŽ MEZERNÍK = NABÍJENÍ<br>A / D = SMĚR SKOKU</div>
+        <div class="controls-hint">DRŽ MEZERNÍK: Nabíjení<br>A / D: Pohyb (i za letu!)</div>
     </div>
 
     <canvas id="gameCanvas"></canvas>
@@ -40,7 +26,7 @@ HTML
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = 500; canvas.height = 800;
+        canvas.width = 600; canvas.height = 850;
 
         const imgOrc = new Image(); imgOrc.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
 
@@ -53,68 +39,80 @@ HTML
         let cameraY = 0;
         const keys = {};
 
+        // Hvězdy na pozadí
+        const stars = Array.from({ length: 100 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2,
+            speed: Math.random() * 0.5 + 0.1
+        }));
+
         const player = {
-            x: 230, y: 700, w: 40, h: 40,
-            dx: 0, dy: 0, grounded: false
+            x: 280, y: 700, w: 45, h: 45,
+            dx: 0, dy: 0, speed: 6, grounded: false
         };
 
-        // Generování platforem
         let platforms = [];
-        function generatePlatforms() {
-            platforms = [{x: 0, y: 750, w: 500, h: 100}]; // Startovní podlaha
-            for (let i = 0; i < 20; i++) {
-                addPlatform(700 - (i * 120));
+        function generateInitialPlatforms() {
+            platforms = [{x: 0, y: 780, w: 600, h: 100, color: "#1a1a1a"}]; // Startovní zem
+            for (let i = 0; i < 25; i++) {
+                addPlatform(700 - (i * 130));
             }
         }
 
         function addPlatform(y) {
-            const width = Math.max(60, 120 - (Math.abs(y) / 200)); // Čím výš, tím menší
+            const width = Math.max(70, 140 - (Math.abs(y) / 300));
             platforms.push({
                 x: Math.random() * (canvas.width - width),
                 y: y,
                 w: width,
-                h: 15
+                h: 18
             });
         }
 
         function update() {
+            // Horizontální pohyb (funguje pořád)
+            if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -player.speed;
+            else if (keys['KeyD'] || keys['ArrowRight']) player.dx = player.speed;
+            else player.dx *= 0.85; // Zpomalení při puštění klávesy
+
             // Gravitace
-            player.dy += 0.45;
+            player.dy += 0.5;
             player.y += player.dy;
             player.x += player.dx;
 
-            // Nabíjení
+            // Nabíjení skoku
             if (spacePressed && player.grounded) {
-                jumpPower += 0.35;
-                if (jumpPower > 18) jumpPower = 18;
-                document.getElementById('powerBar').style.width = (jumpPower / 18 * 100) + "%";
+                jumpPower += 0.4;
+                if (jumpPower > 19) jumpPower = 19;
+                document.getElementById('powerBar').style.width = (jumpPower / 19 * 100) + "%";
             }
 
-            // Odraz od stěn
-            if (player.x < 0) { player.x = 0; player.dx *= -0.7; }
-            if (player.x + player.w > canvas.width) { player.x = canvas.width - player.w; player.dx *= -0.7; }
+            // Odraz od stěn (Mírné odražení)
+            if (player.x < 0) { player.x = 0; player.dx *= -0.5; }
+            if (player.x + player.w > canvas.width) { player.x = canvas.width - player.w; player.dx *= -0.5; }
 
-            // Kolize
+            // Kolize s platformami
             player.grounded = false;
             platforms.forEach(p => {
                 if (player.dy > 0 && player.x + player.w > p.x && player.x < p.x + p.w &&
                     player.y + player.h >= p.y && player.y + player.h <= p.y + p.h + player.dy) {
                     player.y = p.y - player.h;
                     player.dy = 0;
-                    player.dx *= 0.8; // Tření
                     player.grounded = true;
                 }
             });
 
-            // Kamera (sleduje hráče nahoru)
-            if (player.y < cameraY + 300) {
-                cameraY = player.y - 300;
+            // Kamera (hladší sledování)
+            let targetCameraY = player.y - 500;
+            if (targetCameraY < cameraY) {
+                cameraY += (targetCameraY - cameraY) * 0.1;
             }
 
-            // Nekonečné generování
+            // Generování nových plošin nad hráčem
             const topPlatformY = platforms[platforms.length - 1].y;
-            if (player.y < topPlatformY + 1000) {
-                addPlatform(topPlatformY - 120);
+            if (player.y < topPlatformY + 1200) {
+                addPlatform(topPlatformY - 130);
             }
 
             // Skóre
@@ -128,41 +126,59 @@ HTML
                     document.getElementById('best').innerText = bestScore;
                 }
             }
-
-            // Pád na úplný začátek (pokud chceš být fakt zlý jako v Jump Kingu)
-            if (player.y > cameraY + 900) {
-                // Tady by mohl být reset, ale pro začátek tě necháme spadnout jen na zem
-            }
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dynamické pozadí podle výšky
-            let bgHue = 240 + (score / 10); // Mění barvu z modré do fialové
-            ctx.fillStyle = `hsl(${bgHue}, 30%, 10%)`;
+            // 1. Pozadí s hvězdami
+            ctx.fillStyle = "#05050a";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            stars.forEach(s => {
+                ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                // Hvězdy se hýbou s kamerou (paralaxa)
+                let starY = (s.y - cameraY * 0.3) % canvas.height;
+                if (starY < 0) starY += canvas.height;
+                ctx.beginPath();
+                ctx.arc(s.x, starY, s.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
 
             ctx.save();
             ctx.translate(0, -cameraY);
 
-            // Kreslení platforem
+            // 2. Platformy
             platforms.forEach(p => {
-                // Efekt zářící platformy
-                ctx.fillStyle = "#4e342e";
+                // Stín plošiny
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = "rgba(196, 150, 66, 0.3)";
+                
+                // Hlavní tělo
+                ctx.fillStyle = "#2c1a0a";
                 ctx.fillRect(p.x, p.y, p.w, p.h);
+                
+                // Zlatý okraj
                 ctx.strokeStyle = "#c49642";
                 ctx.lineWidth = 2;
                 ctx.strokeRect(p.x, p.y, p.w, p.h);
                 
-                // Mírný glow
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = "#c49642";
+                // Odlesk navrchu
+                ctx.fillStyle = "rgba(196, 150, 66, 0.2)";
+                ctx.fillRect(p.x, p.y, p.w, 4);
             });
 
-            // Kreslení hráče
-            ctx.shadowBlur = 0;
+            // 3. Hráč (Ork)
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "rgba(0,0,0,1)";
             ctx.drawImage(imgOrc, player.x, player.y, player.w, player.h);
+            
+            // Pokud nabíjí skok, přidej efekt záře
+            if (spacePressed && player.grounded) {
+                ctx.strokeStyle = "#ffcc00";
+                ctx.lineWidth = 3;
+                ctx.strokeRect(player.x - 2, player.y - 2, player.w + 4, player.h + 4);
+            }
 
             ctx.restore();
 
@@ -176,19 +192,18 @@ HTML
 
         window.addEventListener('keyup', e => {
             keys[e.code] = false;
-            if (e.code === 'Space' && player.grounded) {
-                player.dy = -jumpPower;
-                if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -6;
-                if (keys['KeyD'] || keys['ArrowRight']) player.dx = 6;
-                
-                player.grounded = false;
+            if (e.code === 'Space') {
+                if (player.grounded) {
+                    player.dy = -jumpPower;
+                    player.grounded = false;
+                }
                 spacePressed = false;
                 jumpPower = 0;
                 document.getElementById('powerBar').style.width = "0%";
             }
         });
 
-        generatePlatforms();
+        generateInitialPlatforms();
         draw();
     </script>
 </body>
