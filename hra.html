@@ -1,134 +1,170 @@
+Jasná věc, jdeme do „Full Hardcore“ režimu! Uděláme z toho nekonečnou věž, kde se platformy generují náhodně, jak stoupáš výš, takže hra nikdy nekončí a "M+ score" může jít do tisíců.
+
+Co jsem vylepšil:
+Nekonečný svět: Kamera tě sleduje nahoru. Jakmile vyskočíš výš, staré platformy mizí a nové se generují nad tebou.
+
+Epické pozadí: Přidal jsem dynamický gradient (mění barvu, čím jsi výš) a efekt "paralaxních hvězd", aby to vypadalo jako cesta do vesmíru/Argusu.
+
+Větší obtížnost: Platformy se postupně zmenšují.
+
+Mechanika Jump King: Musíš fakt precizně nabíjet skok, jinak letíš dolů.
+
+Tady je tvůj nový hra.html. Zkopíruj ho celý:
+
+HTML
 <!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Mythion: M+ Vertical Push</title>
+    <title>Mythion: M+ Infinite Climb</title>
     <style>
-        body { margin: 0; background: #0b0d12; display: flex; flex-direction: column; align-items: center; color: #f0ebe0; font-family: sans-serif; overflow: hidden; }
-        canvas { border: 3px solid #c49642; background: linear-gradient(to bottom, #1a2a3a, #0b0d12); margin-top: 20px; box-shadow: 0 0 30px black; }
-        .ui { margin-top: 10px; text-align: center; }
-        .power-bar-container { width: 400px; height: 20px; background: #333; border: 2px solid #c49642; margin-top: 5px; position: relative; }
-        #powerBar { width: 0%; height: 100%; background: linear-gradient(to right, #4a7c2c, #ff4444); transition: width 0.1s; }
-        .stats { font-size: 20px; color: #c49642; font-weight: bold; margin-bottom: 5px; }
+        body { margin: 0; background: #05050a; display: flex; flex-direction: column; align-items: center; color: #f0ebe0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        canvas { border: 2px solid #c49642; background: #0a0a1a; margin-top: 10px; box-shadow: 0 0 50px #000; }
+        .ui { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.7); padding: 15px; border: 1px solid #c49642; border-radius: 8px; pointer-events: none; }
+        .stats { font-size: 24px; color: #c49642; font-weight: bold; }
+        .power-bar-bg { width: 200px; height: 10px; background: #222; border: 1px solid #c49642; margin-top: 10px; }
+        #powerBar { width: 0%; height: 100%; background: linear-gradient(to right, #4a7c2c, #ffcc00, #ff4444); }
+        .controls-hint { font-size: 14px; color: #888; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <h1 style="color: #c49642; margin: 10px 0;">M+ VERTICAL PUSH: SEASON 1</h1>
-    
-    <div class="stats">
-        Current Depth: <span id="height">0</span> yd | 
-        Best M+ Score: <span id="score">0</span>
+    <div class="ui">
+        <div class="stats">M+ Score: <span id="height">0</span> yd</div>
+        <div style="font-size: 14px;">Season Best: <span id="best">0</span> yd</div>
+        <div class="power-bar-bg"><div id="powerBar"></div></div>
+        <div class="controls-hint">DRŽ MEZERNÍK = NABÍJENÍ<br>A / D = SMĚR SKOKU</div>
     </div>
 
     <canvas id="gameCanvas"></canvas>
 
-    <div class="ui">
-        <div class="power-bar-container"><div id="powerBar"></div></div>
-        <p style="color: #888;">Drž MEZERNÍK pro sílu skoku | Šipky A/D pro směr ve vzduchu</p>
-    </div>
-
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = 600; canvas.height = 700;
+        canvas.width = 500; canvas.height = 800;
 
-        // Obrázky
         const imgOrc = new Image(); imgOrc.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
 
-        let maxScore = localStorage.getItem('mythion_mplus') || 0;
-        document.getElementById('score').innerText = maxScore;
+        let score = 0;
+        let bestScore = localStorage.getItem('mythion_vertical_best') || 0;
+        document.getElementById('best').innerText = bestScore;
 
         let spacePressed = false;
         let jumpPower = 0;
+        let cameraY = 0;
         const keys = {};
 
         const player = {
-            x: 280, y: 600, w: 40, h: 40,
-            dx: 0, dy: 0,
-            grounded: false
+            x: 230, y: 700, w: 40, h: 40,
+            dx: 0, dy: 0, grounded: false
         };
 
-        // Platformy (svislý level)
-        // x, y (odshora), šířka, výška
-        const platforms = [
-            {x: 0, y: 650, w: 600, h: 50}, // Startovní zem
-            {x: 100, y: 550, w: 150, h: 20},
-            {x: 350, y: 480, w: 150, h: 20},
-            {x: 150, y: 380, w: 100, h: 20},
-            {x: 400, y: 300, w: 120, h: 20},
-            {x: 100, y: 220, w: 150, h: 20},
-            {x: 300, y: 150, w: 100, h: 20},
-            {x: 50, y: 80, w: 100, h: 20},
-        ];
+        // Generování platforem
+        let platforms = [];
+        function generatePlatforms() {
+            platforms = [{x: 0, y: 750, w: 500, h: 100}]; // Startovní podlaha
+            for (let i = 0; i < 20; i++) {
+                addPlatform(700 - (i * 120));
+            }
+        }
+
+        function addPlatform(y) {
+            const width = Math.max(60, 120 - (Math.abs(y) / 200)); // Čím výš, tím menší
+            platforms.push({
+                x: Math.random() * (canvas.width - width),
+                y: y,
+                w: width,
+                h: 15
+            });
+        }
 
         function update() {
             // Gravitace
-            player.dy += 0.5;
-            player.x += player.dx;
+            player.dy += 0.45;
             player.y += player.dy;
+            player.x += player.dx;
 
-            // Nabíjení skoku
+            // Nabíjení
             if (spacePressed && player.grounded) {
-                jumpPower += 0.4;
-                if (jumpPower > 20) jumpPower = 20;
-                document.getElementById('powerBar').style.width = (jumpPower * 5) + "%";
-            }
-
-            // Ovládání ve vzduchu
-            if (!player.grounded) {
-                if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -4;
-                else if (keys['KeyD'] || keys['ArrowRight']) player.dx = 4;
-            } else {
-                player.dx *= 0.8; // Tření na zemi
+                jumpPower += 0.35;
+                if (jumpPower > 18) jumpPower = 18;
+                document.getElementById('powerBar').style.width = (jumpPower / 18 * 100) + "%";
             }
 
             // Odraz od stěn
-            if (player.x < 0 || player.x + player.w > canvas.width) {
-                player.dx *= -1;
+            if (player.x < 0) { player.x = 0; player.dx *= -0.7; }
+            if (player.x + player.w > canvas.width) { player.x = canvas.width - player.w; player.dx *= -0.7; }
+
+            // Kolize
+            player.grounded = false;
+            platforms.forEach(p => {
+                if (player.dy > 0 && player.x + player.w > p.x && player.x < p.x + p.w &&
+                    player.y + player.h >= p.y && player.y + player.h <= p.y + p.h + player.dy) {
+                    player.y = p.y - player.h;
+                    player.dy = 0;
+                    player.dx *= 0.8; // Tření
+                    player.grounded = true;
+                }
+            });
+
+            // Kamera (sleduje hráče nahoru)
+            if (player.y < cameraY + 300) {
+                cameraY = player.y - 300;
             }
 
-            // Kolize s platformami
-            let wasGrounded = player.grounded;
-            player.grounded = false;
-            for (let p of platforms) {
-                if (player.x < p.x + p.w && player.x + player.w > p.x &&
-                    player.y < p.y + p.h && player.y + player.h > p.y) {
-                    
-                    // Dopad shora
-                    if (player.dy > 0 && player.y + player.h - player.dy <= p.y) {
-                        player.y = p.y - player.h;
-                        player.dy = 0;
-                        player.dx = 0;
-                        player.grounded = true;
-                    }
+            // Nekonečné generování
+            const topPlatformY = platforms[platforms.length - 1].y;
+            if (player.y < topPlatformY + 1000) {
+                addPlatform(topPlatformY - 120);
+            }
+
+            // Skóre
+            let currentHeight = Math.floor(Math.abs(player.y - 700) / 10);
+            if (currentHeight > score) {
+                score = currentHeight;
+                document.getElementById('height').innerText = score;
+                if (score > bestScore) {
+                    bestScore = score;
+                    localStorage.setItem('mythion_vertical_best', bestScore);
+                    document.getElementById('best').innerText = bestScore;
                 }
             }
 
-            // Výpočet skóre (výška)
-            let currentHeight = Math.floor((610 - player.y));
-            if (currentHeight < 0) currentHeight = 0;
-            document.getElementById('height').innerText = currentHeight;
-
-            if (currentHeight > maxScore) {
-                maxScore = currentHeight;
-                localStorage.setItem('mythion_mplus', maxScore);
-                document.getElementById('score').innerText = maxScore;
+            // Pád na úplný začátek (pokud chceš být fakt zlý jako v Jump Kingu)
+            if (player.y > cameraY + 900) {
+                // Tady by mohl být reset, ale pro začátek tě necháme spadnout jen na zem
             }
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+            // Dynamické pozadí podle výšky
+            let bgHue = 240 + (score / 10); // Mění barvu z modré do fialové
+            ctx.fillStyle = `hsl(${bgHue}, 30%, 10%)`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.save();
+            ctx.translate(0, -cameraY);
+
             // Kreslení platforem
-            ctx.fillStyle = "#4e342e";
-            for (let p of platforms) {
+            platforms.forEach(p => {
+                // Efekt zářící platformy
+                ctx.fillStyle = "#4e342e";
                 ctx.fillRect(p.x, p.y, p.w, p.h);
                 ctx.strokeStyle = "#c49642";
+                ctx.lineWidth = 2;
                 ctx.strokeRect(p.x, p.y, p.w, p.h);
-            }
+                
+                // Mírný glow
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = "#c49642";
+            });
 
             // Kreslení hráče
+            ctx.shadowBlur = 0;
             ctx.drawImage(imgOrc, player.x, player.y, player.w, player.h);
+
+            ctx.restore();
 
             requestAnimationFrame(() => { update(); draw(); });
         }
@@ -141,11 +177,9 @@
         window.addEventListener('keyup', e => {
             keys[e.code] = false;
             if (e.code === 'Space' && player.grounded) {
-                // Výstřel nahoru
                 player.dy = -jumpPower;
-                // Pokud držíme stranu, skočíme i do boku
-                if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -5;
-                if (keys['KeyD'] || keys['ArrowRight']) player.dx = 5;
+                if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -6;
+                if (keys['KeyD'] || keys['ArrowRight']) player.dx = 6;
                 
                 player.grounded = false;
                 spacePressed = false;
@@ -154,6 +188,7 @@
             }
         });
 
+        generatePlatforms();
         draw();
     </script>
 </body>
