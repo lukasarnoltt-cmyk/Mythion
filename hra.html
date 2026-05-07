@@ -2,146 +2,125 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Mythion: Great Escape</title>
+    <title>Mythion: World of Platformer</title>
     <style>
-        body { margin: 0; background: #0b0d12; display: flex; flex-direction: column; align-items: center; color: #f0ebe0; font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; }
-        canvas { border: 3px solid #c49642; background: url('https://i.imgur.com/3Z4Q6Qz.png'); background-size: cover; margin-top: 20px; cursor: pointer; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
-        .stats { margin-top: 15px; font-size: 24px; color: #c49642; text-shadow: 2px 2px 4px black; font-weight: bold; }
-        .controls { color: #888; margin-top: 5px; font-style: italic; }
-        .btn-back { margin-top: 20px; padding: 10px 20px; background: #c49642; color: black; text-decoration: none; font-weight: bold; border-radius: 3px; transition: 0.3s; }
-        .btn-back:hover { background: #eec16d; }
+        body { margin: 0; background: #0b0d12; display: flex; flex-direction: column; align-items: center; color: #f0ebe0; font-family: sans-serif; overflow: hidden; }
+        canvas { border: 3px solid #c49642; background: #1a1a2e; margin-top: 20px; box-shadow: 0 0 20px black; }
+        .ui { margin-top: 10px; font-size: 20px; color: #c49642; font-weight: bold; }
+        .controls { color: #888; font-size: 14px; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <h1 style="color: #c49642; margin-bottom: 5px;">MYTHION: MURLOC RUN</h1>
-    <div class="stats">Skóre: <span id="score">0</span> yd | High Score: <span id="highscore">0</span> yd</div>
+    <h1 style="color: #c49642; margin-bottom: 5px;">MYTHION QUEST: LEVEL 1</h1>
+    <div class="ui">Najdi Dark Portal na konci mapy!</div>
     <canvas id="gameCanvas"></canvas>
-    <div class="controls">Mezerník = SKOK | Vyhýbej se Murlokům!</div>
-    
-    <a href="index.html" class="btn-back">ZPĚT NA WEB GUILDY</a>
+    <div class="controls">Pohyb: Šipky / A,D | Skok: Mezerník</div>
+    <a href="index.html" style="margin-top:15px; color:#c49642;">Zpět na web</a>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = 800; canvas.height = 400;
+        canvas.width = 1000; canvas.height = 500;
 
-        // Načtení obrázků (WoW tématika)
-        const playerImg = new Image();
-        playerImg.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg'; // Ikona helmy (válečník)
-        
-        const monsterImg = new Image();
-        monsterImg.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_misc_head_murloc_01.jpg'; // Ikona Murloka
+        // Nastavení hry
+        const gravity = 0.8;
+        const keys = {};
 
-        let score = 0;
-        let highscore = localStorage.getItem('mythion_highscore') || 0;
-        document.getElementById('highscore').innerText = highscore;
-        
-        let gameActive = true;
-        let speed = 6;
-        let timer = 0;
+        // Obrázky
+        const playerImg = new Image(); playerImg.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
+        const portalImg = new Image(); portalImg.src = 'https://render.worldofwarcraft.com/eu/icons/56/spell_arcane_teleportorgrimmar.jpg';
 
-        const player = { x: 80, y: 300, w: 50, h: 50, dy: 0, jump: -14, grav: 0.8, grounded: false };
-        const obstacles = [];
+        // Hráč
+        const player = {
+            x: 50, y: 300, w: 40, h: 40,
+            dx: 0, dy: 0, speed: 5, jump: -15, grounded: false
+        };
+
+        // Mapa (Level 1) - x, y, šířka, výška
+        const platforms = [
+            { x: 0, y: 450, w: 300, h: 50 },   // Start
+            { x: 350, y: 380, w: 150, h: 30 },  // První skok
+            { x: 550, y: 300, w: 200, h: 30 },  // Druhý skok
+            { x: 400, y: 200, w: 100, h: 20 },  // Odbočka nahoru
+            { x: 800, y: 450, w: 200, h: 50 },  // Cíl
+        ];
+
+        const goal = { x: 920, y: 390, w: 60, h: 60 }; // Portál
 
         function update() {
-            if (!gameActive) return;
+            // Pohyb
+            if (keys['ArrowRight'] || keys['KeyD']) player.dx = player.speed;
+            else if (keys['ArrowLeft'] || keys['KeyA']) player.dx = -player.speed;
+            else player.dx = 0;
 
-            player.dy += player.grav;
+            player.dy += gravity;
+            player.x += player.dx;
             player.y += player.dy;
 
-            if (player.y + player.h > 360) {
-                player.y = 360 - player.h;
-                player.dy = 0;
-                player.grounded = true;
+            // Kolize s platformami
+            player.grounded = false;
+            for (let p of platforms) {
+                if (player.x < p.x + p.w && player.x + player.w > p.x &&
+                    player.y < p.y + p.h && player.y + player.h > p.y) {
+                    
+                    // Detekce dopadu shora
+                    if (player.dy > 0 && player.y + player.h - player.dy <= p.y) {
+                        player.y = p.y - player.h;
+                        player.dy = 0;
+                        player.grounded = true;
+                    }
+                }
             }
 
-            timer++;
-            if (timer > Math.max(40, 90 - (score/15))) { 
-                obstacles.push({ x: canvas.width, y: 310, w: 50, h: 50 });
-                timer = 0;
+            // Pád do "lávy" (mimo obrazovku)
+            if (player.y > canvas.height) {
+                reset();
             }
 
-            for (let i = obstacles.length - 1; i >= 0; i--) {
-                obstacles[i].x -= (speed + score/200);
-
-                // Detekce kolize (trochu zmenšená pro férovost)
-                if (player.x + 5 < obstacles[i].x + obstacles[i].w - 5 && 
-                    player.x + player.w - 5 > obstacles[i].x + 5 &&
-                    player.y + 5 < obstacles[i].y + obstacles[i].h - 5 && 
-                    player.y + player.h - 5 > obstacles[i].y + 5) {
-                    gameOver();
-                }
-
-                if (obstacles[i].x + obstacles[i].w < 0) {
-                    obstacles.splice(i, 1);
-                    score += 10;
-                    document.getElementById('score').innerText = score;
-                }
+            // Výhra - dotek portálu
+            if (player.x < goal.x + goal.w && player.x + player.w > goal.x &&
+                player.y < goal.y + goal.h && player.y + player.h > goal.y) {
+                alert("GRATULACE! Level 1 dokončen. Jsi připraven na raid!");
+                reset();
             }
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Podlaha (vypadá jako v dungeonu)
-            ctx.fillStyle = '#1c1c1c';
-            ctx.fillRect(0, 360, canvas.width, 40);
-            ctx.strokeStyle = '#c49642';
-            ctx.strokeRect(0, 360, canvas.width, 1);
+
+            // Pozadí - obloha
+            ctx.fillStyle = "#1a1a2e";
+            ctx.fillRect(0,0, canvas.width, canvas.height);
+
+            // Platformy
+            ctx.fillStyle = "#4e342e"; // Barva země
+            for (let p of platforms) {
+                ctx.fillRect(p.x, p.y, p.w, p.h);
+                ctx.strokeStyle = "#c49642";
+                ctx.strokeRect(p.x, p.y, p.w, p.h);
+            }
+
+            // Portál
+            ctx.drawImage(portalImg, goal.x, goal.y, goal.w, goal.h);
 
             // Hráč
             ctx.drawImage(playerImg, player.x, player.y, player.w, player.h);
-            
-            // Překážky
-            obstacles.forEach(o => {
-                ctx.drawImage(monsterImg, o.x, o.y, o.w, o.h);
-            });
 
-            if (!gameActive) {
-                ctx.fillStyle = "rgba(0,0,0,0.85)";
-                ctx.fillRect(0,0, canvas.width, canvas.height);
-                ctx.fillStyle = "#ff4444";
-                ctx.font = "bold 50px serif";
-                ctx.textAlign = "center";
-                ctx.fillText("RAID WIPE!", canvas.width/2, 170);
-                
-                ctx.fillStyle = "white";
-                ctx.font = "24px sans-serif";
-                ctx.fillText("Murloci tě dostali. Skóre: " + score + " yd", canvas.width/2, 220);
-                ctx.fillStyle = "#c49642";
-                ctx.fillText("Klikni pro Reset", canvas.width/2, 270);
-            }
             requestAnimationFrame(() => { update(); draw(); });
         }
 
-        function gameOver() {
-            gameActive = false;
-            if (score > highscore) {
-                highscore = score;
-                localStorage.setItem('mythion_highscore', highscore);
-                document.getElementById('highscore').innerText = highscore;
-            }
+        function reset() {
+            player.x = 50; player.y = 300; player.dy = 0;
         }
 
         window.addEventListener('keydown', e => {
-            if ((e.code === 'Space' || e.code === 'ArrowUp') && player.grounded) { 
-                player.dy = player.jump; 
-                player.grounded = false; 
-            }
-        });
-
-        canvas.addEventListener('mousedown', () => {
-            if (!gameActive) {
-                score = 0;
-                document.getElementById('score').innerText = score;
-                obstacles.length = 0;
-                player.y = 300;
-                gameActive = true;
-            } else if (player.grounded) {
+            keys[e.code] = true;
+            if (e.code === 'Space' && player.grounded) {
                 player.dy = player.jump;
                 player.grounded = false;
             }
         });
+        window.addEventListener('keyup', e => keys[e.code] = false);
 
         draw();
     </script>
