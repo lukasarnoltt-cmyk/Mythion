@@ -30,12 +30,12 @@
         }
         .panel-title { color: var(--gold); font-weight: bold; text-transform: uppercase; border-bottom: 1px solid var(--gold); padding-bottom: 5px; margin-bottom: 15px; font-size: 14px; letter-spacing: 2px; }
         .score-val { font-size: 36px; font-weight: bold; color: #fff; text-shadow: 0 0 10px var(--gold); }
-        .rank-badge { display: inline-block; padding: 4px 10px; background: var(--gold); color: black; font-weight: bold; border-radius: 4px; font-size: 12px; margin-top: 10px; }
+        .rank-badge { display: inline-block; padding: 4px 10px; background: var(--gold); color: black; font-weight: bold; border-radius: 4px; font-size: 12px; margin-top: 10px; text-transform: uppercase;}
 
         /* OVERLAY */
         .overlay { 
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); flex-direction: column; justify-content: center; 
+            background: rgba(0,0,0,0.92); flex-direction: column; justify-content: center; 
             align-items: center; z-index: 100; text-align: center; border-radius: 8px;
         }
         .btn-restart { 
@@ -54,9 +54,9 @@
         <div style="position: relative;">
             <canvas id="gameCanvas"></canvas>
             <div id="gameOverScreen" class="overlay">
-                <h1 style="color: #ff4444; font-size: 50px; margin: 0;">RAID WIPE</h1>
-                <p id="deathQuote" style="color: #aaa; font-style: italic;"></p>
-                <div class="score-val" id="finalScoreDisplay">0</div>
+                <h1 style="color: #ff4444; font-size: 50px; margin: 0; text-transform: uppercase;">Raid Wipe</h1>
+                <div style="font-size: 20px; color: #aaa; margin: 10px 0;">Stál jsi v ohni.</div>
+                <div class="score-val" id="finalScoreDisplay">0 yd</div>
                 <button class="btn-restart" onclick="restartGame()">Re-Pull Boss</button>
             </div>
         </div>
@@ -65,6 +65,7 @@
             <div class="panel">
                 <div class="panel-title">M+ Score</div>
                 <div class="score-val" id="height">0</div>
+                <div style="font-size: 16px; color: #aaa; margin-top: -5px;">yd</div>
                 <div id="currentRank" class="rank-badge">LFR Raider</div>
             </div>
 
@@ -73,13 +74,15 @@
                 <div style="font-size: 24px; font-weight: bold;" id="best">0 yd</div>
             </div>
 
-            <div class="panel" style="border-left-color: #4a7c2c;">
+            <div class="panel" style="border-left-color: #ff4444;">
                 <div class="panel-title">Affixes</div>
-                <div id="affixList" style="font-size: 14px; color: #aaa;">None active</div>
+                <div id="affixList" style="font-size: 14px; color: #ff8888; font-weight: bold;">None active</div>
             </div>
             
-            <div style="text-align: center; color: #555; font-size: 12px;">
-                Hold SPACE to charge jump<br>A / D to move in air
+            <div style="text-align: center; color: #555; font-size: 12px; margin-top: auto; padding: 10px;">
+                <b style="color: #888;">OVLÁDÁNÍ:</b><br>
+                DRŽ [MEZERNÍK]: Nabíjení<br>
+                [A] / [D]: Pohyb do stran
             </div>
         </div>
     </div>
@@ -93,16 +96,40 @@
 
         const imgOrc = new Image(); imgOrc.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
         
-        let score = 0, bestScore = localStorage.getItem('mythion_best') || 0;
+        // Lokální úložiště
+        let score = 0;
+        let bestScore = localStorage.getItem('mythion_best_new') || 0;
         document.getElementById('best').innerText = bestScore + " yd";
 
-        let spacePressed = false, jumpPower = 0, cameraY = 0, gameActive = true, started = false;
-        let activeQuote = { text: "", timer: 0 };
-        const keys = {}, particles = [];
+        // Herní stavy
+        let gameActive = true;
+        let started = false;
+        
+        // Skok
+        let spacePressed = false;
+        let jumpPower = 0;
+        const maxJumpPower = 22; // Maximální síla skoku
+        
+        // Kamera a klávesy
+        let cameraY = 0;
+        const keys = {};
 
-        let player = { x: 230, y: 650, w: 40, h: 40, dx: 0, dy: 0, grounded: false };
+        // Hráč
+        let player = {
+            x: 230,
+            y: 650,
+            w: 40,
+            h: 40,
+            dx: 0,
+            dy: 0,
+            speed: 6.5,
+            grounded: false
+        };
+
+        // Platformy
         let platforms = [];
 
+        // Ranky
         function getRank(h) {
             if (h < 300) return { n: "LFR Raider", c: "#888" };
             if (h < 700) return { n: "Normal Raider", c: "#4a7c2c" };
@@ -110,124 +137,259 @@
             return { n: "Mythic CE", c: "#a335ee" };
         }
 
+        // Restart hry
         function restartGame() {
-            score = 0; cameraY = 0; gameActive = true; started = false;
-            player = { x: 230, y: 650, w: 40, h: 40, dx: 0, dy: 0, grounded: false };
-            platforms = [{x: 0, y: 700, w: 500, h: 100, type: 'start'}];
-            for(let i=0; i<20; i++) addPlatform(600 - i*140);
+            score = 0;
+            cameraY = 0;
+            gameActive = true;
+            started = false;
+            jumpPower = 0;
+            spacePressed = false;
+            
+            document.getElementById('height').innerText = "0";
+            document.getElementById('affixList').innerText = "None active";
+            document.getElementById('affixList').style.color = "#88ff88";
+            
+            const r = getRank(0);
+            document.getElementById('currentRank').innerText = r.n;
+            document.getElementById('currentRank').style.background = r.c;
+            document.getElementById('currentRank').style.color = "black";
+
+            // Hráč zpět na start
+            player = { x: 230, y: 650, w: 40, h: 40, dx: 0, dy: 0, speed: 6.5, grounded: false };
+            
+            // Startovní platformy
+            platforms = [
+                {x: 0, y: 700, w: 500, h: 100, type: 'start', alpha: 1} // Pevná startovní zem
+            ];
+            
+            // Generovat počáteční věž
+            for(let i=1; i<25; i++) {
+                addPlatform(700 - i*140);
+            }
+            
             document.getElementById('gameOverScreen').style.display = 'none';
         }
 
+        // Přidání platformy
         function addPlatform(y) {
-            const w = Math.max(60, 140 - Math.abs(y)/400);
-            const type = (Math.random() > 0.85 && Math.abs(y) > 1000) ? 'void' : 'normal';
-            platforms.push({ x: Math.random()*(canvas.width-w), y: y, w: w, h: 15, type: type, alpha: 1 });
+            const w = Math.max(65, 150 - Math.abs(y)/450); // Mírně širší pro férovost
+            
+            // Náhodný typ (void/normální)
+            let type = 'normal';
+            if (Math.abs(y) > 1000 && Math.random() > 0.82) {
+                type = 'void';
+            }
+            
+            platforms.push({
+                x: Math.random() * (canvas.width - w),
+                y: y,
+                w: w,
+                h: 18,
+                type: type,
+                alpha: 1
+            });
         }
 
+        // --- HLAVNÍ LOGIKA (Zde byla chyba) ---
         function update() {
             if (!gameActive) return;
 
-            // Movement
-            if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -6;
-            else if (keys['KeyD'] || keys['ArrowRight']) player.dx = 6;
-            else player.dx *= 0.8;
+            // 1. Horizontální pohyb (A / D) - funguje pořád
+            if (keys['KeyA'] || keys['ArrowLeft']) {
+                player.dx = -player.speed;
+            } else if (keys['KeyD'] || keys['ArrowRight']) {
+                player.dx = player.speed;
+            } else {
+                player.dx *= 0.85; // Tření
+            }
 
-            player.dy += 0.5;
+            // 2. Gravitace
+            player.dy += 0.52; // Konstantní pád
+            
+            // 3. Aplikovat pohyb
             player.x += player.dx;
             player.y += player.dy;
 
-            // Power Charge
+            // 4. Nabíjení skoku (Držíš mezerník)
             if (spacePressed && player.grounded) {
-                jumpPower += 0.5;
-                if (jumpPower > 21) jumpPower = 21;
+                jumpPower += 0.5; // Rychlost nabíjení
+                if (jumpPower > maxJumpPower) jumpPower = maxJumpPower;
             }
 
-            // Collisions
+            // 5. Kolize se stěnami
+            if (player.x < 0) { player.x = 0; player.dx *= -0.5; }
+            if (player.x + player.w > canvas.width) { player.x = canvas.width - player.w; player.dx *= -0.5; }
+
+            // 6. Kolize s platformami (Fyzika dopadu)
+            let wasGrounded = player.grounded;
             player.grounded = false;
-            platforms.forEach(p => {
-                if (player.dy > 0 && player.x + player.w > p.x && player.x < p.x + p.w &&
-                    player.y + player.h >= p.y && player.y + player.h <= p.y + p.h + player.dy) {
-                    player.y = p.y - player.h; player.dy = 0; player.grounded = true;
-                    if (p.type === 'void') p.alpha -= 0.1;
+            
+            for (let p of platforms) {
+                // Detekce dopadu shora
+                if (player.dy > 0 && // Hráč padá
+                    player.x + player.w > p.x && // Pravý okraj hráče > levý platformy
+                    player.x < p.x + p.w && // Levý okraj hráče < pravý platformy
+                    player.y + player.h >= p.y && // Nohy hráče pod vrškem platformy
+                    player.y + player.h <= p.y + p.h + player.dy) { // Nohy hráče nad spodem platformy (+rezerva rychlosti)
+                    
+                    player.y = p.y - player.h; // Postavit hráče na platformu
+                    player.dy = 0;
+                    player.grounded = true;
+                    
+                    // Speciální chování void platformy
+                    if (p.type === 'void' && started) {
+                        p.alpha -= 0.12; // Začne mizet
+                    }
                 }
-            });
+            }
+            // Vyčistit zmizelé void platformy
             platforms = platforms.filter(p => p.alpha > 0.1);
 
-            // Camera & Score
+            // 7. Kamera a Skóre
             if (started) {
-                let targetCam = player.y - 400;
-                if (targetCam < cameraY) cameraY += (targetCam - cameraY) * 0.1;
+                // Kamera hladce sleduje hráče nahoru
+                let targetCam = player.y - 450;
+                if (targetCam < cameraY) {
+                    cameraY += (targetCam - cameraY) * 0.1;
+                }
             }
 
-            if (player.y < platforms[platforms.length-1].y + 800) addPlatform(platforms[platforms.length-1].y - 140);
+            // Generovat nekonečnou věž
+            let topPlatformY = platforms[platforms.length - 1].y;
+            if (player.y < topPlatformY + 1200) {
+                addPlatform(topPlatformY - 140);
+            }
 
-            let curH = Math.floor(Math.abs(player.y - 650)/10);
+            // Aktualizace skóre
+            let curH = Math.floor(Math.abs(player.y - 650) / 10);
+            if (curH < 0) curH = 0;
             if (curH > score) {
                 score = curH;
                 document.getElementById('height').innerText = score;
+                
+                // Rank a affixy
                 const r = getRank(score);
                 document.getElementById('currentRank').innerText = r.n;
                 document.getElementById('currentRank').style.background = r.c;
-                if (score > 1000) document.getElementById('affixList').innerText = "Void Platforms";
-                else if (score > 500) document.getElementById('affixList').innerText = "Windy Conditions";
+                
+                let affixList = document.getElementById('affixList');
+                if (score > 1000) {
+                    affixList.innerText = "VOID PLATFORMS"; affixList.style.color = "#ff4444";
+                } else if (score > 500) {
+                    affixList.innerText = "WINDY CONDITIONS"; affixList.style.color = "#ffcc00";
+                }
+                
+                // PB
+                if (score > bestScore) {
+                    bestScore = score;
+                    localStorage.setItem('mythion_best_new', score);
+                    document.getElementById('best').innerText = bestScore + " yd";
+                }
             }
 
-            if (player.y > cameraY + canvas.height + 100 && started) {
+            // 8. Podmínka prohry (GameOver)
+            // Hráč spadne pod viditelný okraj kamery (jen pokud hra začala)
+            if (started && player.y > cameraY + canvas.height + 150) {
                 gameActive = false;
                 document.getElementById('finalScoreDisplay').innerText = score + " yd";
                 document.getElementById('gameOverScreen').style.display = 'flex';
-                if (score > bestScore) localStorage.setItem('mythion_best', score);
             }
         }
 
+        // --- KRESLENÍ (Vizuál) ---
         function draw() {
             ctx.clearRect(0,0,canvas.width, canvas.height);
             
-            // DRAW DUNGEON BG (Atmospheric)
+            // DYNAMICKÉ POZADÍ (Podle výšky)
             const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            gradient.addColorStop(0, "#1a1a2e");
-            gradient.addColorStop(1, "#050508");
+            // Čím výš, tím tmavší fialová (jako Argus/Void)
+            let hue = 240 + Math.min(100, score/20);
+            gradient.addColorStop(0, `hsl(${hue}, 30%, 15%)`);
+            gradient.addColorStop(1, "#050508"); // Dole tma
             ctx.fillStyle = gradient;
             ctx.fillRect(0,0,canvas.width, canvas.height);
 
             ctx.save();
-            ctx.translate(0, -cameraY);
+            ctx.translate(0, -cameraY); // Aplikovat pohyb kamery
 
-            // Platforms
+            // 1. Kreslit platformy
             platforms.forEach(p => {
                 ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.type === 'void' ? "#ff4444" : "#1a1a2e";
-                ctx.shadowBlur = 10; ctx.shadowColor = p.type === 'void' ? "red" : "#c49642";
+                
+                // Záře
+                ctx.shadowBlur = p.type === 'void' ? 20 : 12;
+                ctx.shadowColor = p.type === 'void' ? "rgba(255,0,0,0.8)" : "rgba(196, 150, 66, 0.4)";
+                
+                // Vnitřek
+                ctx.fillStyle = p.type === 'start' ? "#1a1a1a" : (p.type === 'void' ? "#3a0000" : "#1a1a2e");
                 ctx.fillRect(p.x, p.y, p.w, p.h);
-                ctx.strokeStyle = "#c49642"; ctx.lineWidth = 2;
+                
+                // Okraj
+                ctx.strokeStyle = p.type === 'void' ? "#ff4444" : "#c49642";
+                ctx.lineWidth = 2;
                 ctx.strokeRect(p.x, p.y, p.w, p.h);
+                
+                // Odlesk navrchu
+                if (p.type !== 'void') {
+                    ctx.fillStyle = "rgba(196, 150, 66, 0.1)";
+                    ctx.fillRect(p.x, p.y, p.w, 4);
+                }
             });
+            ctx.globalAlpha = 1; // Reset opacity
 
-            // Orc
-            ctx.shadowBlur = 15; ctx.shadowColor = "black";
+            // 2. Kreslit hráče (Orka)
+            ctx.shadowBlur = 20; ctx.shadowColor = "black"; // Vlastní stín
             ctx.drawImage(imgOrc, player.x, player.y, player.w, player.h);
 
-            // Jump Charge Visual
+            // 3. Vizuální efekt nabíjení
             if (spacePressed && player.grounded) {
-                ctx.strokeStyle = "#ffcc00"; ctx.lineWidth = 3;
-                ctx.strokeRect(player.x-2, player.y-2, player.w+4, player.h+4);
+                // Zářící obdélník kolem hráče, mění barvu podle nabití
+                let chargeRatio = jumpPower / maxJumpPower;
+                let r = Math.floor(chargeRatio * 255);
+                let g = Math.floor((1 - chargeRatio) * 200 + 55);
+                
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = `rgb(${r}, ${g}, 0)`;
+                ctx.strokeStyle = `rgb(${r}, ${g}, 0)`;
+                ctx.lineWidth = 4;
+                ctx.strokeRect(player.x - 3, player.y - 3, player.w + 6, player.h + 6);
             }
 
             ctx.restore();
+            
+            // Loop
             requestAnimationFrame(() => { update(); draw(); });
         }
 
-        window.addEventListener('keydown', e => { keys[e.code] = true; if (e.code === 'Space') spacePressed = true; });
+        // --- OVLÁDÁNÍ (Zde se opravil skok) ---
+        window.addEventListener('keydown', e => { 
+            keys[e.code] = true; 
+            if (e.code === 'Space') {
+                e.preventDefault(); // Zabránit scrollování stránky
+                spacePressed = true; 
+            }
+        });
+        
         window.addEventListener('keyup', e => { 
             keys[e.code] = false; 
-            if (e.code === 'Space' && player.grounded) { 
-                player.dy = -jumpPower; player.grounded = false; started = true;
-                jumpPower = 0; 
+            
+            // Uvolnění mezerníku = VÝSTŘEL NAHORU
+            if (e.code === 'Space' && gameActive) { 
+                if (player.grounded) { 
+                    // TADY SE TO OPRAVILO: Skutečná síla skoku se aplikuje
+                    player.dy = -Math.max(8, jumpPower); // Minimální skok je 8, max jumpPower
+                    player.grounded = false; 
+                    started = true; // Hra oficiálně začala (kamera se pustí)
+                }
+                spacePressed = false; 
+                jumpPower = 0; // Resetovat nabití
             }
-            spacePressed = false; 
         });
 
-        restartGame(); draw();
+        // --- START ---
+        restartGame(); // Inicializace (postaví Orka na zem)
+        draw(); // Spustit loop
     </script>
 </body>
 </html>
