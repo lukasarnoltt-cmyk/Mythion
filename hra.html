@@ -16,39 +16,38 @@
             font-family: 'Segoe UI', sans-serif;
             display: flex; align-items: center; justify-content: center; min-height: 100vh;
             overflow: hidden;
-            /* EPIC BACKGROUND */
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('https://i.imgur.com/84u8Ony.jpg'); /* Dungeon Wall Texture */
+            /* POZADÍ CELÉHO WEBU - DUNGEON WALL */
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                        url('https://i.imgur.com/84u8Ony.jpg'); 
             background-size: cover;
             background-position: center;
         }
 
-        .layout-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 10; width: 800px; }
+        .layout-wrapper { display: flex; flex-direction: column; align-items: center; gap: 0; z-index: 10; }
         
         .guild-header { 
-            font-size: 55px; font-weight: 900; letter-spacing: 25px; text-transform: uppercase; margin: 0;
+            font-size: 55px; font-weight: 900; letter-spacing: 25px; text-transform: uppercase; margin-bottom: 20px;
             background: linear-gradient(to bottom, #fff, var(--gold), #8a6526);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 20px rgba(196, 150, 66, 0.4));
         }
 
-        /* HORNÍ CHAT */
+        /* CHAT JE TEĎ NAHOŘE */
         .chat-container {
             width: 506px; height: 110px; background: var(--bg-panel);
             border: 2px solid var(--gold); border-bottom: none;
             border-radius: 12px 12px 0 0; padding: 12px; box-sizing: border-box;
             display: flex; flex-direction: column; justify-content: flex-end;
-            backdrop-filter: blur(10px); align-self: flex-start;
+            backdrop-filter: blur(10px);
         }
         .chat-msg { font-size: 13px; margin-bottom: 3px; border-left: 2px solid #40ff40; padding-left: 8px; }
         .chat-guild { color: #40ff40; font-weight: bold; }
 
         .game-container { display: flex; gap: 20px; align-items: flex-start; }
 
-        /* CANVAS AREA */
         .canvas-area { 
             position: relative; border: 3px solid var(--gold); border-radius: 0 0 12px 12px; 
-            overflow: hidden; background: rgba(0,0,0,0.4); 
+            overflow: hidden; background: rgba(10, 10, 20, 0.4); 
             box-shadow: 0 20px 50px rgba(0,0,0,0.9);
         }
         canvas { display: block; cursor: none; }
@@ -58,13 +57,12 @@
         .panel { 
             background: var(--bg-panel); border: 1px solid rgba(196, 150, 66, 0.3); 
             border-radius: 8px; padding: 15px; backdrop-filter: blur(10px);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
         }
         .panel-title { color: var(--gold); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; font-weight: bold; }
         .score-val { font-size: 28px; font-weight: 800; }
 
         .overlay { 
-            display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.9);
             flex-direction: column; justify-content: center; align-items: center; z-index: 100;
         }
     </style>
@@ -88,15 +86,15 @@
             </div>
 
             <div class="sidebar">
-                <div class="panel" style="border-top: 3px solid var(--gold);">
+                <div class="panel" style="border-left: 4px solid var(--gold);">
                     <div class="panel-title">M+ Rating</div>
                     <div class="score-val" id="height">0</div>
                 </div>
-                <div class="panel" style="border-top: 3px solid var(--mythic);">
+                <div class="panel" style="border-left: 4px solid var(--mythic);">
                     <div class="panel-title">Personal Best</div>
                     <div id="bestScore" style="font-size: 20px; font-weight: bold;">0 yd</div>
                 </div>
-                <div class="panel" style="border-top: 3px solid #3498db;">
+                <div class="panel" style="border-left: 4px solid #3498db;">
                     <div class="panel-title">Active Affix</div>
                     <div style="font-weight: bold; color: #3498db; font-size: 14px;">BOLSTERING</div>
                 </div>
@@ -120,7 +118,7 @@
         function addPlatform(y) {
             const w = Math.max(85, 160 - Math.abs(y)/700);
             const isVoid = Math.abs(y) > 800 && Math.random() > 0.7;
-            platforms.push({ x: Math.random()*(canvas.width - w), y: y, w: w, h: 18, type: isVoid ? 'void' : 'normal', alpha: 1 });
+            platforms.push({ x: Math.random()*(canvas.width - w), y: y, w: w, h: 20, type: isVoid ? 'void' : 'normal', alpha: 1 });
         }
 
         function restartGame() {
@@ -173,36 +171,31 @@
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // DYNAMICKÉ POZADÍ UVNITŘ HERNÍ PLOCHY (The "Vipe")
-            ctx.fillStyle = "rgba(10, 10, 20, 0.6)"; ctx.fillRect(0,0,500,600);
-            
-            // Červená mlha na dně (Vír smrti)
-            let fogGrd = ctx.createLinearGradient(0, 500 - cameraY, 0, 800 - cameraY);
+            // RUDÝ VÍR NA DNĚ (THE VIPE EFFECT)
+            let fogGrd = ctx.createLinearGradient(0, 500 - cameraY, 0, 850 - cameraY);
             fogGrd.addColorStop(0, "transparent");
-            fogGrd.addColorStop(1, "rgba(255, 0, 0, 0.4)");
+            fogGrd.addColorStop(1, "rgba(220, 20, 20, 0.7)");
             ctx.fillStyle = fogGrd; ctx.fillRect(0,0,500,600);
 
             ctx.save(); ctx.translate(0, -cameraY);
 
-            // PLOŠINY JAKO MAGICKÉ RUNY
+            // MAGICKÉ RUNY MÍSTO PLOŠIN
             platforms.forEach(p => {
                 ctx.globalAlpha = p.alpha;
                 ctx.shadowBlur = 15;
-                ctx.shadowColor = p.type === 'void' ? "#f00" : var(--gold);
+                ctx.shadowColor = p.type === 'void' ? "#f00" : "#c49642";
                 
-                // Vnitřek plošiny
                 ctx.fillStyle = p.type === 'void' ? "#300" : "#1a1a2e";
                 ctx.fillRect(p.x, p.y, p.w, p.h);
                 
-                // Runa efekt (textura)
                 ctx.strokeStyle = p.type === 'void' ? "#ff4444" : "#c49642";
                 ctx.lineWidth = 2;
                 ctx.strokeRect(p.x, p.y, p.w, p.h);
                 
-                // Přidání "runových znaků" pro styl
+                // RUNY UVNITŘ
                 ctx.fillStyle = ctx.strokeStyle;
-                ctx.font = "bold 10px serif";
-                ctx.fillText("ᚱ ᚢ ᚾ ᛅ", p.x + 10, p.y + 13);
+                ctx.font = "bold 11px serif";
+                ctx.fillText("ᚱᚢᚾᛅ", p.x + 15, p.y + 14);
             });
 
             // PLAYER
@@ -224,13 +217,12 @@
         };
 
         const msgs = ["Makej, nebo ti Jefoma máma nedá oběd", "Mimi vidí všechno!", "To je dps jak u tanka...", "Suzu tě healovat nebude!"];
-        const names = ["Arny", "Mimi", "Arny", "Suzu"];
         setInterval(() => {
             if(!gameActive || !started) return;
             const chat = document.getElementById('gameChat');
             const div = document.createElement('div');
             div.className = 'chat-msg';
-            div.innerHTML = `<span class="chat-guild">[Guild]</span> <b>${names[Math.floor(Math.random()*names.length)]}:</b> ${msgs[Math.floor(Math.random()*msgs.length)]}`;
+            div.innerHTML = `<span class="chat-guild">[Guild]</span> <b>${["Arny", "Mimi", "Suzu"][Math.floor(Math.random()*3)]}:</b> ${msgs[Math.floor(Math.random()*msgs.length)]}`;
             chat.appendChild(div);
             if(chat.childNodes.length > 5) chat.removeChild(chat.firstChild);
         }, 8000);
