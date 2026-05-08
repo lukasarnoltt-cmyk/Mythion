@@ -2,62 +2,47 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Mythion: Epic Dungeon Edition</title>
+    <title>Mythion: Fixed Edition</title>
     <style>
         :root { --gold: #c49642; --mythic: #a335ee; --void: #ff4444; }
         
         body { 
             margin: 0; 
+            /* TEMNÉ POZADÍ JAKO ZÁLOHA, ABY NEBYLO BÍLÉ */
+            background: #050508 radial-gradient(circle, #1a1a2e 0%, #050508 100%);
             color: #f0ebe0; 
             font-family: 'Segoe UI', sans-serif;
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             min-height: 100vh; overflow: hidden;
-            /* NAHRÁNÍ EPIC OBRÁZKU DO POZADÍ */
-            background-image: url('https://r.jina.ai/i/9e62f038084a44b9a896d88f62a4066a'); 
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
         }
 
-        .game-container {
-            display: flex; gap: 20px; align-items: flex-start;
-            filter: drop-shadow(0 0 30px rgba(0,0,0,0.8));
-        }
-
-        .canvas-wrap { display: flex; flex-direction: column; }
+        .game-container { display: flex; gap: 20px; align-items: flex-start; }
+        .canvas-wrap { display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
 
         .chat-area {
-            width: 506px; height: 120px; background: rgba(0,0,0,0.85);
+            width: 506px; height: 120px; background: rgba(0,0,0,0.9);
             border: 3px solid var(--gold); border-bottom: none; border-radius: 12px 12px 0 0;
             padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end;
-            backdrop-filter: blur(4px);
         }
 
-        canvas { 
-            border: 3px solid var(--gold); background: rgba(10, 10, 26, 0.7); 
-            border-radius: 0 0 12px 12px; display: block; 
-        }
+        canvas { border: 3px solid var(--gold); background: rgba(10, 10, 20, 0.8); border-radius: 0 0 12px 12px; }
 
         .sidebar { width: 200px; display: flex; flex-direction: column; gap: 10px; }
-        .panel { 
-            background: rgba(0,0,0,0.8); border: 1px solid var(--gold); 
-            border-left: 6px solid var(--gold); padding: 15px; border-radius: 4px;
-        }
+        .panel { background: rgba(0,0,0,0.85); border: 1px solid var(--gold); border-left: 6px solid var(--gold); padding: 15px; border-radius: 4px; }
         .score-num { font-size: 28px; font-weight: bold; color: #fff; }
-
         .chat-msg { font-size: 13px; margin-bottom: 2px; }
         .chat-guild { color: #40ff40; font-weight: bold; }
         
         .overlay { 
             display: none; position: absolute; top: 120px; left: 0; width: 506px; height: 606px; 
-            background: rgba(0,0,0,0.9); flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.9); flex-direction: column; justify-content: center; align-items: center; z-index: 100;
         }
-        button { background: var(--gold); border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        button { background: var(--gold); border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 4px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <h1 style="color: var(--gold); letter-spacing: 10px; text-transform: uppercase; margin-bottom: 15px; text-shadow: 2px 2px 10px black;">Mythion</h1>
+    <h1 style="color: var(--gold); letter-spacing: 12px; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 0 10px rgba(196,150,66,0.5);">Mythion</h1>
 
     <div class="game-container">
         <div class="canvas-wrap">
@@ -65,9 +50,9 @@
             <div style="position: relative;">
                 <canvas id="gameCanvas"></canvas>
                 <div id="gameOver" class="overlay">
-                    <h2 style="color:var(--void)">WIPE / REPAIR NEEDED</h2>
+                    <h2 style="color:var(--void); font-size: 32px;">WIPE / REPAIR</h2>
                     <div id="finalScore" class="score-num" style="margin-bottom: 20px;">0 yd</div>
-                    <button onclick="reset()">DALŠÍ TRY</button>
+                    <button onclick="reset()">Zkusit znovu</button>
                 </div>
             </div>
         </div>
@@ -92,8 +77,7 @@
         const img = new Image(); img.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
 
         let p, platforms, score, best, active, started, camY, keys = {};
-        let gravity = 0.45; // Startovní gravitace (pomalejší hra)
-        best = localStorage.getItem('myth_vEpic_best') || 0;
+        best = localStorage.getItem('myth_v5_best') || 0;
         document.getElementById('bestScore').innerText = best + " yd";
 
         const members = [
@@ -114,28 +98,22 @@
 
         function reset() {
             p = { x: 230, y: 500, w: 42, h: 42, dy: 0, dx: 0, grounded: false };
-            platforms = [{x: 0, y: 570, w: 500, h: 100, type: 'safe', alpha: 1}];
-            for(let i=1; i<15; i++) spawnPlat(570 - i*145);
-            score = 0; camY = 0; active = true; started = false; gravity = 0.45;
+            platforms = [{x: 0, y: 570, w: 500, h: 100, type: 'safe', alpha: 1, dead: false}];
+            for(let i=1; i<15; i++) spawnPlat(570 - i*150);
+            score = 0; camY = 0; active = true; started = false;
             document.getElementById('gameOver').style.display = 'none';
         }
 
         function spawnPlat(y) {
-            const w = 130; // Širší plošiny pro lepší hratelnost
+            const w = 125;
             let type = 'safe';
-            // KAŽDÁ DRUHÁ JE VŽDY SAFE, aby to nebylo nemožné
-            if (platforms.length % 2 === 0 && Math.abs(y) > 600 && Math.random() > 0.6) type = 'void';
-            platforms.push({ x: Math.random()*(canvas.width-w), y, w, h: 20, type, alpha: 1 });
+            // KAŽDÁ DRUHÁ JE VŽDY SAFE
+            if (platforms.length % 2 === 0 && Math.abs(y) > 700 && Math.random() > 0.5) type = 'void';
+            platforms.push({ x: Math.random()*(canvas.width-w), y, w, h: 18, type, alpha: 1, dead: false });
         }
 
         window.onkeydown = e => { keys[e.code] = true; if(e.code === 'Space') e.preventDefault(); };
-        window.onkeyup = e => {
-            keys[e.code] = false;
-            if(e.code === 'Space' && p.grounded && active) {
-                p.dy = -19; // SILNĚJŠÍ SKOK, abys všude doskočil
-                p.grounded = false; started = true;
-            }
-        };
+        window.onkeyup = e => { keys[e.code] = false; };
 
         function loop() {
             if(active) {
@@ -143,50 +121,56 @@
                 else if(keys['ArrowRight'] || keys['KeyD']) p.dx = 7;
                 else p.dx *= 0.8;
 
-                p.dy += gravity; 
+                p.dy += 0.5; // GRAVITACE
                 p.x += p.dx; p.y += p.dy;
                 
                 if(p.x > canvas.width) p.x = -p.w; if(p.x < -p.w) p.x = canvas.width;
 
                 p.grounded = false;
                 platforms.forEach(plat => {
-                    if(p.dy > 0 && p.x + p.w > plat.x && p.x < plat.x + plat.w &&
+                    if(!plat.dead && p.dy > 0 && p.x + p.w > plat.x && p.x < plat.x + plat.w &&
                        p.y + p.h > plat.y && p.y + p.h < plat.y + plat.h + p.dy) {
+                        
                         p.y = plat.y - p.h; p.dy = 0; p.grounded = true;
-                        if(plat.type === 'void' && started) plat.alpha -= 0.05; // Pomaleji mizí
+                        
+                        if(plat.type === 'void' && started) {
+                            plat.alpha -= 0.05; // POSTUPNĚ MIZÍ
+                            if(plat.alpha <= 0.1) plat.dead = true; // PAK ZMIZÍ ÚPLNĚ
+                        }
                     }
                 });
+
+                if(keys['Space'] && p.grounded) {
+                    p.dy = -17; p.grounded = false; started = true;
+                }
 
                 if(started) {
                     if(p.y < camY + 300) camY += (p.y - 300 - camY) * 0.1;
                     score = Math.max(score, Math.floor(Math.abs(p.y - 500)/10));
                     document.getElementById('curScore').innerText = score;
-                    // POSTUPNÉ ZTĚŽOVÁNÍ: Gravitace roste se skóre
-                    gravity = 0.45 + (score / 2000); 
                 }
 
-                if(platforms[platforms.length-1].y > camY - 100) spawnPlat(platforms[platforms.length-1].y - 145);
+                if(platforms[platforms.length-1].y > camY - 100) spawnPlat(platforms[platforms.length-1].y - 150);
                 
                 if(p.y > camY + canvas.height + 200 && started) {
                     active = false;
                     document.getElementById('gameOver').style.display = 'flex';
                     document.getElementById('finalScore').innerText = score + " yd";
-                    if(score > best) { best = score; localStorage.setItem('myth_vEpic_best', best); document.getElementById('bestScore').innerText = best + " yd"; }
+                    if(score > best) { best = score; localStorage.setItem('myth_v5_best', best); document.getElementById('bestScore').innerText = best + " yd"; }
                 }
             }
 
             ctx.clearRect(0,0,500,600);
             ctx.save(); ctx.translate(0, -camY);
             platforms.forEach(plat => {
-                ctx.globalAlpha = plat.alpha;
-                ctx.fillStyle = plat.type === 'void' ? '#ff4444' : '#c49642';
-                ctx.shadowBlur = 15; ctx.shadowColor = ctx.fillStyle;
-                ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
-                ctx.fillStyle = "rgba(0,0,0,0.4)";
-                ctx.font = "bold 10px sans-serif";
-                ctx.fillText("MYTHION", plat.x + 40, plat.y + 14);
+                if(!plat.dead) {
+                    ctx.globalAlpha = plat.alpha;
+                    ctx.fillStyle = plat.type === 'void' ? '#ff4444' : '#c49642';
+                    ctx.shadowBlur = 10; ctx.shadowColor = ctx.fillStyle;
+                    ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
+                }
             });
-            ctx.globalAlpha = 1; ctx.shadowBlur = 10; ctx.shadowColor = 'black';
+            ctx.globalAlpha = 1; ctx.shadowBlur = 0;
             ctx.drawImage(img, p.x, p.y, p.w, p.h);
             ctx.restore();
             requestAnimationFrame(loop);
@@ -197,7 +181,7 @@
                 const mem = members[Math.floor(Math.random()*members.length)];
                 msg(mem.n, mem.m[Math.floor(Math.random()*mem.m.length)]);
             }
-        }, 9000);
+        }, 8000);
 
         reset(); loop();
     </script>
