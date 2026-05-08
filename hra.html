@@ -2,123 +2,84 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Mythion: The Dungeon Crawler</title>
+    <title>Mythion: Epic Dungeon Edition</title>
     <style>
         :root { --gold: #c49642; --mythic: #a335ee; --void: #ff4444; }
         
         body { 
             margin: 0; 
-            background: #020205; 
             color: #f0ebe0; 
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh;
-            overflow: hidden;
-            /* HLAVNÍ POZADÍ STRÁNKY */
-            background: radial-gradient(circle, #1a1a2e 0%, #050508 100%);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 100vh; overflow: hidden;
+            /* NAHRÁNÍ EPIC OBRÁZKU DO POZADÍ */
+            background-image: url('https://r.jina.ai/i/9e62f038084a44b9a896d88f62a4066a'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
-        /* EPIC NÁPIS MYTHION */
-        .game-title {
-            font-size: 55px;
-            font-weight: 900;
-            letter-spacing: 12px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            background: linear-gradient(to bottom, #fceabb 0%, #fccd4d 50%, #f8b500 51%, #fbdf93 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(196, 150, 66, 0.6));
-            position: relative;
+        .game-container {
+            display: flex; gap: 20px; align-items: flex-start;
+            filter: drop-shadow(0 0 30px rgba(0,0,0,0.8));
         }
 
-        .main-layout { display: flex; gap: 25px; align-items: flex-start; }
-        .game-window { display: flex; flex-direction: column; box-shadow: 0 0 100px rgba(0,0,0,1); }
+        .canvas-wrap { display: flex; flex-direction: column; }
 
-        /* CHAT INTEGROVANÝ DO HRY */
         .chat-area {
-            width: 506px; height: 130px; 
-            background: rgba(0, 0, 0, 0.85);
-            border: 3px solid var(--gold); 
-            border-bottom: none; 
-            border-radius: 12px 12px 0 0;
-            padding: 12px; 
-            box-sizing: border-box; 
-            overflow: hidden;
-            display: flex; 
-            flex-direction: column; 
-            justify-content: flex-end;
-            backdrop-filter: blur(5px);
+            width: 506px; height: 120px; background: rgba(0,0,0,0.85);
+            border: 3px solid var(--gold); border-bottom: none; border-radius: 12px 12px 0 0;
+            padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end;
+            backdrop-filter: blur(4px);
         }
-        
-        .chat-msg { font-size: 13px; margin-bottom: 3px; border-left: 2px solid transparent; padding-left: 5px; }
-        .chat-guild { color: #40ff40; font-weight: bold; }
-        .chat-system { color: #ffff40; font-style: italic; font-weight: bold; }
 
         canvas { 
-            border: 3px solid var(--gold); 
-            background: #0a0a1a; 
-            border-radius: 0 0 12px 12px; 
-            display: block;
+            border: 3px solid var(--gold); background: rgba(10, 10, 26, 0.7); 
+            border-radius: 0 0 12px 12px; display: block; 
         }
 
-        /* SIDEBAR S STATISTIKAMI */
-        .sidebar { width: 220px; display: flex; flex-direction: column; gap: 15px; }
+        .sidebar { width: 200px; display: flex; flex-direction: column; gap: 10px; }
         .panel { 
-            background: rgba(15, 15, 25, 0.9); 
-            border: 1px solid var(--gold); 
-            border-left: 8px solid var(--gold); 
-            padding: 18px; 
-            border-radius: 6px;
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.8); border: 1px solid var(--gold); 
+            border-left: 6px solid var(--gold); padding: 15px; border-radius: 4px;
         }
-        .panel-label { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 5px; }
-        .panel-value { font-size: 32px; font-weight: bold; color: #fff; }
+        .score-num { font-size: 28px; font-weight: bold; color: #fff; }
 
+        .chat-msg { font-size: 13px; margin-bottom: 2px; }
+        .chat-guild { color: #40ff40; font-weight: bold; }
+        
         .overlay { 
-            display: none; position: absolute; top: 130px; left: 0; width: 506px; height: 606px; 
-            background: rgba(0,0,0,0.9); flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+            display: none; position: absolute; top: 120px; left: 0; width: 506px; height: 606px; 
+            background: rgba(0,0,0,0.9); flex-direction: column; justify-content: center; align-items: center;
         }
-        .btn-restart { 
-            background: var(--gold); color: black; border: none; padding: 12px 30px; 
-            font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; margin-top: 20px;
-            transition: transform 0.2s;
-        }
-        .btn-restart:hover { transform: scale(1.05); background: #e0ac4e; }
+        button { background: var(--gold); border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <div class="game-title">MYTHION</div>
+    <h1 style="color: var(--gold); letter-spacing: 10px; text-transform: uppercase; margin-bottom: 15px; text-shadow: 2px 2px 10px black;">Mythion</h1>
 
-    <div class="main-layout">
-        <div class="game-window">
-            <div class="chat-area" id="gameChat"></div>
+    <div class="game-container">
+        <div class="canvas-wrap">
+            <div class="chat-area" id="chat"></div>
             <div style="position: relative;">
                 <canvas id="gameCanvas"></canvas>
-                <div id="gameOverScreen" class="overlay">
-                    <h1 style="color:var(--void); font-size: 45px; margin: 0; letter-spacing: 5px;">RAID WIPE</h1>
-                    <div class="panel-value" id="finalScoreDisplay">0 yd</div>
-                    <button class="btn-restart" onclick="restartGame()">RE-PULL BOSS</button>
+                <div id="gameOver" class="overlay">
+                    <h2 style="color:var(--void)">WIPE / REPAIR NEEDED</h2>
+                    <div id="finalScore" class="score-num" style="margin-bottom: 20px;">0 yd</div>
+                    <button onclick="reset()">DALŠÍ TRY</button>
                 </div>
             </div>
         </div>
 
         <div class="sidebar">
             <div class="panel">
-                <div class="panel-label">M+ Rating</div>
-                <div class="panel-value" id="height">0</div>
+                <div style="font-size: 10px; color: var(--gold)">M+ RATING</div>
+                <div id="curScore" class="score-num">0</div>
             </div>
-            <div class="panel" style="border-left-color: var(--mythic);">
-                <div class="panel-label">Season Best</div>
-                <div id="best" style="font-size: 22px; font-weight: bold;">0 yd</div>
-            </div>
-            <div class="panel" style="border-left-color: #3498db;">
-                <div class="panel-label">Active Affix</div>
-                <div style="font-size: 14px; font-weight: bold; color: #3498db;">BOLSTERING</div>
+            <div class="panel" style="border-left-color: var(--mythic)">
+                <div style="font-size: 10px; color: var(--mythic)">SEASON BEST</div>
+                <div id="bestScore" style="font-size: 20px; font-weight: bold;">0 yd</div>
             </div>
         </div>
     </div>
@@ -128,129 +89,117 @@
         const ctx = canvas.getContext('2d');
         canvas.width = 500; canvas.height = 600;
 
-        const imgOrc = new Image(); 
-        imgOrc.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
-        
-        let score = 0, bestScore = localStorage.getItem('mythion_final_best') || 0;
-        document.getElementById('best').innerText = bestScore + " yd";
+        const img = new Image(); img.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
 
-        let gameActive = true, started = false, spacePressed = false, jumpPower = 0, cameraY = 0;
-        const keys = {}, platforms = [];
-        let player = { x: 230, y: 500, w: 42, h: 42, dx: 0, dy: 0, grounded: false };
+        let p, platforms, score, best, active, started, camY, keys = {};
+        let gravity = 0.45; // Startovní gravitace (pomalejší hra)
+        best = localStorage.getItem('myth_vEpic_best') || 0;
+        document.getElementById('bestScore').innerText = best + " yd";
 
         const members = [
             {n: "Arny", m: ["Makej, nebo ti Jefoma máma nedá oběd!", "To je dps jak u tanka...", "Mimi ti Jefoma mama..."]},
             {n: "Mimi", m: ["Mimi vidí všechno!", "Skoč víc, bačkoro!", "Tebe bych si vzal do parády k nám do armády!"]},
-            {n: "Suzu", m: ["Suzu tě healovat nebude!", "Mám low manu, nepadni.", "Kdo to zase pullnul?"]},
+            {n: "Suzu", m: ["Suzu tě healovat nebude!", "Mám low manu, nepadni.", "Kdo to zase pullnul??"]},
             {n: "Exsqueez", m: ["Máš zapnutý monitor?", "Exsqueez me? Co to bylo?", "Půjč mi na repair."]}
         ];
 
-        function addChatMessage(name, msg, type = 'guild') {
-            const chatBox = document.getElementById('gameChat');
-            const div = document.createElement('div');
-            div.className = 'chat-msg';
-            div.innerHTML = type === 'guild' ? `[<span class="chat-guild">Guild</span>] <b>${name}:</b> ${msg}` : `<span class="chat-system">${msg}</span>`;
-            chatBox.appendChild(div);
-            if (chatBox.childNodes.length > 7) chatBox.removeChild(chatBox.firstChild);
+        function msg(name, text) {
+            const c = document.getElementById('chat');
+            const d = document.createElement('div');
+            d.className = 'chat-msg';
+            d.innerHTML = `<span class="chat-guild">[Guild] ${name}:</span> ${text}`;
+            c.appendChild(d);
+            if(c.childNodes.length > 6) c.removeChild(c.firstChild);
         }
 
-        function restartGame() {
-            score = 0; cameraY = 0; gameActive = true; started = false;
-            player = { x: 229, y: 500, w: 42, h: 42, dx: 0, dy: 0, grounded: false };
-            platforms.length = 0;
-            platforms.push({x: 0, y: 560, w: 500, h: 100, type: 'safe', alpha: 1});
-            for(let i=1; i<15; i++) addPlatform(560 - i*142);
-            document.getElementById('gameOverScreen').style.display = 'none';
-            addChatMessage(null, "--- NOVÝ PULL: LOK'TAR OGAR! ---", "system");
+        function reset() {
+            p = { x: 230, y: 500, w: 42, h: 42, dy: 0, dx: 0, grounded: false };
+            platforms = [{x: 0, y: 570, w: 500, h: 100, type: 'safe', alpha: 1}];
+            for(let i=1; i<15; i++) spawnPlat(570 - i*145);
+            score = 0; camY = 0; active = true; started = false; gravity = 0.45;
+            document.getElementById('gameOver').style.display = 'none';
         }
 
-        function addPlatform(y) {
-            const w = 120;
+        function spawnPlat(y) {
+            const w = 130; // Širší plošiny pro lepší hratelnost
             let type = 'safe';
-            // KAŽDÁ DRUHÁ JE GARANTOVANĚ SAFE (Férovost)
-            if (platforms.length % 2 === 0 && Math.abs(y) > 800 && Math.random() > 0.5) type = 'void';
-            platforms.push({ x: Math.random()*(canvas.width - w), y, w, h: 18, type, alpha: 1 });
+            // KAŽDÁ DRUHÁ JE VŽDY SAFE, aby to nebylo nemožné
+            if (platforms.length % 2 === 0 && Math.abs(y) > 600 && Math.random() > 0.6) type = 'void';
+            platforms.push({ x: Math.random()*(canvas.width-w), y, w, h: 20, type, alpha: 1 });
         }
 
-        function update() {
-            if (!gameActive) return;
-            if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -7.5;
-            else if (keys['KeyD'] || keys['ArrowRight']) player.dx = 7.5;
-            else player.dx *= 0.85;
+        window.onkeydown = e => { keys[e.code] = true; if(e.code === 'Space') e.preventDefault(); };
+        window.onkeyup = e => {
+            keys[e.code] = false;
+            if(e.code === 'Space' && p.grounded && active) {
+                p.dy = -19; // SILNĚJŠÍ SKOK, abys všude doskočil
+                p.grounded = false; started = true;
+            }
+        };
 
-            player.dy += 0.6; player.x += player.dx; player.y += player.dy;
+        function loop() {
+            if(active) {
+                if(keys['ArrowLeft'] || keys['KeyA']) p.dx = -7;
+                else if(keys['ArrowRight'] || keys['KeyD']) p.dx = 7;
+                else p.dx *= 0.8;
 
-            if (player.x < 0) player.x = 0; 
-            if (player.x + player.w > canvas.width) player.x = canvas.width - player.w;
+                p.dy += gravity; 
+                p.x += p.dx; p.y += p.dy;
+                
+                if(p.x > canvas.width) p.x = -p.w; if(p.x < -p.w) p.x = canvas.width;
 
-            player.grounded = false;
-            platforms.forEach(p => {
-                if (player.dy > 0 && player.x + player.w > p.x && player.x < p.x + p.w &&
-                    player.y + player.h >= p.y && player.y + player.h <= p.y + p.h + player.dy) {
-                    player.y = p.y - player.h; player.dy = 0; player.grounded = true;
-                    if (p.type === 'void' && started) p.alpha -= 0.15;
+                p.grounded = false;
+                platforms.forEach(plat => {
+                    if(p.dy > 0 && p.x + p.w > plat.x && p.x < plat.x + plat.w &&
+                       p.y + p.h > plat.y && p.y + p.h < plat.y + plat.h + p.dy) {
+                        p.y = plat.y - p.h; p.dy = 0; p.grounded = true;
+                        if(plat.type === 'void' && started) plat.alpha -= 0.05; // Pomaleji mizí
+                    }
+                });
+
+                if(started) {
+                    if(p.y < camY + 300) camY += (p.y - 300 - camY) * 0.1;
+                    score = Math.max(score, Math.floor(Math.abs(p.y - 500)/10));
+                    document.getElementById('curScore').innerText = score;
+                    // POSTUPNÉ ZTĚŽOVÁNÍ: Gravitace roste se skóre
+                    gravity = 0.45 + (score / 2000); 
                 }
-            });
 
-            if (started) {
-                if (player.y < cameraY + 300) cameraY = player.y - 300;
-                score = Math.max(score, Math.floor(Math.abs(player.y - 500) / 10));
-                document.getElementById('height').innerText = score;
+                if(platforms[platforms.length-1].y > camY - 100) spawnPlat(platforms[platforms.length-1].y - 145);
+                
+                if(p.y > camY + canvas.height + 200 && started) {
+                    active = false;
+                    document.getElementById('gameOver').style.display = 'flex';
+                    document.getElementById('finalScore').innerText = score + " yd";
+                    if(score > best) { best = score; localStorage.setItem('myth_vEpic_best', best); document.getElementById('bestScore').innerText = best + " yd"; }
+                }
             }
 
-            if (platforms[platforms.length - 1].y > cameraY - 150) addPlatform(platforms[platforms.length - 1].y - 142);
-
-            if (started && player.y > cameraY + canvas.height + 150) {
-                gameActive = false;
-                document.getElementById('finalScoreDisplay').innerText = score + " yd";
-                document.getElementById('gameOverScreen').style.display = 'flex';
-                if (score > bestScore) {
-                    bestScore = score; localStorage.setItem('mythion_final_best', score);
-                    document.getElementById('best').innerText = bestScore + " yd";
-                }
-            }
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // HERNI POZADI (VNITŘNÍ)
-            ctx.fillStyle = '#0a0a1a'; ctx.fillRect(0,0,500,600);
-            
-            ctx.save(); ctx.translate(0, -cameraY);
-            platforms.forEach(p => {
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.type === 'void' ? '#ff4444' : '#c49642';
+            ctx.clearRect(0,0,500,600);
+            ctx.save(); ctx.translate(0, -camY);
+            platforms.forEach(plat => {
+                ctx.globalAlpha = plat.alpha;
+                ctx.fillStyle = plat.type === 'void' ? '#ff4444' : '#c49642';
                 ctx.shadowBlur = 15; ctx.shadowColor = ctx.fillStyle;
-                ctx.fillRect(p.x, p.y, p.w, p.h);
-                ctx.fillStyle = "rgba(0,0,0,0.3)";
+                ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
+                ctx.fillStyle = "rgba(0,0,0,0.4)";
                 ctx.font = "bold 10px sans-serif";
-                ctx.fillText("MYTHION", p.x + 35, p.y + 13);
+                ctx.fillText("MYTHION", plat.x + 40, plat.y + 14);
             });
-
-            ctx.globalAlpha = 1; ctx.shadowBlur = 20; ctx.shadowColor = '#000';
-            ctx.drawImage(imgOrc, player.x, player.y, player.w, player.h);
+            ctx.globalAlpha = 1; ctx.shadowBlur = 10; ctx.shadowColor = 'black';
+            ctx.drawImage(img, p.x, p.y, p.w, p.h);
             ctx.restore();
-            requestAnimationFrame(() => { update(); draw(); });
+            requestAnimationFrame(loop);
         }
-
-        window.addEventListener('keydown', e => { 
-            keys[e.code] = true; 
-            if (e.code === 'Space') { 
-                e.preventDefault(); 
-                if (player.grounded && gameActive) { player.dy = -18; player.grounded = false; started = true; }
-            }
-        });
-        window.addEventListener('keyup', e => { keys[e.code] = false; });
 
         setInterval(() => {
-            if (gameActive && started) {
+            if(active && started) {
                 const mem = members[Math.floor(Math.random()*members.length)];
-                addChatMessage(mem.n, mem.m[Math.floor(Math.random()*mem.m.length)]);
+                msg(mem.n, mem.m[Math.floor(Math.random()*mem.m.length)]);
             }
-        }, 8000);
+        }, 9000);
 
-        restartGame(); draw();
+        reset(); loop();
     </script>
 </body>
 </html>
