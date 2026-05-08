@@ -2,74 +2,82 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Mythion: Shadowlands Edition</title>
+    <title>Mythion: Shadowlands Edition v6</title>
     <style>
         :root { 
             --gold: #c49642; 
             --mythic: #a335ee; 
             --void: #ff4444; 
-            --bg-panel: rgba(10, 10, 15, 0.85);
+            --bg-panel: rgba(10, 10, 15, 0.9);
         }
         
         body { 
-            margin: 0; background: #050508; color: #f0ebe0; 
-            font-family: 'Segoe UI', sans-serif;
+            margin: 0; background: #020205; color: #f0ebe0; 
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex; align-items: center; justify-content: center; min-height: 100vh;
             overflow: hidden;
-            /* POZADÍ CELÉHO WEBU - DUNGEON WALL */
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
-                        url('https://i.imgur.com/84u8Ony.jpg'); 
-            background-size: cover;
-            background-position: center;
+            /* HLUBOKÉ VESMÍRNÉ POZADÍ */
+            background-color: #050508;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            background-attachment: fixed;
         }
 
-        .layout-wrapper { display: flex; flex-direction: column; align-items: center; gap: 0; z-index: 10; }
+        .layout-wrapper { display: flex; flex-direction: column; align-items: center; gap: 0; z-index: 10; transition: transform 0.05s; }
         
         .guild-header { 
-            font-size: 55px; font-weight: 900; letter-spacing: 25px; text-transform: uppercase; margin-bottom: 20px;
+            font-size: 55px; font-weight: 900; letter-spacing: 25px; text-transform: uppercase; margin: 0 0 15px 0;
             background: linear-gradient(to bottom, #fff, var(--gold), #8a6526);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 20px rgba(196, 150, 66, 0.4));
         }
 
-        /* CHAT JE TEĎ NAHOŘE */
+        /* CHAT BOX NAHOŘE */
         .chat-container {
-            width: 506px; height: 110px; background: var(--bg-panel);
+            width: 506px; height: 120px; background: var(--bg-panel);
             border: 2px solid var(--gold); border-bottom: none;
             border-radius: 12px 12px 0 0; padding: 12px; box-sizing: border-box;
             display: flex; flex-direction: column; justify-content: flex-end;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); align-self: flex-start;
         }
-        .chat-msg { font-size: 13px; margin-bottom: 3px; border-left: 2px solid #40ff40; padding-left: 8px; }
+        .chat-msg { font-size: 13px; margin-bottom: 4px; line-height: 1.2; animation: chatIn 0.3s; }
         .chat-guild { color: #40ff40; font-weight: bold; }
+        .chat-system { color: #ffff40; font-style: italic; }
 
         .game-container { display: flex; gap: 20px; align-items: flex-start; }
 
         .canvas-area { 
             position: relative; border: 3px solid var(--gold); border-radius: 0 0 12px 12px; 
-            overflow: hidden; background: rgba(10, 10, 20, 0.4); 
+            overflow: hidden; background: #000;
             box-shadow: 0 20px 50px rgba(0,0,0,0.9);
         }
-        canvas { display: block; cursor: none; }
+        canvas { display: block; cursor: none; background: rgba(0,0,0,0.85); }
 
         /* SIDEBAR */
         .sidebar { width: 220px; display: flex; flex-direction: column; gap: 12px; }
         .panel { 
             background: var(--bg-panel); border: 1px solid rgba(196, 150, 66, 0.3); 
-            border-radius: 8px; padding: 15px; backdrop-filter: blur(10px);
+            border-radius: 8px; padding: 15px; border-left: 5px solid var(--gold);
+            backdrop-filter: blur(10px);
         }
-        .panel-title { color: var(--gold); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; font-weight: bold; }
-        .score-val { font-size: 28px; font-weight: 800; }
+        .panel-title { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; font-weight: bold; }
+        .score-val { font-size: 30px; font-weight: 800; }
 
         .overlay { 
-            display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.9);
-            flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+            display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.92);
+            flex-direction: column; justify-content: center; align-items: center; z-index: 100; text-align: center;
         }
+        .btn-restart { 
+            background: var(--gold); color: black; border: none; padding: 12px 30px; 
+            font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; margin-top: 20px;
+            text-transform: uppercase;
+        }
+
+        @keyframes chatIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="layout-wrapper">
+    <div class="layout-wrapper" id="gameUI">
         <h1 class="guild-header">Mythion</h1>
 
         <div class="game-container">
@@ -80,21 +88,21 @@
                     <div id="gameOverScreen" class="overlay">
                         <h1 style="color:var(--void); font-size: 45px; margin:0; letter-spacing: 5px;">RAID WIPE</h1>
                         <div class="score-val" id="finalScore" style="color:var(--gold); margin: 10px 0;">0 yd</div>
-                        <button style="background:var(--gold); border:none; padding:12px 30px; font-weight:bold; cursor:pointer; border-radius:4px;" onclick="restartGame()">RE-PULL BOSS</button>
+                        <button class="btn-restart" onclick="restartGame()">RE-PULL BOSS</button>
                     </div>
                 </div>
             </div>
 
             <div class="sidebar">
-                <div class="panel" style="border-left: 4px solid var(--gold);">
-                    <div class="panel-title">M+ Rating</div>
+                <div class="panel">
+                    <div class="panel-title">M+ Score</div>
                     <div class="score-val" id="height">0</div>
                 </div>
-                <div class="panel" style="border-left: 4px solid var(--mythic);">
+                <div class="panel" style="border-left-color: var(--mythic);">
                     <div class="panel-title">Personal Best</div>
                     <div id="bestScore" style="font-size: 20px; font-weight: bold;">0 yd</div>
                 </div>
-                <div class="panel" style="border-left: 4px solid #3498db;">
+                <div class="panel" style="border-left-color: #3498db;">
                     <div class="panel-title">Active Affix</div>
                     <div style="font-weight: bold; color: #3498db; font-size: 14px;">BOLSTERING</div>
                 </div>
@@ -109,125 +117,36 @@
 
         const imgOrc = new Image(); imgOrc.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
         
-        let score = 0, best = localStorage.getItem('mythion_final_best') || 0;
+        let score = 0, best = localStorage.getItem('mythion_v6_best') || 0;
+        document.getElementById('bestScore').innerText = best + " yd";
+
         let gameActive = true, started = false, spacePressed = false, jumpPower = 0, cameraY = 0;
+        let shake = 0;
         const platforms = [];
 
         let player = { x: 230, y: 500, w: 42, h: 42, dx: 0, dy: 0, grounded: false };
 
-        function addPlatform(y) {
-            const w = Math.max(85, 160 - Math.abs(y)/700);
-            const isVoid = Math.abs(y) > 800 && Math.random() > 0.7;
-            platforms.push({ x: Math.random()*(canvas.width - w), y: y, w: w, h: 20, type: isVoid ? 'void' : 'normal', alpha: 1 });
+        function addChatMessage(name, msg, type = 'guild') {
+            const chatBox = document.getElementById('gameChat');
+            const div = document.createElement('div');
+            div.className = 'chat-msg';
+            div.innerHTML = type === 'guild' ? `[<span class="chat-guild">Guild</span>] <b>${name}:</b> ${msg}` : `<span class="chat-system">${msg}</span>`;
+            chatBox.appendChild(div);
+            if (chatBox.childNodes.length > 5) chatBox.removeChild(chatBox.firstChild);
         }
 
         function restartGame() {
             score = 0; cameraY = 0; gameActive = true; started = false; jumpPower = 0;
+            player = { x: 230, y: 500, w: 42, h: 42, dx: 0, dy: 0, grounded: false };
             platforms.length = 0;
-            player.x = 230; player.y = 500; player.dy = 0;
             platforms.push({x: 0, y: 570, w: 500, h: 100, type: 'start', alpha: 1});
-            for(let i=1; i<10; i++) addPlatform(570 - i*145);
+            for(let i=1; i<15; i++) addPlatform(570 - i*142);
             document.getElementById('gameOverScreen').style.display = 'none';
-            document.getElementById('bestScore').innerText = best + " yd";
+            addChatMessage(null, "--- NOVÝ PULL: LOK'TAR OGAR! ---", "system");
         }
 
-        function update() {
-            if (!gameActive) return;
-            if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -8;
-            else if (keys['KeyD'] || keys['ArrowRight']) player.dx = 8;
-            else player.dx *= 0.85;
-
-            player.dy += 0.55; player.x += player.dx; player.y += player.dy;
-            if (player.x < 0) player.x = 0; if (player.x + player.w > canvas.width) player.x = canvas.width - player.w;
-
-            if (spacePressed && player.grounded) jumpPower = Math.min(jumpPower + 0.9, 22);
-
-            player.grounded = false;
-            for (let p of platforms) {
-                if (player.dy > 0 && player.x + player.w > p.x && player.x < p.x + p.w &&
-                    player.y + player.h >= p.y && player.y + player.h <= p.y + p.h + player.dy) {
-                    player.y = p.y - player.h; player.dy = 0; player.grounded = true;
-                    if (p.type === 'void' && started) p.alpha -= 0.15;
-                }
-            }
-
-            if (started) {
-                let targetCam = player.y - 280;
-                if (targetCam < cameraY) cameraY += (targetCam - cameraY) * 0.1;
-                score = Math.max(score, Math.floor(Math.abs(player.y - 500)/10));
-                document.getElementById('height').innerText = score;
-            }
-
-            if (platforms[platforms.length-1].y > cameraY - 200) addPlatform(platforms[platforms.length-1].y - 145);
-
-            if (player.y > cameraY + canvas.height + 100) {
-                gameActive = false;
-                document.getElementById('gameOverScreen').style.display = 'flex';
-                document.getElementById('finalScore').innerText = score + " yd";
-                if (score > best) { best = score; localStorage.setItem('mythion_final_best', best); }
-            }
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // RUDÝ VÍR NA DNĚ (THE VIPE EFFECT)
-            let fogGrd = ctx.createLinearGradient(0, 500 - cameraY, 0, 850 - cameraY);
-            fogGrd.addColorStop(0, "transparent");
-            fogGrd.addColorStop(1, "rgba(220, 20, 20, 0.7)");
-            ctx.fillStyle = fogGrd; ctx.fillRect(0,0,500,600);
-
-            ctx.save(); ctx.translate(0, -cameraY);
-
-            // MAGICKÉ RUNY MÍSTO PLOŠIN
-            platforms.forEach(p => {
-                ctx.globalAlpha = p.alpha;
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = p.type === 'void' ? "#f00" : "#c49642";
-                
-                ctx.fillStyle = p.type === 'void' ? "#300" : "#1a1a2e";
-                ctx.fillRect(p.x, p.y, p.w, p.h);
-                
-                ctx.strokeStyle = p.type === 'void' ? "#ff4444" : "#c49642";
-                ctx.lineWidth = 2;
-                ctx.strokeRect(p.x, p.y, p.w, p.h);
-                
-                // RUNY UVNITŘ
-                ctx.fillStyle = ctx.strokeStyle;
-                ctx.font = "bold 11px serif";
-                ctx.fillText("ᚱᚢᚾᛅ", p.x + 15, p.y + 14);
-            });
-
-            // PLAYER
-            ctx.globalAlpha = 1; ctx.shadowBlur = 20; ctx.shadowColor = "#000";
-            ctx.drawImage(imgOrc, player.x, player.y, player.w, player.h);
-            
-            ctx.restore();
-            requestAnimationFrame(() => { update(); draw(); });
-        }
-
-        const keys = {};
-        window.onkeydown = (e) => { keys[e.code] = true; if(e.code==='Space') { e.preventDefault(); spacePressed = true; }};
-        window.onkeyup = (e) => { 
-            keys[e.code] = false; 
-            if(e.code==='Space' && player.grounded) { 
-                player.dy = -jumpPower; player.grounded = false; started = true; 
-                jumpPower = 0; spacePressed = false;
-            }
-        };
-
-        const msgs = ["Makej, nebo ti Jefoma máma nedá oběd", "Mimi vidí všechno!", "To je dps jak u tanka...", "Suzu tě healovat nebude!"];
-        setInterval(() => {
-            if(!gameActive || !started) return;
-            const chat = document.getElementById('gameChat');
-            const div = document.createElement('div');
-            div.className = 'chat-msg';
-            div.innerHTML = `<span class="chat-guild">[Guild]</span> <b>${["Arny", "Mimi", "Suzu"][Math.floor(Math.random()*3)]}:</b> ${msgs[Math.floor(Math.random()*msgs.length)]}`;
-            chat.appendChild(div);
-            if(chat.childNodes.length > 5) chat.removeChild(chat.firstChild);
-        }, 8000);
-
-        restartGame(); draw();
-    </script>
-</body>
-</html>
+        function addPlatform(y) {
+            const w = Math.max(75, 150 - Math.abs(y)/600);
+            let type = 'normal';
+            // KAŽDÁ 3. JE BEZPEČNÁ
+            if (platforms.length % 3 !== 0 && Math.abs(y)
