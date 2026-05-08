@@ -2,29 +2,34 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Mythion: M+ Infinite Climb</title>
+    <title>Mythion: M+ SEASON OVERDRIVE</title>
     <style>
         body { margin: 0; background: #05050a; display: flex; flex-direction: column; align-items: center; color: #f0ebe0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
-        canvas { border: 3px solid #c49642; background: #0a0a1a; margin-top: 10px; box-shadow: 0 0 50px #000; cursor: none; }
-        .ui { position: absolute; top: 20px; left: 20px; background: rgba(11, 13, 18, 0.9); padding: 15px; border: 2px solid #c49642; border-radius: 8px; pointer-events: none; min-width: 180px; z-index: 10; }
-        .stats { font-size: 26px; color: #c49642; font-weight: bold; text-shadow: 2px 2px 0px #000; }
+        canvas { border: 3px solid #c49642; background: radial-gradient(circle at center, #1a1a3a 0%, #05050a 100%); margin-top: 10px; box-shadow: 0 0 50px #c4964244; cursor: none; }
+        .ui { position: absolute; top: 20px; left: 20px; background: rgba(11, 13, 18, 0.9); padding: 15px; border: 2px solid #c49642; border-radius: 8px; pointer-events: none; min-width: 200px; z-index: 10; border-left: 8px solid #c49642; }
+        .rank { color: #ffcc00; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .stats { font-size: 32px; color: #fff; font-weight: bold; text-shadow: 0 0 10px #c49642; }
         .power-bar-bg { width: 100%; height: 12px; background: #222; border: 1px solid #c49642; margin-top: 10px; border-radius: 6px; overflow: hidden; }
-        #powerBar { width: 0%; height: 100%; background: linear-gradient(to right, #4a7c2c, #ffcc00, #ff4444); }
-        .overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); flex-direction: column; justify-content: center; align-items: center; z-index: 20; }
-        .btn-restart { background: #c49642; color: black; border: none; padding: 15px 30px; font-size: 20px; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; }
-        .btn-restart:hover { background: #ffcc00; }
+        #powerBar { width: 0%; height: 100%; background: linear-gradient(to right, #4a7c2c, #ffcc00, #ff4444); box-shadow: 0 0 15px rgba(255, 204, 0, 0.5); }
+        .overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); flex-direction: column; justify-content: center; align-items: center; z-index: 20; text-align: center; }
+        .btn-restart { background: #c49642; color: black; border: none; padding: 15px 40px; font-size: 20px; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; box-shadow: 0 0 20px #c49642aa; }
+        #affixNotify { position: absolute; top: 20px; right: 20px; color: #ff4444; font-weight: bold; font-size: 20px; text-shadow: 0 0 10px black; }
     </style>
 </head>
 <body>
+    <div id="affixNotify"></div>
     <div id="gameOverScreen" class="overlay">
-        <h1 style="color: #ff4444; font-size: 50px; margin-bottom: 0;">RAID WIPE!</h1>
-        <p style="font-size: 24px;">Tvé skóre: <span id="finalScore">0</span> yd</p>
-        <button class="btn-restart" onclick="restartGame()">Zkusit znovu</button>
+        <h1 style="color: #ff4444; font-size: 60px; margin-bottom: 0; text-shadow: 0 0 20px red;">RAID WIPE</h1>
+        <p id="deathTaunt" style="font-style: italic; color: #888; margin-top: 5px;"></p>
+        <p style="font-size: 28px; color: #c49642; margin-top: 20px;">Rank: <span id="finalRank">LFR</span></p>
+        <p style="font-size: 20px;">Score: <span id="finalScore">0</span> yd</p>
+        <button class="btn-restart" onclick="restartGame()">RE-PULL BOSS</button>
     </div>
 
     <div class="ui">
-        <div class="stats"><span style="font-size: 16px; color: #888;">M+ SCORE</span><br><span id="height">0</span> yd</div>
-        <div style="font-size: 14px; margin-top: 5px;">Season Best: <span id="best" style="color: #c49642;">0</span> yd</div>
+        <div id="currentRank" class="rank">LFR Raider</div>
+        <div class="stats"><span id="height">0</span><span style="font-size: 18px; color: #888;"> yd</span></div>
+        <div style="font-size: 13px;">Personal Best: <span id="best" style="color: #c49642;">0</span> yd</div>
         <div class="power-bar-bg"><div id="powerBar"></div></div>
     </div>
 
@@ -36,53 +41,60 @@
         canvas.width = 600; canvas.height = 850;
 
         const imgOrc = new Image(); imgOrc.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
+        
+        const jumpQuotes = ["For Mythion!", "Lag!", "Kdo pullnul?", "Heal me!", "More DPS!", "Leeeeroy!", "Watch the tail!", "Easy M+", "Mana!"];
+        const deathQuotes = ["Zase stojíš v ohni!", "Kdo nedal kick?!", "Tanku??", "Půjč mi goldy na opravu.", "Low DPS, sorry.", "To byl lag!", "Měl jsi skočit víc doleva."];
 
-        let score = 0;
-        let bestScore = localStorage.getItem('mythion_vertical_best') || 0;
+        let score = 0, bestScore = localStorage.getItem('mythion_vertical_best') || 0;
         document.getElementById('best').innerText = bestScore;
 
-        let spacePressed = false;
-        let jumpPower = 0;
-        let cameraY = 0;
-        let gameActive = true;
-        const keys = {};
-
-        const stars = Array.from({ length: 100 }, () => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2
-        }));
+        let spacePressed = false, jumpPower = 0, cameraY = 0, gameActive = true;
+        let activeQuote = { text: "", timer: 0 };
+        const keys = {}, particles = [];
 
         let player = { x: 280, y: 700, w: 45, h: 45, dx: 0, dy: 0, speed: 6, grounded: false };
         let platforms = [];
 
-        function generateInitialPlatforms() {
-            platforms = [{x: 0, y: 780, w: 600, h: 100}];
-            for (let i = 0; i < 25; i++) {
-                addPlatform(700 - (i * 130));
+        function getRank(h) {
+            if (h < 200) return { n: "LFR Raider", c: "#888" };
+            if (h < 500) return { n: "Normal Raider", c: "#4a7c2c" };
+            if (h < 1000) return { n: "Heroic - Curve", c: "#3498db" };
+            return { n: "CUTTING EDGE", c: "#9b59b6" };
+        }
+
+        function createParticle() {
+            if (Math.abs(player.dy) > 2 || Math.abs(player.dx) > 2) {
+                particles.push({ x: player.x + 22, y: player.y + 22, s: Math.random()*5+2, l: 20, c: getRank(score).c });
             }
         }
 
+        function generateInitialPlatforms() {
+            platforms = [{x: 0, y: 780, w: 600, h: 100, type: 'normal'}];
+            for (let i = 0; i < 25; i++) addPlatform(700 - (i * 135));
+        }
+
         function addPlatform(y) {
-            const width = Math.max(70, 140 - (Math.abs(y) / 400));
-            platforms.push({ x: Math.random() * (canvas.width - width), y: y, w: width, h: 18 });
+            const width = Math.max(60, 150 - (Math.abs(y) / 500));
+            let type = 'normal';
+            if (Math.abs(y) > 800 && Math.random() > 0.8) type = 'void';
+            platforms.push({ x: Math.random() * (canvas.width - width), y: y, w: width, h: 20, type: type, alpha: 1 });
         }
 
         function restartGame() {
-            score = 0;
-            cameraY = 0;
-            gameActive = true;
+            score = 0; cameraY = 0; gameActive = true;
             player = { x: 280, y: 700, w: 45, h: 45, dx: 0, dy: 0, speed: 6, grounded: false };
             generateInitialPlatforms();
             document.getElementById('gameOverScreen').style.display = 'none';
-            document.getElementById('height').innerText = "0";
         }
 
         function update() {
             if (!gameActive) return;
 
-            if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -player.speed;
-            else if (keys['KeyD'] || keys['ArrowRight']) player.dx = player.speed;
+            let wind = (score > 400) ? Math.sin(Date.now()/1000) * 1.8 : 0;
+            if (score > 400) document.getElementById('affixNotify').innerText = "AFFIX: WINDY";
+
+            if (keys['KeyA'] || keys['ArrowLeft']) player.dx = -player.speed + wind;
+            else if (keys['KeyD'] || keys['ArrowRight']) player.dx = player.speed + wind;
             else player.dx *= 0.85;
 
             player.dy += 0.5;
@@ -90,98 +102,108 @@
             player.x += player.dx;
 
             if (spacePressed && player.grounded) {
-                jumpPower += 0.45;
-                if (jumpPower > 20) jumpPower = 20;
-                document.getElementById('powerBar').style.width = (jumpPower / 20 * 100) + "%";
+                jumpPower += 0.5;
+                if (jumpPower > 21) jumpPower = 21;
+                document.getElementById('powerBar').style.width = (jumpPower / 21 * 100) + "%";
             }
 
-            if (player.x < 0) { player.x = 0; player.dx *= -0.5; }
-            if (player.x + player.w > canvas.width) { player.x = canvas.width - player.w; player.dx *= -0.5; }
+            if (player.x < 0) { player.x = 0; player.dx *= -0.6; }
+            if (player.x + player.w > canvas.width) { player.x = canvas.width - player.w; player.dx *= -0.6; }
 
             player.grounded = false;
-            platforms.forEach(p => {
+            platforms.forEach((p, i) => {
                 if (player.dy > 0 && player.x + player.w > p.x && player.x < p.x + p.w &&
                     player.y + player.h >= p.y && player.y + player.h <= p.y + p.h + player.dy) {
-                    player.y = p.y - player.h;
-                    player.dy = 0;
-                    player.grounded = true;
+                    player.y = p.y - player.h; player.dy = 0; player.grounded = true;
+                    if (p.type === 'void') p.alpha -= 0.15;
                 }
             });
+            platforms = platforms.filter(p => p.alpha > 0);
 
             let targetCameraY = player.y - 500;
             if (targetCameraY < cameraY) cameraY += (targetCameraY - cameraY) * 0.1;
 
-            const topPlatformY = platforms[platforms.length - 1].y;
-            if (player.y < topPlatformY + 1200) addPlatform(topPlatformY - 130);
+            const topY = platforms[platforms.length - 1].y;
+            if (player.y < topY + 1200) addPlatform(topY - 135);
 
-            let currentHeight = Math.floor(Math.abs(player.y - 700) / 10);
-            if (currentHeight > score) {
-                score = currentHeight;
+            let h = Math.floor(Math.abs(player.y - 700) / 10);
+            if (h > score) {
+                score = h;
                 document.getElementById('height').innerText = score;
+                let r = getRank(score);
+                document.getElementById('currentRank').innerText = r.n;
+                document.getElementById('currentRank').style.color = r.c;
                 if (score > bestScore) {
-                    bestScore = score;
-                    localStorage.setItem('mythion_vertical_best', bestScore);
+                    bestScore = score; localStorage.setItem('mythion_vertical_best', bestScore);
                     document.getElementById('best').innerText = bestScore;
                 }
             }
 
-            // PODMÍNKA PROHRY: Pád pod okraj kamery
-            if (player.y > cameraY + canvas.height + 100) {
+            if (player.y > cameraY + canvas.height + 150) {
                 gameActive = false;
+                document.getElementById('deathTaunt').innerText = deathQuotes[Math.floor(Math.random()*deathQuotes.length)];
                 document.getElementById('finalScore').innerText = score;
+                document.getElementById('finalRank').innerText = getRank(score).n;
                 document.getElementById('gameOverScreen').style.display = 'flex';
             }
+
+            createParticle();
+            particles.forEach((p, i) => { p.l--; if (p.l <= 0) particles.splice(i, 1); });
+            if (activeQuote.timer > 0) activeQuote.timer--;
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#05050a";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            stars.forEach(s => {
-                ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-                let starY = (s.y - cameraY * 0.3) % canvas.height;
-                if (starY < 0) starY += canvas.height;
-                ctx.fillRect(s.x, starY, s.size, s.size);
-            });
+            // GUILD LOGO NA POZADÍ
+            ctx.save();
+            ctx.globalAlpha = 0.15;
+            ctx.fillStyle = "#c49642";
+            ctx.font = "bold 80px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("MYTHION", canvas.width/2, (500 - cameraY * 0.5) % 1500);
+            ctx.fillText("GUILD", canvas.width/2, (600 - cameraY * 0.5) % 1500);
+            ctx.restore();
 
             ctx.save();
             ctx.translate(0, -cameraY);
 
+            // Platformy
             platforms.forEach(p => {
-                ctx.fillStyle = "#2c1a0a";
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.type === 'void' ? "#451a1a" : "#2c1a0a";
                 ctx.fillRect(p.x, p.y, p.w, p.h);
-                ctx.strokeStyle = "#c49642";
-                ctx.lineWidth = 2;
+                ctx.strokeStyle = p.type === 'void' ? "#ff4444" : "#c49642";
                 ctx.strokeRect(p.x, p.y, p.w, p.h);
             });
 
+            // Hráč
+            ctx.globalAlpha = 1;
             ctx.drawImage(imgOrc, player.x, player.y, player.w, player.h);
-            ctx.restore();
 
+            // Bublina s hláškou
+            if (activeQuote.timer > 0) {
+                ctx.fillStyle = "white";
+                ctx.font = "bold 14px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText(activeQuote.text, player.x + 22, player.y - 15);
+            }
+
+            ctx.restore();
             requestAnimationFrame(() => { update(); draw(); });
         }
 
-        window.addEventListener('keydown', e => {
-            keys[e.code] = true;
-            if (e.code === 'Space') spacePressed = true;
-        });
-
-        window.addEventListener('keyup', e => {
-            keys[e.code] = false;
-            if (e.code === 'Space') {
-                if (player.grounded) {
-                    player.dy = -jumpPower;
-                    player.grounded = false;
-                }
-                spacePressed = false;
-                jumpPower = 0;
-                document.getElementById('powerBar').style.width = "0%";
+        window.addEventListener('keydown', e => { keys[e.code] = true; if (e.code === 'Space') spacePressed = true; });
+        window.addEventListener('keyup', e => { 
+            keys[e.code] = false; 
+            if (e.code === 'Space' && player.grounded) { 
+                player.dy = -jumpPower; player.grounded = false; 
+                activeQuote = { text: jumpQuotes[Math.floor(Math.random()*jumpQuotes.length)], timer: 60 };
             }
+            spacePressed = false; jumpPower = 0; document.getElementById('powerBar').style.width = "0%";
         });
 
-        generateInitialPlatforms();
-        draw();
+        generateInitialPlatforms(); draw();
     </script>
 </body>
 </html>
