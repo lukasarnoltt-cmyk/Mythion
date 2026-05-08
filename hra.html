@@ -10,6 +10,11 @@
             font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
             overflow: hidden;
+            /* EPIC DUNGEON POZADÍ */
+            background-image: url('https://i.imgur.com/3Z4Q6Qz.png'); /* Nahraď odkaz vlastním obrázkem */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
         
         .layout-wrapper { display: flex; flex-direction: column; align-items: center; gap: 20px; }
@@ -29,7 +34,7 @@
 
         /* CANVAS AREA */
         .canvas-area { position: relative; border: 3px solid var(--gold); border-radius: 12px; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
-        canvas { background: #000; cursor: none; display: block; }
+        canvas { background: rgba(0,0,0,0.5); /* Ztmavení za plátnem */ cursor: none; display: block; }
 
         /* SIDEBAR */
         .sidebar { width: 220px; display: flex; flex-direction: column; gap: 15px; }
@@ -40,14 +45,16 @@
         .panel-title { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold; }
         .score-val { font-size: 32px; font-weight: bold; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
 
-        /* EPIC CHAT OKNO */
+        /* EPIC CHAT OKNO - ZAROVNÁNO DOLEVA */
         .chat-container {
-            width: 506px; height: 140px; background: rgba(5, 5, 15, 0.9);
+            width: 506px; /* Šířka canvasu + border */
+            height: 140px; background: rgba(5, 5, 15, 0.9);
             border: 2px solid var(--gold); border-top: none;
             border-radius: 0 0 10px 10px; padding: 12px; box-sizing: border-box;
             display: flex; flex-direction: column; justify-content: flex-end;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7), inset 0 0 20px #000;
             backdrop-filter: blur(10px);
+            align-self: flex-start; /* Zarovnání na začátek (doleva) */
         }
         .chat-msg { font-size: 13px; margin-bottom: 5px; line-height: 1.4; animation: chatIn 0.3s ease-out; }
         .chat-guild { color: #40ff40; font-weight: bold; }
@@ -116,7 +123,7 @@
         const maxJumpPower = 22, keys = {}, platforms = [];
         let player = { x: 230, y: 500, w: 42, h: 42, dx: 0, dy: 0, grounded: false };
         
-        let consecutiveVoid = 0; // Čítač červených plošin za sebou
+        let consecutiveVoid = 0;
 
         const members = [
             {n: "Arny", m: ["Makej, nebo ti Jefoma máma nedá oběd!", "To je dps jak u tanka...", "Uhni z toho ohně!"]},
@@ -148,10 +155,6 @@
         function addPlatform(y) {
             const w = Math.max(75, 150 - Math.abs(y)/600);
             let type = 'normal';
-
-            // INTELIGENTNÍ GENERÁTOR:
-            // Pokud už byly 2 červené za sebou, tahle MUSÍ být zlatá (normal).
-            // Jinak je šance na červenou 40% (nad 800yd).
             if (Math.abs(y) > 800 && consecutiveVoid < 2 && Math.random() > 0.6) {
                 type = 'void';
                 consecutiveVoid++;
@@ -159,7 +162,6 @@
                 type = 'normal';
                 consecutiveVoid = 0;
             }
-
             platforms.push({ x: Math.random()*(canvas.width-w), y: y, w: w, h: 20, type: type, alpha: 1 });
         }
 
@@ -182,7 +184,7 @@
                 if (player.dy > 0 && player.x + player.w > p.x && player.x < p.x + p.w &&
                     player.y + player.h >= p.y && player.y + player.h <= p.y + p.h + player.dy) {
                     player.y = p.y - player.h; player.dy = 0; player.grounded = true;
-                    if (p.type === 'void' && started) p.alpha -= 0.18; // Červené mizí o něco rychleji
+                    if (p.type === 'void' && started) p.alpha -= 0.18;
                 }
             }
             for(let i=platforms.length-1; i>=0; i--) { if(platforms[i].alpha <= 0) platforms.splice(i,1); }
@@ -214,11 +216,12 @@
         }
 
         function draw() {
-            ctx.fillStyle = "#020205"; ctx.fillRect(0,0,500,600);
+            // Průhlednější pozadí canvasu, aby vyniklo pozadí těla body
+            ctx.fillStyle = "rgba(10, 10, 20, 0.4)"; ctx.fillRect(0,0,500,600);
             
-            // Nebula / Space effect
+            // Nebula / Space effect - jemnější
             let grd = ctx.createRadialGradient(250, 300 - cameraY*0.1, 100, 250, 300, 500);
-            grd.addColorStop(0, "rgba(40, 20, 80, 0.2)");
+            grd.addColorStop(0, "rgba(40, 20, 80, 0.1)");
             grd.addColorStop(1, "transparent");
             ctx.fillStyle = grd; ctx.fillRect(0,0,500,600);
 
