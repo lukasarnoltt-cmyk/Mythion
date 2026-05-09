@@ -1,4 +1,8 @@
-<title>Mythion: The Starry Return</title>
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Mythion: Toxic Raid Edition</title>
     <style>
         :root { --gold: #c49642; --mythic: #a335ee; --void: #ff4444; }
         
@@ -9,7 +13,7 @@
             font-family: 'Segoe UI', sans-serif;
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             min-height: 100vh; overflow: hidden;
-            /* HVĚZDNÉ POZADÍ */
+            /* EPICKÉ HVĚZDNÉ POZADÍ */
             background-image: 
                 radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
                 radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
@@ -24,33 +28,33 @@
             to { background-position: 0 1000px, 40px 1060px, 130px 1270px; }
         }
 
-        .game-container { display: flex; gap: 20px; align-items: flex-start; }
-        .canvas-wrap { display: flex; flex-direction: column; }
-
+        .game-container { display: flex; gap: 20px; align-items: flex-start; position: relative; }
+        
         .chat-area {
-            width: 506px; height: 110px; background: rgba(0,0,0,0.85);
+            width: 506px; height: 130px; background: rgba(0,0,0,0.9);
             border: 3px solid var(--gold); border-bottom: none; border-radius: 8px 8px 0 0;
-            padding: 8px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end;
-            font-size: 13px;
+            padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end;
+            font-size: 13px; line-height: 1.4;
         }
 
-        canvas { border: 3px solid var(--gold); background: rgba(10, 10, 25, 0.6); border-radius: 0 0 8px 8px; }
+        canvas { border: 3px solid var(--gold); background: rgba(10, 10, 25, 0.7); border-radius: 0 0 8px 8px; }
 
-        .sidebar { width: 180px; display: flex; flex-direction: column; gap: 10px; }
-        .panel { background: rgba(0,0,0,0.8); border: 1px solid var(--gold); border-left: 5px solid var(--gold); padding: 12px; border-radius: 4px; }
-        .score-num { font-size: 26px; font-weight: bold; }
+        .sidebar { width: 200px; display: flex; flex-direction: column; gap: 10px; }
+        .panel { background: rgba(0,0,0,0.8); border: 1px solid var(--gold); border-left: 6px solid var(--gold); padding: 15px; border-radius: 4px; }
+        .score-num { font-size: 28px; font-weight: bold; color: #fff; }
         .chat-guild { color: #40ff40; font-weight: bold; }
+        .chat-mimi { color: #f06292; font-weight: bold; } /* Mimi má speciální barvu pro ego */
         
         .overlay { 
-            display: none; position: absolute; top: 110px; left: 0; width: 506px; height: 606px; 
-            background: rgba(0,0,0,0.9); flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+            display: none; position: absolute; top: 130px; left: 0; width: 506px; height: 606px; 
+            background: rgba(0,0,0,0.92); flex-direction: column; justify-content: center; align-items: center; z-index: 100;
         }
-        button { background: var(--gold); border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        button { background: var(--gold); border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 4px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <h1 style="color: var(--gold); letter-spacing: 8px; text-transform: uppercase; margin-bottom: 10px;">Mythion</h1>
+    <h1 style="color: var(--gold); letter-spacing: 10px; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 0 15px rgba(196,150,66,0.6);">Mythion</h1>
 
     <div class="game-container">
         <div class="canvas-wrap">
@@ -58,21 +62,21 @@
             <div style="position: relative;">
                 <canvas id="gameCanvas"></canvas>
                 <div id="gameOver" class="overlay">
-                    <h2 style="color:var(--void)">RAID WIPE</h2>
+                    <h2 style="color:var(--void); font-size: 30px; letter-spacing: 3px;">RAID WIPE</h2>
                     <div id="finalScore" class="score-num" style="margin-bottom: 20px;">0 yd</div>
-                    <button onclick="reset()">RE-PULL</button>
+                    <button onclick="reset()">RE-PULL (DO TOHO!)</button>
                 </div>
             </div>
         </div>
 
         <div class="sidebar">
             <div class="panel">
-                <div style="font-size: 10px; color: var(--gold)">M+ RATING</div>
+                <div style="font-size: 10px; color: var(--gold)">AKTUÁLNÍ PROGRES</div>
                 <div id="curScore" class="score-num">0</div>
             </div>
             <div class="panel" style="border-left-color: var(--mythic)">
-                <div style="font-size: 10px; color: var(--mythic)">BEST</div>
-                <div id="bestScore" style="font-size: 18px; font-weight: bold;">0 yd</div>
+                <div style="font-size: 10px; color: var(--mythic)">SEASON BEST</div>
+                <div id="bestScore" style="font-size: 20px; font-weight: bold;">0 yd</div>
             </div>
         </div>
     </div>
@@ -85,40 +89,59 @@
         const img = new Image(); img.src = 'https://render.worldofwarcraft.com/eu/icons/56/inv_helmet_06.jpg';
 
         let p, platforms, score, best, active, started, camY, keys = {};
-        let jumpCharge = 0; // Pro nabíjení skoku
+        let jumpCharge = 0;
         
-        best = localStorage.getItem('myth_starry_best') || 0;
+        best = localStorage.getItem('myth_vToxic_best') || 0;
         document.getElementById('bestScore').innerText = best + " yd";
 
         const members = [
-            {n: "Arny", m: ["Makej!", "To je dps jak u tanka...", "Mimi ti Jefoma mama..."]},
-            {n: "Mimi", m: ["Mimi vidí všechno!", "Skoč víc!", "Armáda čeká!"]},
-            {n: "Suzu", m: ["Nehealuju!", "Low mana!", "Kdo to pullnul?"]},
-            {n: "Exsqueez", m: ["Monitor zapnout!", "Wipe!", "Dej goldy na repair."]}
+            {n: "Mimi", c: "chat-mimi", m: [
+                "S jinou guildou se mi to teda dělá mnohem líp...",
+                "S jinou guildou už jsem to dávno prošel, tohle je nuda.",
+                "Já jsem prostě větší frajer než vy, tohle už jsem měl hotový loni.",
+                "Proč to zase padá? Já už tohle dávno udělal na jiným savu.",
+                "Hele, nechcete to radši nechat na mně? Jste pomalí.",
+                "Mimi vidí všechno a vidí, že jste lamy!",
+                "Takový dps? To jsem měl v levelu 10..."
+            ]},
+            {n: "Arny", c: "chat-guild", m: [
+                "Mimi, už zase meleš o jiný guildě? Tak tam běž!",
+                "Makej, nebo ti Jefoma máma nedá oběd!",
+                "To je dps jak u AFK tanka...",
+                "Mimi, radši skákej a neřeš minulost.",
+                "Kdo to zase pullnul bez ready checku?!"
+            ]},
+            {n: "Exsqueez", c: "chat-guild", m: [
+                "Máš zapnutý monitor, nebo hraješ na kalkulačce?",
+                "Exsqueez me? Co to bylo za skok?",
+                "Půjč mi někdo na repair, Mimi mi všechno vylootoval.",
+                "Ten ork je pomalejší než moje babička.",
+                "Wipe za 3... 2... 1..."
+            ]}
         ];
 
-        function msg(name, text) {
+        function msg(member) {
             const c = document.getElementById('chat');
             const d = document.createElement('div');
-            d.style.marginBottom = "2px";
-            d.innerHTML = `<span class="chat-guild">[Guild] ${name}:</span> ${text}`;
+            const text = member.m[Math.floor(Math.random()*member.m.length)];
+            d.innerHTML = `<span class="${member.c}">[Guild] ${member.n}:</span> ${text}`;
             c.appendChild(d);
             if(c.childNodes.length > 5) c.removeChild(c.firstChild);
         }
 
         function reset() {
-            p = { x: 230, y: 500, w: 40, h: 40, dy: 0, dx: 0, grounded: false };
+            p = { x: 230, y: 500, w: 42, h: 42, dy: 0, dx: 0, grounded: false };
             platforms = [{x: 0, y: 570, w: 500, h: 100, type: 'safe', alpha: 1, dead: false}];
-            for(let i=1; i<10; i++) spawnPlat(570 - i * 140);
+            for(let i=1; i<12; i++) spawnPlat(570 - i * 140);
             score = 0; camY = 0; active = true; started = false; jumpCharge = 0;
             document.getElementById('gameOver').style.display = 'none';
         }
 
         function spawnPlat(y) {
-            const w = 110;
+            const w = 115;
             let type = 'safe';
-            if (platforms.length > 5 && Math.random() > 0.6) type = 'void';
-            platforms.push({ x: Math.random()*(canvas.width-w), y, w, h: 15, type, alpha: 1, dead: false });
+            if (platforms.length > 4 && Math.random() > 0.65) type = 'void';
+            platforms.push({ x: Math.random()*(canvas.width-w), y, w, h: 18, type, alpha: 1, dead: false });
         }
 
         window.onkeydown = e => { keys[e.code] = true; if(e.code === 'Space') e.preventDefault(); };
@@ -126,23 +149,22 @@
 
         function loop() {
             if(active) {
-                // Pohyb do stran
-                if(keys['ArrowLeft'] || keys['KeyA']) p.dx = -6;
-                else if(keys['ArrowRight'] || keys['KeyD']) p.dx = 6;
-                else p.dx *= 0.8;
+                if(keys['ArrowLeft'] || keys['KeyA']) p.dx = -7;
+                else if(keys['ArrowRight'] || keys['KeyD']) p.dx = 7;
+                else p.dx *= 0.82;
 
-                // LOGIKA SKOKU: Držení mezerníku
+                // DYNAMICKÝ SKOK: Síla podle délky stisku
                 if (keys['Space'] && p.grounded) {
-                    jumpCharge += 0.8;
-                    if (jumpCharge > 18) jumpCharge = 18; // Limit síly
+                    jumpCharge += 0.9;
+                    if (jumpCharge > 19) jumpCharge = 19;
                 } else if (!keys['Space'] && jumpCharge > 0) {
-                    p.dy = -jumpCharge - 5; // Minimální skok je 5 + nabití
+                    p.dy = -jumpCharge - 6;
                     jumpCharge = 0;
                     p.grounded = false;
                     started = true;
                 }
 
-                p.dy += 0.5; // Gravitace
+                p.dy += 0.55; 
                 p.x += p.dx; p.y += p.dy;
                 
                 if(p.x > canvas.width) p.x = -p.w; if(p.x < -p.w) p.x = canvas.width;
@@ -153,25 +175,25 @@
                        p.y + p.h > plat.y && p.y + p.h < plat.y + plat.h + p.dy) {
                         p.y = plat.y - p.h; p.dy = 0; p.grounded = true;
                         if(plat.type === 'void' && started) {
-                            plat.alpha -= 0.1;
+                            plat.alpha -= 0.12;
                             if(plat.alpha <= 0) plat.dead = true;
                         }
                     }
                 });
 
                 if(started) {
-                    if(p.y < camY + 300) camY += (p.y - 300 - camY) * 0.1;
+                    if(p.y < camY + 300) camY += (p.y - 300 - camY) * 0.12;
                     score = Math.max(score, Math.floor(Math.abs(p.y - 500)/10));
                     document.getElementById('curScore').innerText = score;
                 }
 
                 if(platforms[platforms.length-1].y > camY - 100) spawnPlat(platforms[platforms.length-1].y - 140);
                 
-                if(p.y > camY + 700 && started) {
+                if(p.y > camY + 750 && started) {
                     active = false;
                     document.getElementById('gameOver').style.display = 'flex';
                     document.getElementById('finalScore').innerText = score + " yd";
-                    if(score > best) { best = score; localStorage.setItem('myth_starry_best', best); document.getElementById('bestScore').innerText = best + " yd"; }
+                    if(score > best) { best = score; localStorage.setItem('myth_vToxic_best', best); document.getElementById('bestScore').innerText = best + " yd"; }
                 }
             }
 
@@ -182,15 +204,16 @@
                 if(!plat.dead) {
                     ctx.globalAlpha = plat.alpha;
                     ctx.fillStyle = plat.type === 'void' ? '#ff4444' : '#c49642';
+                    ctx.shadowBlur = 15; ctx.shadowColor = ctx.fillStyle;
                     ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
                 }
             });
 
-            ctx.globalAlpha = 1;
-            // Indikátor nabití skoku (stoupající linka pod orkem)
+            ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+            // Indikátor skoku
             if(jumpCharge > 0) {
                 ctx.fillStyle = '#40ff40';
-                ctx.fillRect(p.x, p.y + p.h + 5, (jumpCharge/18)*p.w, 4);
+                ctx.fillRect(p.x, p.y + p.h + 8, (jumpCharge/19)*p.w, 5);
             }
             
             ctx.drawImage(img, p.x, p.y, p.w, p.h);
@@ -198,12 +221,17 @@
             requestAnimationFrame(loop);
         }
 
+        // Logika hlášek - Mimi trollí víc
         setInterval(() => {
             if(active && started) {
-                const mem = members[Math.floor(Math.random()*members.length)];
-                msg(mem.n, mem.m[Math.floor(Math.random()*mem.m.length)]);
+                const rand = Math.random();
+                let member;
+                if(rand < 0.5) member = members[0]; // Mimi mluví nejvíc
+                else if(rand < 0.75) member = members[1];
+                else member = members[2];
+                msg(member);
             }
-        }, 8000);
+        }, 7000);
 
         reset(); loop();
     </script>
