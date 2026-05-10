@@ -1,0 +1,328 @@
+/* --- GOOGLE FONTY (WoW Vibe) --- */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Metamorphous&family=Roboto:wght@400;700&display=swap');
+
+body {
+    background-color: #050505;
+    color: #e0e0e0;
+    font-family: 'Roboto', sans-serif; 
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    
+    /* Globální nastavení pozadí pro pixel art */
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed; 
+    background-repeat: no-repeat;
+    image-rendering: pixelated; /* Tohle drží pixely ostré */
+    transition: background-image 0.5s ease-in-out; 
+}
+
+/* --- POZADÍ PRO JEDNOTLIVÉ LOKACE --- */
+body.bg-default { background-image: none; }
+body.bg-hub { background-image: url('hub.png'); }
+body.bg-menu { background-image: url('menu.png'); }
+body.bg-draft { background-image: url('draft.png'); }
+body.bg-auction { background-image: url('auction.png'); }
+body.bg-combat-magisters-terrace { background-image: url('combat-magisters-terrace.png'); }
+body.bg-combat-algethar-academy { background-image: url('combat-algethar-academy.png'); }
+body.bg-combat-maisara-caverns { background-image: url('combat-maisara-caverns.png'); }
+body.bg-combat-pit-of-saron { background-image: url('combat-pit-of-saron.png'); }
+body.bg-combat-nexus-point-xenas { background-image: url('combat-nexus-point-xenas.png'); }
+body.bg-combat-seat-of-the-triumvirate { background-image: url('combat-seat-of-the-triumvirate.png'); }
+body.bg-combat-windrunner-spire { background-image: url('combat-windrunner-spire.png'); }
+body.bg-combat-skyreach { background-image: url('combat-skyreach.png'); }
+
+/* --- TYPOGRAFIE --- */
+h1, h2, h3 {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 2px;
+    margin-top: 0;
+}
+
+.card-name {
+    font-family: 'Metamorphous', cursive;
+    font-size: 1.1em;
+    color: #ffd100;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+h1 { color: #ffaa00; text-shadow: 0 3px 6px rgba(0,0,0,0.9); }
+h2 { color: #cccccc; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.subtitle { color: #ff4444; font-weight: bold; font-family: 'Metamorphous', cursive; }
+.gold-text { color: #ffd700; font-weight: bold; text-shadow: 0 0 8px rgba(255, 215, 0, 0.6); }
+.dungeon-text { color: #b044ff; font-weight: bold; font-size: 1.3em; text-shadow: 0 0 10px rgba(176, 68, 255, 0.6); }
+
+/* --- PRŮHLEDNÁ OKNA (GLASSMORPHISM) --- */
+.menu-container, .combat-wrapper {
+    background-color: rgba(15, 15, 15, 0.85); /* Lehce průhledná černá */
+    backdrop-filter: blur(6px); /* Rozmaže pozadí za oknem */
+    -webkit-backdrop-filter: blur(6px);
+    border: 2px solid #3a3a3a;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,0,0,0.5);
+    margin: 0 auto;
+}
+
+.menu-container {
+    padding: 30px;
+    max-width: 600px;
+}
+
+.combat-wrapper {
+    max-width: 1200px;
+    padding: 25px;
+}
+
+/* --- EPICKÁ TLAČÍTKA --- */
+button {
+    background: linear-gradient(to bottom, #2c2c2c, #111111);
+    color: #ffcc00;
+    border: 2px solid #5a4a00;
+    padding: 12px 24px;
+    margin: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-family: 'Metamorphous', cursive;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px #000;
+    box-shadow: inset 0 0 5px #000, 0 4px 6px rgba(0,0,0,0.6);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+button:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #3c3c3c, #1a1a1a);
+    border-color: #ffaa00;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 10px rgba(255,170,0,0.3), 0 8px 15px rgba(0,0,0,0.8);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+}
+
+button:disabled {
+    background: #1a1a1a;
+    color: #555;
+    border-color: #333;
+    text-shadow: none;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+button.selected {
+    border-color: #00ff00;
+    background: linear-gradient(to bottom, #004400, #002200);
+    color: #00ff00;
+    box-shadow: 0 0 15px rgba(0,255,0,0.4);
+}
+
+.btn-active {
+    border-color: #ffaa00;
+    background: linear-gradient(to bottom, #4a3500, #2a1500);
+    box-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
+}
+
+/* --- AUKCE --- */
+.ah-grid { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
+.ah-item { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background-color: rgba(20, 20, 20, 0.7); 
+    padding: 15px; 
+    border: 1px solid #444; 
+    border-radius: 8px; 
+    transition: 0.2s; 
+}
+.ah-item:hover { border-color: #ffaa00; background-color: rgba(30, 30, 30, 0.9); }
+.ah-item-info { text-align: left; }
+.ah-item-info h3 { margin: 0 0 5px 0; color: #00ccff; font-family: 'Metamorphous', cursive; }
+.ah-item-info p { margin: 0; font-size: 0.9em; color: #aaa; }
+
+/* --- DRAFT KARTY --- */
+.draft-grid { display: flex; justify-content: space-around; margin-top: 30px; }
+.draft-card { 
+    background-color: rgba(20, 20, 20, 0.8); 
+    border: 2px solid #555; 
+    border-radius: 10px; 
+    padding: 20px; 
+    width: 200px; 
+    cursor: pointer; 
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6); 
+}
+.draft-card:hover { 
+    border-color: #00ff00; 
+    background-color: rgba(30, 30, 30, 0.95);
+    transform: scale(1.05) translateY(-5px); 
+    box-shadow: 0 10px 25px rgba(0,255,0,0.3); 
+}
+.draft-card h3 { margin-top: 0; color: #00ff00; }
+
+/* --- COMBAT LAYOUT --- */
+.combat-layout { display: flex; gap: 20px; }
+.combat-left { flex: 2; }
+.combat-right { flex: 1; display: flex; flex-direction: column; }
+
+.combat-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1); 
+    padding-bottom: 15px; 
+    margin-bottom: 20px; 
+}
+.timer { 
+    font-size: 2.5em; 
+    font-weight: bold; 
+    color: #ff4444; 
+    font-family: 'Cinzel', serif; 
+    text-shadow: 0 0 15px rgba(255,0,0,0.6); 
+}
+.encounter-info { text-align: left; font-size: 1.2em; font-family: 'Metamorphous', cursive; color: #ddd; }
+
+.action-bar { 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    margin-top: 10px; 
+    padding: 12px; 
+    background: rgba(10, 10, 10, 0.6); 
+    border: 1px solid #333; 
+    border-radius: 8px; 
+}
+.action-bar button { font-size: 13px; padding: 8px 12px; }
+
+/* Spelly barevně odlišené */
+.spell-btn { border-color: #00aaff; color: #00ccff; }
+.spell-btn:hover:not(:disabled) { border-color: #00ffff; color: #fff; box-shadow: 0 0 10px rgba(0,255,255,0.4); }
+.item-btn { border-color: #00ff00; color: #00ff00; }
+.item-btn:hover:not(:disabled) { border-color: #88ff88; color: #fff; box-shadow: 0 0 10px rgba(0,255,0,0.4); }
+
+/* --- HP BAR VYLEPŠENÍ --- */
+.hp-bar-container { 
+    width: 100%; 
+    max-width: 500px; 
+    height: 35px; 
+    background-color: rgba(0, 0, 0, 0.8); 
+    border: 2px solid #444; 
+    border-radius: 20px; 
+    margin: 15px auto; 
+    overflow: hidden; 
+    position: relative; 
+    box-shadow: inset 0 0 15px #000; 
+}
+.hp-bar-fill { 
+    height: 100%; 
+    background: linear-gradient(90deg, #8b0000, #ff4500, #ffaa00); 
+    width: 0%; 
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); 
+    box-shadow: 0 0 20px #ff4500; 
+}
+.hp-bar-text { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    font-weight: bold; 
+    font-size: 1.2em; 
+    color: #fff; 
+    text-shadow: 1px 1px 3px #000, 0 0 6px #000; 
+    pointer-events: none; 
+}
+
+/* --- KARTY HRÁČŮ --- */
+.party-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
+.combat-card { 
+    background-color: rgba(20, 20, 20, 0.85); 
+    border: 2px solid #444; 
+    border-radius: 10px; 
+    padding: 15px; 
+    width: 130px; 
+    min-height: 130px; 
+    cursor: pointer; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    transition: all 0.3s ease; 
+    box-shadow: 0 8px 15px rgba(0,0,0,0.7); 
+}
+.combat-card:hover { transform: translateY(-5px); }
+.dmg-number { 
+    font-size: 2.5em; 
+    font-weight: bold; 
+    color: #00ff00; 
+    display: none; 
+    font-family: 'Cinzel', serif;
+    text-shadow: 0 0 10px rgba(0,255,0,0.5); 
+}
+.hidden { 
+    background-color: rgba(5, 5, 5, 0.9); 
+    border-color: #222 !important; 
+    box-shadow: inset 0 0 20px #000 !important; 
+    opacity: 0.7;
+}
+
+.synergy-buff { color: #00ff00; font-weight: bold; font-size: 0.9em; margin: 5px 0; }
+.synergy-debuff { color: #ff4444; font-weight: bold; font-size: 0.9em; margin: 5px 0; }
+.rerolled-text { color: #00ffff !important; text-shadow: 0 0 15px rgba(0, 255, 255, 0.9); }
+
+/* --- OBRÁZEK BOSSE --- */
+.encounter-image-placeholder { 
+    width: 100%; 
+    height: 350px; 
+    background-color: rgba(0, 0, 0, 0.6); 
+    border: 2px solid #555; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 10px; 
+    margin-bottom: 20px; 
+    overflow: hidden; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.8); 
+}
+.encounter-image-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+
+/* --- CUSTOM CHAT --- */
+.combat-bottom { margin-top: 25px; }
+.party-chat { 
+    background-color: rgba(5, 5, 5, 0.85); 
+    border: 1px solid #444; 
+    border-radius: 8px; 
+    padding: 15px; 
+    height: 180px; 
+    overflow-y: auto; 
+    text-align: left; 
+    font-family: 'Consolas', 'Courier New', monospace; 
+    font-size: 0.95em; 
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.9); 
+}
+.party-chat h3 { 
+    margin-top: 0; 
+    color: #00ccff; 
+    font-size: 1.1em; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+    padding-bottom: 8px; 
+    margin-bottom: 10px; 
+    font-family: 'Metamorphous', cursive; 
+}
+.chat-message { margin: 6px 0; line-height: 1.5; }
+
+/* Epický scrollbar pro chat */
+.party-chat::-webkit-scrollbar { width: 10px; }
+.party-chat::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.5); border-radius: 5px; }
+.party-chat::-webkit-scrollbar-thumb { background: #444; border-radius: 5px; border: 1px solid #222; }
+.party-chat::-webkit-scrollbar-thumb:hover { background: #ffaa00; }
+
+@keyframes popIn { 
+    0% { transform: scale(0.8); opacity: 0; } 
+    60% { transform: scale(1.1); } 
+    100% { transform: scale(1); opacity: 1; } 
+}
+.combat-card:not(.hidden) { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
