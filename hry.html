@@ -2,32 +2,96 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Mythion - Hry</title>
-    <link rel="stylesheet" href="css/style_final_v8.css"> </head>
-<body style="background-color: #111; color: white; text-align: center; font-family: sans-serif;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYTHION - Herní Koutek</title>
+    <link rel="stylesheet" href="css/style_final_v8.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <style>
+        .games-container {
+            padding: 120px 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.8);
+            min-height: 80vh;
+        }
+        .game-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+        .game-card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid #ffaa00;
+            border-radius: 15px;
+            width: 350px;
+            padding: 40px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
+        }
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 40px rgba(255, 170, 0, 0.5);
+        }
+        .game-card h2 {
+            font-family: 'Cinzel', serif;
+            color: #ffaa00;
+            margin-bottom: 20px;
+        }
+        .game-card p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #ddd;
+        }
+        .status-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-ready { background-color: #00ff00; color: black; }
+        .status-locked { background-color: #444; color: #888; border: 1px solid #666; }
+    </style>
+</head>
+<body>
 
-    <div style="padding: 100px 20px;">
-        <h1 style="color: #ffaa00; font-size: 3em;">HERNÍ KOUTEK</h1>
-        <p style="color: #aaa; margin-bottom: 50px;">Vyber si, jak chceš dneska prohrát nervy.</p>
+    <nav class="navbar">
+      <div class="logo">MYTHION</div>
+      <ul>
+        <li><a href="hry.html" style="color: #ffaa00; font-weight: bold;">Hry 🎮</a></li>
+        <li><a href="index.html">Zpět na Web</a></li>
+        <li><a href="https://discord.gg/8MEktvx93N" target="_blank">Discord</a></li>
+      </ul>
+    </nav>
 
-        <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+    <div class="games-container">
+        <h1 style="font-family: 'Cinzel', serif; font-size: 3.5em; color: #ffaa00; text-shadow: 0 0 20px rgba(255,170,0,0.5);">Herní Rozcestník</h1>
+        <p style="font-size: 1.3em; color: #aaa;">Protože grind ve WoWku občas nestačí...</p>
+
+        <div class="game-grid">
             
-            <a href="pug-sim/index.html" style="text-decoration: none;">
-                <div style="border: 2px solid #ffaa00; background-color: #222; padding: 30px; border-radius: 10px; width: 300px; cursor: pointer;">
-                    <h2 style="color: #ffaa00; margin-top: 0;">WoW PUG Simulator</h2>
-                    <p style="color: #ddd;">Zažij pravé peklo LFG bez ztráty vlastního ratingu! Poskládej partu a nezdepletuj klíč.</p>
-                    <div style="margin-top: 20px; font-weight: bold; color: #00ff00;">▶ HRÁT NYNÍ</div>
-                </div>
+            <a href="pug-sim/index.html" class="game-card">
+                <h2>WoW PUG Simulator</h2>
+                <p>Máš na to odřídit partu náhodných idiotů a nezdepletovat klíč? Hardcore simulátor pro ty, co už nemají co ztratit.</p>
+                <div class="status-btn status-ready">Vstoupit do Pekla ▶</div>
             </a>
 
-            <div style="border: 2px solid #444; background-color: #1a1a1a; padding: 30px; border-radius: 10px; width: 300px; opacity: 0.5;">
-                <h2 style="color: #666; margin-top: 0;">Tajemný Projekt</h2>
-                <p style="color: #888;">Tato hra je momentálně ve vývoji nebo je uzavřena. Zkus to později.</p>
-                <div style="margin-top: 20px; font-weight: bold; color: #ff4444;">🔒 NEDOSTUPNÉ</div>
+            <div class="game-card" style="opacity: 0.6; cursor: not-allowed; border-color: #444;">
+                <h2 style="color: #666;">Arnýho projekt</h2>
+                <p style="color: #888;">Zde bude další hra.</p>
+                <div class="status-btn status-locked">🔒 Brzy víc...</div>
             </div>
 
         </div>
     </div>
+
+    <footer>
+      <p>&copy; 2026 Mythion Guild | Všechna práva (a viny za wipe) vyhrazena.</p>
+    </footer>
 
 </body>
 </html>
